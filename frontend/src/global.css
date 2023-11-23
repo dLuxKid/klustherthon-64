@@ -11,3 +11,26 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.invoice-form {
+  @apply w-full max-w-3xl my-14 mx-auto p-10 bg-background rounded-lg shadow-lg border border-white flex items-stretch justify-center flex-col gap-4;
+}
+
+.invoice-form label {
+  @apply flex items-start justify-center flex-col gap-1;
+}
+
+.invoice-form label p {
+}
+
+.invoice-form label input {
+  @apply w-full px-4 h-[45px] rounded outline-none border-none text-text text-base font-normal;
+}
+
+select {
+  @apply px-4 py-2 rounded-md text-text text-base font-medium;
+}
+
+select option {
+  @apply text-base font-normal;
+}
