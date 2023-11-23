@@ -18,10 +18,7 @@ export default function SideNavbar() {
     const [activeMenu, setActiveMenu] = useState<boolean>(false);
     const [screenSize, setScreenSize] = useState<number | null>(null);
 
-    const [showLogOutBtn, setShowLogOutBtn] = useState(false)
-
     useEffect(() => {
-        setShowLogOutBtn(false)
         const handleSize = () => {
             setScreenSize(window.innerWidth);
         };
@@ -65,16 +62,16 @@ export default function SideNavbar() {
                     <div className="w-full flex flex-col gap-2">
                         <NavLink
                             onClick={() => setActiveMenu(!activeMenu)}
-
                             to={`/dashboard`}
                             className={({ isActive }: { isActive: boolean }) =>
                                 isActive
-                                    ? "bg-primary flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90"
-                                    : "flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90"
+                                    ? "bg-primary flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90 text-white"
+                                    : "flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90 hover:text-white text-text"
                             }
+                            end
                         >
-                            <span className="text-text"><FaChartBar /></span>
-                            <p className="capitalize text-text">
+                            <FaChartBar />
+                            <p className="capitalize">
                                 Dashboard
                             </p>
                         </NavLink>
@@ -85,12 +82,12 @@ export default function SideNavbar() {
                                 to={`/dashboard/${item.name}`}
                                 className={({ isActive }: { isActive: boolean }) =>
                                     isActive
-                                        ? "bg-primary flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90"
-                                        : "flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90"
+                                        ? "bg-primary flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90 text-white"
+                                        : "flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90 hover:text-white text-text"
                                 }
                             >
-                                <span className="text-text">{item.icon}</span>
-                                <p className="capitalize text-text">
+                                {item.icon}
+                                <p className="capitalize">
                                     {item.name}
                                 </p>
                             </NavLink>
@@ -98,14 +95,9 @@ export default function SideNavbar() {
                     </div>
                     <div className="w-full mb-8">
                         <div className="text-text flex items-center">
-                            <p>Log out</p>
-                            <span
-                                className="ml-4 pt-2 self-end cursor-pointer"
-                                onClick={() => {
-                                    setShowLogOutBtn(!showLogOutBtn);
-                                }}
-                            >
-                            </span>
+                            <NavLink to={'/'}>
+                                <p>Log out</p>
+                            </NavLink>
                         </div>
                     </div>
                 </div>

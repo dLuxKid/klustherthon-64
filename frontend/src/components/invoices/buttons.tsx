@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 export function CreateInvoice() {
     return (
         <NavLink
-            //   href="/dashboard/invoices/create"
+            to="/dashboard/invoices/create"
             className="flex h-10 items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
             <span className="hidden md:block">Create Invoice</span>
@@ -35,7 +35,7 @@ export function DeleteInvoice({ id }: { id: string }) {
 
     return (
         <form>
-            <button className="rounded-md border p-2 hover:bg-gray-100">
+            <button className="rounded-md border p-2 hover:bg-gray-100" type="submit">
                 <span className="sr-only">Delete</span>
                 <div className="text-slate-600">
                     <FaTrash />
