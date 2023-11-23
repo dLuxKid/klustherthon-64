@@ -1,4 +1,4 @@
-import img from '../assets/3992745.jpg'
+import img from '../assets/3992745.jpg';
 
 export default function LandingPage() {
     return (
