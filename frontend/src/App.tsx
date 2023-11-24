@@ -31,10 +31,7 @@ function App() {
           </div>
         }>
           <Route path="" element={<Dashboard />} />
-          <Route path="/dashboard/invoices" element={<Outlet />} >
-            <Route path="" element={<Invoices />} />
-            <Route path="create" element={<CreateNewInvoice />} />
-          </Route>
+          <Route path="invoices" element={<Invoices />} />
           <Route path="customers" element={<Customers />} />
         </Route>
       </Routes >
