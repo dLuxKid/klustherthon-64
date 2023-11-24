@@ -1,12 +1,16 @@
-const express = require("express");
-const mongoose = require("mongoose");
-require("dotenv").config();
+import express from "express";
+import mongoose from "mongoose";
+import invoiceRouter from "./routes/invoiceRoutes.js";
+import dotenv from "dotenv"
+import UserRouter from "./routes/UserRoutes.js";
+import cors from "cors";
 
-const app = express();
+
+
 
 // db connection
 mongoose
-  .connect(process.env.mongodb_connect, {})
+  .connect("mongodb+srv://vj2k02:rdGddQmuY76qc5aC@klusterthon-64.pf8rfmj.mongodb.net/?retryWrites=true&w=majority")
   .then(() => {
     console.log("Connected to database!");
   })
@@ -14,6 +18,10 @@ mongoose
     console.log("Connection failed!");
   });
 
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+app.use(cors());
 app.post("/api/posts", (req, res, next) => {
   const post = req.body;
   console.log(post);
@@ -22,7 +30,8 @@ app.post("/api/posts", (req, res, next) => {
   });
 });
 app.use("/api/users",UserRouter)
+app.use("/api/invoices",invoiceRouter)
 
-app.listen(3000, () => {
+app.listen(5000, () => {
   console.log("Example app listening on port 3000!");
 });
