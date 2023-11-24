@@ -1,9 +1,9 @@
 import { useState } from "react";
-import BusinessLoginForm from "../components/forms/business-login";
-import StaffLoginForm from "../components/forms/staff-login";
+import BusinessSignupForm from "../components/forms/business-signup";
+import StaffSignupForm from "../components/forms/staff-signup";
 
-const Login = () => {
-    const [loginType, setLoginType] = useState<'business' | 'staff'>('business')
+const Signup = () => {
+    const [signupType, setSignupType] = useState<'business' | 'staff'>('business')
 
     const base =
         "pb-1 text-lg font-medium text-center whitespace-nowrap text-black";
@@ -15,29 +15,29 @@ const Login = () => {
                 <nav className="inline-flex items-center justify-around w-full gap-4 pt-5">
                     <button
                         type="button"
-                        className={`${base} ${loginType === 'business' && selected}`}
+                        className={`${base} ${signupType === 'business' && selected}`}
                         onClick={() => {
-                            setLoginType('business')
+                            setSignupType('business')
                         }}
                     >
                         Business
                     </button>
                     <button
                         type="button"
-                        className={`${base} ${loginType === 'staff' && selected}`}
+                        className={`${base} ${signupType === 'staff' && selected}`}
                         onClick={() => {
-                            setLoginType('staff')
+                            setSignupType('staff')
                         }}
                     >
                         Staff
                     </button>
                 </nav>
-                {loginType === 'business' && <BusinessLoginForm />}
-                {loginType === 'staff' && <StaffLoginForm />}
+                {signupType === 'business' && <BusinessSignupForm />}
+                {signupType === 'staff' && <StaffSignupForm />}
             </section>
         </main>
 
     );
 };
 
-export default Login
+export default Signup;

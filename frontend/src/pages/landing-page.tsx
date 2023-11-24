@@ -1,31 +1,22 @@
 // import img from '../assets/3992745.jpg';
 
-import { createPortal } from "react-dom";
-import Signup from "./signp";
-import { useState } from "react";
+import { NavLink } from 'react-router-dom'
 
 export default function LandingPage() {
-  const [showModelSignup, setShoeModelSignup] = useState(false);
-
   return (
     <main className="bg-background">
       <nav className="bg-fill px-[5%] py-[2.5%] md:px-[7.5%] w-full sticky top-0 bg-transparent backdrop-blur-[2px] shadow-lg">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-primary">EasyLedger</h1>
           <div>
-            {/* <NavLink to="/login"> */}
-            <button
-              type="submit"
-              className="px-8 py-3 text-base transition bg-black rounded-md text-slate-100 hover:bg-slate-900 hover:bg-opacity-90 font-semibolds"
-              onClick={() => setShoeModelSignup(true)}
-            >
-              Sign In
-            </button>
-            {showModelSignup &&
-              createPortal(
-                <Signup close={() => setShoeModelSignup(false)} />,
-                document.body
-              )}
+            <NavLink to="/login">
+              <button
+                type="submit"
+                className="cursor-pointer px-8 py-3 text-base transition bg-black rounded-md text-slate-100 hover:bg-slate-900 hover:bg-opacity-90 font-semibolds"
+              >
+                Sign In
+              </button>
+            </NavLink>
           </div>
         </div>
       </nav>
@@ -43,14 +34,14 @@ export default function LandingPage() {
             journey with confidence.
           </p>
           <div>
-            {/* <NavLink to="/signup"> */}
-            <button
-              type="submit"
-              className="px-8 py-3 text-lg font-semibold text-white transition rounded-md bg-primary hover:bg-blue-700 hover:bg-opacity-90"
-            >
-              Get Started Today
-            </button>
-            {/* </NavLink> */}
+            <NavLink to="/signup">
+              <button
+                type="submit"
+                className="px-8 py-3 text-lg font-semibold text-white transition rounded-md bg-primary hover:bg-blue-700 hover:bg-opacity-90"
+              >
+                Get Started Today
+              </button>
+            </NavLink>
           </div>
         </div>
       </section>
