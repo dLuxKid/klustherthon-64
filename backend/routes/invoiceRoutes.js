@@ -28,7 +28,7 @@ invoiceRouter.post(
             message:"New Invoice Created"
         })
         }catch(err){
-            res.status(400).status({
+            res.status(400).send({
                 message:"An error occured"
             })
         }

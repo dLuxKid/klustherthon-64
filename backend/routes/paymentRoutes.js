@@ -29,7 +29,7 @@ paymentRouter.post(
 
             });
             const payment = await newPayment.save();
-            res.status(201).send({message:"New Payment Created"},payment);
+            res.status(201).send({payment,message:"New Payment Created"});
         }catch(err){
             res.status(400).send({message:"Payment Creation Failed"});
         }
@@ -43,11 +43,11 @@ paymentRouter.put(
         if(payment){
             try{
             payment.name = req.body.name;
-            payment.notes = req.body.email;
+            payment.notes = req.body.notes;
             payment.amount = req.body.amount;
             
             const updatedPayment = await payment.save(); 
-            res.status(201).send({message:"Payment Create Successfully."});
+            res.status(201).send({updatedPayment,message:"Payment Update Successfully."});
             }catch(err){
                 res.status(400).send({message:"Payment Failed to update."});
             }
