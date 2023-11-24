@@ -5,7 +5,7 @@ import Invoice from "../Models/Invoice.js";
 const invoiceRouter = express.Router();
 
 invoiceRouter.get(
-    '/',
+    '/all',
     // isAuth,
     expressAsyncHandler(async(req,res)=>{
         console.log("here");
@@ -20,7 +20,7 @@ invoiceRouter.post(
                 email:req.body.email,
                 amount:req.body.amount,
                 paymentStatus:req.body.paymentStatus,
-                paymentType:req.body.paymentType
+                paymentType:req.body.paymentType,
             })
             console.log(newInvoice);
             const invoice = await newInvoice.save();
