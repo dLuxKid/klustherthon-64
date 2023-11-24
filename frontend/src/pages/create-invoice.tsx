@@ -68,7 +68,7 @@ export default function CreateNewInvoice() {
 
     return (
         <div className="w-full h-screen flex items-center justify-center">
-            <form onSubmit={createInvoice} className="invoice-form">
+            <form onSubmit={createInvoice} className="form">
                 <label>
                     <p>Name</p>
                     <input
@@ -149,7 +149,6 @@ export default function CreateNewInvoice() {
                 </label>
 
                 <button type="submit" className="w-full bg-primary hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4" onClick={createInvoice}>Create Invoice</button>
-
             </form>
         </div >
     )
