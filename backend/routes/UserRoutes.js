@@ -1,7 +1,7 @@
 import express from "express"
 //  import user model 
 import bcrypt from 'bcryptjs';
-import {generateToken,isAuth} from "..utils.js";
+// import {generateToken,isAuth} from "..utils.js";
 import expressAyncHandler from "express-async-handler";
 
 const userRouter = express.Router();
@@ -40,8 +40,10 @@ userRouter.post(
 );
 userRouter.put(
     "/profile",
-    isAuth,
+    // isAuth,
     expressAyncHandler(async(req,res)=>{
         // this will update business and staff
     })
 )
+
+export default userRouter

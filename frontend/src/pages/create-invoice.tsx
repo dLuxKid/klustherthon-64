@@ -34,10 +34,39 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
         dispatch({ name: e.target.name, value: e.target.value })
     }
 
-    const createInvoice = (e: React.FormEvent) => {
-        e.preventDefault()
-        console.log(state)
-    }
+    const createInvoice = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const apiUrl = 'http://localhost:5000/api/invoices/create'
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "title": initialState.name,
+                    "email": initialState.email,
+                    "amount": initialState.price,
+                    "paymentStatus": initialState.paymentStatus,
+                    "paymentType": initialState.paymentType,
+
+
+                }),
+            });
+
+            if (response.ok) {
+                console.log('Data successfully sent to the server');
+                // Handle success, e.g., show a success message or redirect
+            } else {
+                console.error('Failed to send data to the server');
+                // Handle error, e.g., show an error message to the user
+            }
+        } catch (error) {
+            console.error('Error sending data:', error);
+            // Handle network errors or other issues
+        }
+    };
+
 
 
     return (
@@ -53,7 +82,7 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                         type="name"
                         onChange={handleChange}
                         value={state.name}
-                        name="email"
+                        name="name"
                     />
                 </label>
                 <label>
