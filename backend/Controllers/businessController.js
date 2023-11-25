@@ -2,6 +2,7 @@ import expressAsyncHandler from "express-async-handler";
 import Business from "../Models/Business.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils.js";
+import Staff from "../Models/Staff.js";
 
 export const businessSignup = expressAsyncHandler(async (req, res) => {
   try {
@@ -19,6 +20,7 @@ export const businessSignup = expressAsyncHandler(async (req, res) => {
       password: bcrypt.hashSync(req.body.password),
       isBusiness: true,
     });
+
     const business = await newBusiness.save();
     if (business.validationError) {
       return res.status(400).send({
@@ -26,6 +28,17 @@ export const businessSignup = expressAsyncHandler(async (req, res) => {
         errors: business.validationError.errors,
       });
     }
+    var transport = nodemailer.createTransport({
+      host: "sandbox.smtp.mailtrap.io",
+      port: 2525,
+      auth: {
+        user: "7409abb299c423",
+        pass: "b1cc8646397ece",
+      },
+    });
+
+    transport;
+
     res.status(201).send({
       message: "New business succesfully created",
     });
@@ -65,5 +78,20 @@ export const businessSignin = expressAsyncHandler(async (req, res) => {
 });
 
 export const verifyStaff = expressAsyncHandler(async (req, res) => {
-  TODO; //this function will verify staff
+  const { businessId, staffId } = req.body;
+
+  try {
+    const staff = await Staff.findById(staffId);
+
+    if (staff.business.toString() !== businessId) {
+      return res.status(403).send({ message: "Unauthorized" });
+    }
+
+    staff.isVerified = true;
+    await staff.save();
+
+    res.status(200).send({ message: "Staff verified successfully" });
+  } catch (err) {
+    res.status(500).send({ message: "An error occurred" });
+  }
 });
