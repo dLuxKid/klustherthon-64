@@ -3,57 +3,52 @@ import mongoose from "mongoose";
 const staffSchema = new mongoose.Schema({
     name: {
         type: String,
-        type: required
-    },
-    email: {
-        type: String,
-        type: required
+        required: true
     },
     staffId: {
         type: String,
-        type: required,
+        required: true,
     },
     email: {
         type: String,
-        type: required,
-        unique: true
-    },
-    staffId: {
-        type: String,
-        required:true,
+        required: true,
         unique: true
     },
     department: {
         type: String,
-        required:true,
+        required: true,
     },
     staffId: {
         type: String,
-        required:true,
+        required: true,
     },
     password: {
         type: String,
-        required:true,
+        required: true,
     },
-    preferredUsername: {
+    userName: {
         type: String,
-        required:true,
+        required: true,
     },
     managerName: {
         type: String,
-        required:true,
+        required: true,
+    },
+    isVerified: {
+        type: Boolean,
+        required: true
     },
     isBusiness: {
         type: String,
-        type: required
+        required: true
     },
-    business:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Business",
-        required:true
+    business: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Business",
+        required: true
     }
 })
 
-const Staff = mongoose.model("Staff",staffSchema);
+const Staff = mongoose.model("Staff", staffSchema);
 
 export default Staff;
