@@ -10,7 +10,6 @@ const BusinessLoginForm = () => {
   //   type singup = InferType<typeof validationSchema>;
   const input = 'w-full px-4 h-[45px] rounded outline-none border-none text-text text-base font-normal'
 
-
   return (
     <>
       <Formik
@@ -36,7 +35,6 @@ const BusinessLoginForm = () => {
               placeholder="Admin Email"
               required
             />
-            <ErrorMessage name="email" component="div" />
             <Field
               type="password"
               name="password"

@@ -12,8 +12,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  /* outline: 1px solid red; */
+}
+
 .form {
-  @apply w-full max-w-3xl my-14 mx-auto p-10 bg-background rounded-lg shadow-lg border border-white flex items-stretch justify-center flex-col gap-4;
+  @apply w-full max-w-2xl my-14 mx-auto p-10 bg-background rounded-lg shadow-lg border border-white flex items-stretch justify-center flex-col gap-4;
 }
 
 .form label {
@@ -33,4 +37,10 @@ select {
 
 select option {
   @apply text-base font-normal;
+}
+
+button:active,
+button:focus {
+  border: 0;
+  outline: none;
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { AiFillCaretRight } from "react-icons/ai";
-import { BsPeopleFill } from "react-icons/bs";
+import { BsCash, BsPeopleFill } from "react-icons/bs";
 import { FaChartBar, FaFileInvoice } from "react-icons/fa";
 
 
@@ -12,6 +12,10 @@ const links = [
         name: "invoices",
         icon: <FaFileInvoice />,
     },
+    {
+        name: "payments",
+        icon: <BsCash />
+    }
 ];
 
 export default function SideNavbar() {

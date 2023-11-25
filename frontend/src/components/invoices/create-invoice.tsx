@@ -1,15 +1,16 @@
 import React, { useReducer } from "react"
 
 import { MdCancel } from "react-icons/md";
+import { toast } from "sonner";
 
 const initialState = {
     name: '',
     email: '',
-    price: 300,
+    amount: 300,
     paymentStatus: '',
     paymentType: '',
-    periodicPayment: 0,
-    installmentalPaymentAmount: 0
+    periodicPayment: 0, // optional
+    installmentalPaymentAmount: 0 // optional
 }
 
 const paymentStatus_options: Array<{ value: string, label: string }> = [
@@ -36,6 +37,10 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
 
     const createInvoice = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!initialState.amount || !initialState.email || !initialState.name || !initialState.paymentStatus || !initialState.paymentType)
+            return toast.error('Please fill all values')
+
         const apiUrl = 'http://localhost:5000/api/invoices/create'
         try {
             const response = await fetch(apiUrl, {
@@ -46,31 +51,30 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                 body: JSON.stringify({
                     "title": initialState.name,
                     "email": initialState.email,
-                    "amount": initialState.price,
+                    "amount": initialState.amount,
                     "paymentStatus": initialState.paymentStatus,
                     "paymentType": initialState.paymentType,
-
-
                 }),
             });
 
             if (response.ok) {
-                console.log('Data successfully sent to the server');
+                toast.success('invoice successfully created')
+                console.log('Data successfully sent to the server', await response.json());
                 // Handle success, e.g., show a success message or redirect
             } else {
                 console.error('Failed to send data to the server');
+                toast.error('Error creating invoice');
                 // Handle error, e.g., show an error message to the user
             }
         } catch (error) {
             console.error('Error sending data:', error);
+            toast.error('Error creating invoice');
             // Handle network errors or other issues
         }
     };
 
-
-
     return (
-        <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-black/80 z-50">
+        <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
             <form onSubmit={createInvoice} className="form relative">
                 <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenModal(false)}>
                     <MdCancel />
@@ -96,13 +100,13 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                     />
                 </label>
                 <label >
-                    <p>Price</p>
+                    <p>Amount</p>
                     <input
                         required
                         type="number"
                         onChange={handleChange}
-                        value={state.paymentType !== 'installment' ? '300' : state.price}
-                        name="price"
+                        value={state.paymentType !== 'installment' ? '300' : state.amount}
+                        name="amount"
                         readOnly={state.paymentType !== 'installment'}
                     />
                 </label>
@@ -170,7 +174,7 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                     </div>
                 </label>
 
-                <button type="submit" className="w-full bg-primary hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4" onClick={createInvoice}>Create Invoice</button>
+                <button type="submit" className="w-full bg-primary  disabled:bg-slate-600 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4" onClick={createInvoice}>Create Invoice</button>
             </form>
         </div>
     )

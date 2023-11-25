@@ -1,6 +1,6 @@
-import { UpdateInvoice, DeleteInvoice } from './buttons';
+import { formatCurrency, formatDateToLocal } from '../../utils/formatter';
+import { DeleteBtn, UpdateBtn } from '../buttons';
 import InvoiceStatus from './invoice-status';
-import { formatDateToLocal, formatCurrency } from '../../utils/formatter';
 
 const invoices = [
     {
@@ -87,6 +87,7 @@ const invoices = [
 
 
 export default function InvoicesTable() {
+
     return (
         <div className="mt-6 flow-root">
             <div className="inline-block min-w-full align-middle">
@@ -100,25 +101,25 @@ export default function InvoicesTable() {
                                 <div className="flex items-center justify-between border-b pb-4">
                                     <div>
                                         <div className="mb-2 flex items-center">
-                                            <div
+                                            {/* <div
                                                 className="mr-2 rounded-full w-7 h-7 bg-slate-600"
-                                            />
-                                            <p>{invoice.name}</p>
+                                            /> */}
+                                            <p className="text-base font-semibold text-black">{invoice.name}</p>
                                         </div>
-                                        <p className="text-sm text-gray-500">{invoice.email}</p>
+                                        <p className="text-sm text-text">{invoice.email}</p>
                                     </div>
                                     <InvoiceStatus status={invoice.status} />
                                 </div>
                                 <div className="flex w-full items-center justify-between pt-4">
-                                    <div>
+                                    <div className='text-text'>
                                         <p className="text-xl font-medium">
                                             {formatCurrency(invoice.amount)}
                                         </p>
                                         <p>{formatDateToLocal(invoice.date)}</p>
                                     </div>
                                     <div className="flex justify-end gap-2">
-                                        <UpdateInvoice id={invoice.id} />
-                                        <DeleteInvoice id={invoice.id} />
+                                        <UpdateBtn id={invoice.id} />
+                                        <DeleteBtn id={invoice.id} />
                                     </div>
                                 </div>
                             </div>
@@ -155,28 +156,28 @@ export default function InvoicesTable() {
                                 >
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                         <div className="flex items-center gap-3">
-                                            <div
+                                            {/* <div
                                                 className="mr-2 rounded-full w-7 h-7 bg-slate-600"
-                                            />
-                                            <p>{invoice.name}</p>
+                                            /> */}
+                                            <p className="text-base font-semibold text-black">{invoice.name}</p>
                                         </div>
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-3">
+                                    <td className="whitespace-nowrap px-3 py-3 text-text">
                                         {invoice.email}
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-3">
+                                    <td className="whitespace-nowrap px-3 py-3 text-text">
                                         {formatCurrency(invoice.amount)}
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-3">
+                                    <td className="whitespace-nowrap px-3 py-3 text-text">
                                         {formatDateToLocal(invoice.date)}
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-3">
+                                    <td className="whitespace-nowrap px-3 py-3 text-text">
                                         <InvoiceStatus status={invoice.status} />
                                     </td>
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                         <div className="flex justify-end gap-3">
-                                            <UpdateInvoice id={invoice.id} />
-                                            <DeleteInvoice id={invoice.id} />
+                                            <UpdateBtn id={invoice.id} />
+                                            <DeleteBtn id={invoice.id} />
                                         </div>
                                     </td>
                                 </tr>
