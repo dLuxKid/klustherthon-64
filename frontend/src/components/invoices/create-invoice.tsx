@@ -1,12 +1,16 @@
 import React, { useReducer } from "react"
 
+import { MdCancel } from "react-icons/md";
+import { toast } from "sonner";
+
 const initialState = {
     name: '',
     email: '',
-    price: '',
+    amount: 300,
     paymentStatus: '',
     paymentType: '',
-    periodicPayment: '',
+    periodicPayment: 0, // optional
+    installmentalPaymentAmount: 0 // optional
 }
 
 const paymentStatus_options: Array<{ value: string, label: string }> = [
@@ -24,7 +28,7 @@ const invoiceReducer = (state: typeof initialState, action: { name: string, valu
     return { ...state, [action.name]: action.value }
 }
 
-export default function CreateNewInvoice() {
+export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [state, dispatch] = useReducer(invoiceReducer, initialState)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -33,6 +37,10 @@ export default function CreateNewInvoice() {
 
     const createInvoice = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!initialState.amount || !initialState.email || !initialState.name || !initialState.paymentStatus || !initialState.paymentType)
+            return toast.error('Please fill all values')
+
         const apiUrl = 'http://localhost:5000/api/invoices/create'
         try {
             const response = await fetch(apiUrl, {
@@ -43,32 +51,34 @@ export default function CreateNewInvoice() {
                 body: JSON.stringify({
                     "title": initialState.name,
                     "email": initialState.email,
-                    "amount": initialState.price,
+                    "amount": initialState.amount,
                     "paymentStatus": initialState.paymentStatus,
                     "paymentType": initialState.paymentType,
-
-
                 }),
             });
 
             if (response.ok) {
-                console.log('Data successfully sent to the server');
+                toast.success('invoice successfully created')
+                console.log('Data successfully sent to the server', await response.json());
                 // Handle success, e.g., show a success message or redirect
             } else {
                 console.error('Failed to send data to the server');
+                toast.error('Error creating invoice');
                 // Handle error, e.g., show an error message to the user
             }
         } catch (error) {
             console.error('Error sending data:', error);
+            toast.error('Error creating invoice');
             // Handle network errors or other issues
         }
     };
 
-
-
     return (
-        <div className="w-full h-screen flex items-center justify-center">
-            <form onSubmit={createInvoice} className="form">
+        <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
+            <form onSubmit={createInvoice} className="form relative">
+                <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenModal(false)}>
+                    <MdCancel />
+                </div>
                 <label>
                     <p>Name</p>
                     <input
@@ -90,13 +100,14 @@ export default function CreateNewInvoice() {
                     />
                 </label>
                 <label >
-                    <p>Price</p>
+                    <p>Amount</p>
                     <input
                         required
                         type="number"
                         onChange={handleChange}
-                        value={state.price}
-                        name="price"
+                        value={state.paymentType !== 'installment' ? '300' : state.amount}
+                        name="amount"
+                        readOnly={state.paymentType !== 'installment'}
                     />
                 </label>
                 <label>
@@ -130,7 +141,10 @@ export default function CreateNewInvoice() {
                                             type="radio"
                                             value={item.value}
                                             checked={state.paymentType === item.value}
-                                            onChange={() => dispatch({ name: 'paymentType', value: item.value })}
+                                            onChange={() => {
+                                                dispatch({ name: 'paymentType', value: item.value })
+                                                if (state.paymentType !== 'single') dispatch({ name: 'periodicPayment', value: '1' })
+                                            }}
                                             className="cursor-pointer appearance-none checked:bg-black checked:border-none focus:outline-none"
                                         />
                                     </div>
@@ -139,17 +153,29 @@ export default function CreateNewInvoice() {
 
                             ))}
                     </div>
-                    {state.paymentType && state.paymentType !== 'single' &&
-                        <select value={state.periodicPayment} onChange={handleChange} >
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="yearly">Yearly</option>
-                        </select>
-                    }
+                    <div className="flex gap-4 items-center justify-start">
+                        {state.paymentType !== 'single' &&
+                            <select value={state.periodicPayment} onChange={handleChange} name="periodicPayment" >
+                                <option value={1}>Daily</option>
+                                <option value={2}>Weekly</option>
+                                <option value={3}>Monthly</option>
+                                <option value={4}>Yearly</option>
+                            </select>
+                        }
+                        {state.paymentType === 'installment' &&
+                            <input
+                                required
+                                type="number"
+                                onChange={handleChange}
+                                value={state.installmentalPaymentAmount}
+                                name="installmentalPaymentAmount"
+                            />
+                        }
+                    </div>
                 </label>
 
-                <button type="submit" className="w-full bg-primary hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4" onClick={createInvoice}>Create Invoice</button>
+                <button type="submit" className="w-full bg-primary  disabled:bg-slate-600 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4" onClick={createInvoice}>Create Invoice</button>
             </form>
-        </div >
+        </div>
     )
 }

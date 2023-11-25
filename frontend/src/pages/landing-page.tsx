@@ -1,4 +1,4 @@
-// import img from '../assets/3992745.jpg';
+import img from '../assets/illustration.png';
 
 import { NavLink } from 'react-router-dom'
 
@@ -20,10 +20,10 @@ export default function LandingPage() {
           </div>
         </div>
       </nav>
-      <section className="p-[5%] md:p-[7.5%] bg-fill min-h-[80vh] w-full bg-center bg-cover bg-no-repeat flex justify-start items-center relative">
-        <div className="flex flex-col gap-4 sm:gap-6 md:gap-10 w-[90%] max-w-3xl">
+      <section className="p-[5%] py-16 md:p-[7.5%] bg-white min-h-screen w-full flex flex-col-reverse md:flex-row justify-between gap-8 items-center">
+        <div className="flex flex-col gap-4 sm:gap-6 md:gap-10 w-full md:w-[50%] max-w-3xl">
           <h1 className="text-3xl font-bold text-black">
-            Effortless Bookkeeping for Small Businesses
+            Effortless Book Keeping for Small Businesses
           </h1>
           <p className="text-base font-medium md:text-lg text-text">
             Simplify your financial management with EasyLedger, where creating
@@ -43,6 +43,9 @@ export default function LandingPage() {
               </button>
             </NavLink>
           </div>
+        </div>
+        <div className='w-full md:w-[50%]'>
+          <img src={img} alt="illustration of bookkeeping" className='object-contain object-center' />
         </div>
       </section>
       <section className=" p-[5%] md:p-[7.5%] py-[10%] bg-natural flex justify-center items-center w-full">

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { AiFillCaretRight } from "react-icons/ai";
-import { BsPeopleFill } from "react-icons/bs";
+import { BsCash, BsPeopleFill } from "react-icons/bs";
 import { FaChartBar, FaFileInvoice } from "react-icons/fa";
 
 
@@ -12,6 +12,10 @@ const links = [
         name: "invoices",
         icon: <FaFileInvoice />,
     },
+    {
+        name: "payments",
+        icon: <BsCash />
+    }
 ];
 
 export default function SideNavbar() {
@@ -38,7 +42,7 @@ export default function SideNavbar() {
     return (
         <div
             className={`${activeMenu ? "w-72" : "w-8"} ${screenSize <= 976 ? "fixed" : "relative"
-                } bg-background shadow-md shadow-text duration-300 z-50`}
+                } bg-background shadow-md shadow-text duration-300 z-50 h-screen`}
         >
             {screenSize <= 976 ? (
                 <div
@@ -52,7 +56,7 @@ export default function SideNavbar() {
                 </div>
             ) : null}
             <div
-                className={`pl-10 pr-4 py-8 md:pt-16  h-screen w-full duration-350 transition-all  ${!activeMenu && "scale-0"
+                className={`pl-10 pr-4 py-8 md:pt-16 h-screen w-full duration-350 transition-all  ${!activeMenu && "scale-0"
                     }`}
             >
                 <div className="flex flex-col items-center justify-between gap-8 h-full">

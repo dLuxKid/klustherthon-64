@@ -2,17 +2,20 @@ import { Outlet, Route, Routes } from "react-router-dom"
 
 import SideNavbar from "./components/side-navbar"
 
-import CreateNewInvoice from "./pages/create-invoice"
+import { Toaster } from "sonner"
+
 import Customers from "./pages/customers"
 import Dashboard from "./pages/dashboard"
 import Invoices from "./pages/invoices"
 import LandingPage from "./pages/landing-page"
 import Login from "./pages/login"
+import Payments from "./pages/payments"
 import Signup from "./pages/signup"
 
 function App() {
   return (
     <>
+      <Toaster richColors position="top-right" />
       <Routes>
         {/* unauthenticated routes */}
         <Route path="/" element={<LandingPage />} />
@@ -31,11 +34,9 @@ function App() {
           </div>
         }>
           <Route path="" element={<Dashboard />} />
-          <Route path="/dashboard/invoices" element={<Outlet />} >
-            <Route path="" element={<Invoices />} />
-            <Route path="create" element={<CreateNewInvoice />} />
-          </Route>
+          <Route path="invoices" element={<Invoices />} />
           <Route path="customers" element={<Customers />} />
+          <Route path="payments" element={<Payments />} />
         </Route>
       </Routes >
     </>
