@@ -1,33 +1,32 @@
 import { useState } from "react";
 
 import { CreateBtn } from "../components/buttons";
-import InvoicesTable from "../components/invoices/invoice-table";
+import CreateNewPayment from "../components/payments/create-payment";
+import PaymentTable from "../components/payments/payment-table";
 import Search from "../components/search";
-import CreateNewInvoice from "../components/invoices/create-invoice";
 
 
-export default function Invoices() {
+export default function Payments() {
     const [openModal, setOpenModal] = useState<boolean>(false)
 
     return (
         <div className="w-full">
             <div className="w-full">
                 <div className="flex w-full items-center justify-between">
-                    <h1 className={'text-black text-2xl font-semibold uppercase'}>Invoices</h1>
+                    <h1 className={'text-black text-2xl font-semibold uppercase'}>Payments</h1>
                 </div>
                 <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-                    <Search placeholder="Search invoices..." />
-                    <CreateBtn setOpenModal={setOpenModal} text="Create Invoice" />
+                    <Search placeholder="Search Payments..." />
+                    <CreateBtn setOpenModal={setOpenModal} text="Create Payment" />
                 </div>
                 {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
                         <Table query={query} currentPage={currentPage} />
                     </Suspense> */}
             </div>
             <div className="w-full">
-                <InvoicesTable />
+                <PaymentTable />
             </div>
-            {openModal && <CreateNewInvoice setOpenModal={setOpenModal} />}
+            {openModal && <CreateNewPayment setOpenModal={setOpenModal} />}
         </div>
-
     )
 }

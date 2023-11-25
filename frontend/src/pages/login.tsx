@@ -10,8 +10,8 @@ const Login = () => {
     const selected = "text-text border-primary border-b-2";
 
     return (
-        <main className="w-full min-h-screen flex items-center justify-center bg-black/70">
-            <section className="w-[90%] max-w-3xl my-14 mx-auto p-10 bg-background rounded-lg shadow-lg border border-white flex items-stretch justify-center flex-col gap-4">
+        <main className="w-full min-h-screen flex items-center justify-center bg-white/10">
+            <section className="w-[90%] max-w-2xl my-14 mx-auto p-10 bg-background rounded-lg shadow-lg border border-white flex items-stretch justify-center flex-col gap-4">
                 <nav className="inline-flex items-center justify-around w-full gap-4 pt-5">
                     <button
                         type="button"

@@ -13,7 +13,7 @@ paymentRouter.get(
       res.status(200).send(payments);
     } catch (err) {
       res.status(400).send({
-        message: "An error occured",
+        message: "Error fetching payments",
       });
     }
   })

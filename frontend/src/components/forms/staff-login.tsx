@@ -36,7 +36,6 @@ const StaffLoginForm = () => {
                             placeholder="Staff Email"
                             required
                         />
-                        <ErrorMessage name="email" component="div" />
                         <Field
                             type="password"
                             name="password"
