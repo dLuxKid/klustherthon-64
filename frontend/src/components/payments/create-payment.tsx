@@ -2,6 +2,7 @@ import React, { useReducer, useState } from "react"
 
 import { MdCancel } from "react-icons/md";
 import { toast } from "sonner";
+import Loader from "../loader";
 
 const initialState = {
     name: '',
@@ -28,7 +29,10 @@ export default function CreateNewPayment({ setOpenModal }: { setOpenModal: React
         e.preventDefault();
         setLoading(true)
 
-        if (!state.amount || !state.description || !state.name) return toast.error('Please fill all values')
+        if (!state.amount || !state.description || !state.name) {
+            setLoading(false)
+            return toast.error('Please fill all values')
+        }
 
         const apiUrl = 'http://localhost:5000/api/payments/create'
         try {
@@ -111,7 +115,14 @@ export default function CreateNewPayment({ setOpenModal }: { setOpenModal: React
                         name="amount"
                     />
                 </label>
-                <button disabled={loading} type="submit" className="w-full bg-primary disabled:bg-slate-600 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4" onClick={createInvoice}>Create Payment</button>
+                <button
+                    disabled={loading}
+                    type="submit"
+                    className="w-full bg-primary disabled:bg-gray-500 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4 flex items-center justify-center"
+                    onClick={createInvoice}
+                >
+                    {loading ? <Loader /> : 'Create Payment'}
+                </button>
             </form>
         </div>
     )
