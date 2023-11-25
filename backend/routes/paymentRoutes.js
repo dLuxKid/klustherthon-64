@@ -9,9 +9,11 @@ paymentRouter.get(
   "/all",
   expressAsyncHandler(async (req, res) => {
     try {
-      const payments = Payment.find();
+      const payments = await Payment.find();
+      console.log(payments);
       res.status(200).send(payments);
     } catch (err) {
+      console.log(err);
       res.status(400).send({
         message: "Error fetching payments",
       });
