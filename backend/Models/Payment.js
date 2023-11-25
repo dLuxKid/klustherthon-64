@@ -12,6 +12,11 @@ const paymentSchema = new mongoose.Schema({
     amount: {
         type: Number,
         required: true
+    },
+    business: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Business",
+        required: true
     }
 });
 
