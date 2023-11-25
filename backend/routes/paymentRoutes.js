@@ -10,12 +10,10 @@ paymentRouter.get(
   expressAsyncHandler(async (req, res) => {
     try {
       const payments = await Payment.find();
-      console.log(payments);
       res.status(200).send(payments);
     } catch (err) {
-      console.log(err);
       res.status(400).send({
-        message: "An error occured",
+        message: "Error fetching payments",
       });
     }
   })
