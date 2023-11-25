@@ -1,7 +1,11 @@
 import { Formik, Form, Field } from "formik";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import * as Yup from "yup";
 
 const BusinessSignupForm = () => {
+  const navigate = useNavigate()
+
   const validationSchema = Yup.object({
     businessName: Yup.string().required(),
     businessType: Yup.string().required(),
@@ -41,13 +45,42 @@ const BusinessSignupForm = () => {
           confirmPassword: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log('Form submitted with values', values)
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-
-            setSubmitting(false);
-          }, 400);
+        onSubmit={async (values, { setSubmitting }) => {
+          setSubmitting(true)
+          try {
+            const res = await fetch('http://localhost:5000/api/users/business/signup', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                'businessName': values.businessName,
+                'businessType': values.businessType,
+                'businessRegNo': values.businessRegNo,
+                'businessAddress': values.businessAddress,
+                'industry': values.industry,
+                'administratorFullName': values.adminName,
+                'administratorPosition': values.adminPosition,
+                'administratorEmail': values.adminEmail,
+                'administratorPhoneNo': values.adminPhone,
+                'userName': values.username,
+                'password': values.password,
+              }),
+            })
+            console.log(res)
+            console.log(await res.json())
+            if (res.ok) {
+              toast.success('Business succesfully registered')
+              navigate('/dashboard')
+              setSubmitting(false)
+            } else {
+              toast.error('Error registering business')
+              setSubmitting(false)
+            }
+          } catch (error) {
+            toast.error('Error registering business')
+            setSubmitting(false)
+          }
         }}
       >
         {({ isSubmitting }) => (
@@ -75,7 +108,7 @@ const BusinessSignupForm = () => {
             />
             <Field
               type="text"
-              name="businessAdress"
+              name="businessAddress"
               className={input}
               placeholder="Business Address"
               required
@@ -140,7 +173,7 @@ const BusinessSignupForm = () => {
 
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
+              className="w-full bg-primary disabled:bg-gray-600 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
               disabled={isSubmitting}
             >
               Create Account

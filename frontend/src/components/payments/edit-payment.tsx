@@ -1,27 +1,36 @@
-import React, { useReducer, useState } from "react"
+import React, { useReducer, useState } from "react";
 
 import { MdCancel } from "react-icons/md";
+
 import { toast } from "sonner";
+
+import { paymentType } from "../../pages/payments";
+
 import Loader from "../loader";
 
-const initialState = {
-    name: '',
-    description: '',
-    amount: ''
+type initialStateType = {
+    name: string
+    description: string,
+    amount: string
 }
 
-const invoiceReducer = (state: typeof initialState, action: { name: string, value: string }) => {
+const invoiceReducer = (state: initialStateType, action: { name: string, value: string }) => {
     return { ...state, [action.name]: action.value }
 }
 
 type Props = {
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+    setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>
     fetchPayments: () => void
+    payment: paymentType
 }
 
-export default function CreateNewPayment({ setOpenModal, fetchPayments }: Props) {
+export default function EditPayment({ setOpenEditModal, fetchPayments, payment }: Props) {
 
-    const [state, dispatch] = useReducer(invoiceReducer, initialState)
+    const [state, dispatch] = useReducer(invoiceReducer, {
+        name: payment.name,
+        description: payment.notes,
+        amount: payment.amount.toString()
+    })
 
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -29,7 +38,7 @@ export default function CreateNewPayment({ setOpenModal, fetchPayments }: Props)
         dispatch({ name: e.target.name, value: e.target.value })
     }
 
-    const createInvoice = async (e: React.FormEvent) => {
+    const editPayment = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true)
 
@@ -38,7 +47,8 @@ export default function CreateNewPayment({ setOpenModal, fetchPayments }: Props)
             return toast.error('Please fill all values')
         }
 
-        const apiUrl = 'http://localhost:5000/api/payments/create'
+        const apiUrl = `http://localhost:5000/api/payments/${payment._id}/update`
+
         try {
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -53,25 +63,23 @@ export default function CreateNewPayment({ setOpenModal, fetchPayments }: Props)
             });
 
 
-
             if (response.ok) {
-                toast.success('Payment successfully created')
+                toast.success('Payment successfully updated')
                 fetchPayments()
                 setTimeout(() => {
                     setLoading(false)
-                    setOpenModal(false)
+                    setOpenEditModal(false)
                 }, 500);
-                console.log('Data successfully sent to the server', response);
             } else {
                 console.error('Failed to send data to the server');
-                toast.error('Error creating payment');
+                toast.error('Error updating payment');
                 setTimeout(() => {
                     setLoading(false)
                 }, 500);
             }
         } catch (error) {
             console.error('Error sending data:', error);
-            toast.error('Error creating invoice');
+            toast.error('Error updating payment');
             setTimeout(() => {
                 setLoading(false)
             }, 500);
@@ -84,8 +92,8 @@ export default function CreateNewPayment({ setOpenModal, fetchPayments }: Props)
 
     return (
         <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
-            <form onSubmit={createInvoice} className="form relative">
-                <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenModal(false)}>
+            <form onSubmit={editPayment} className="form relative">
+                <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenEditModal(prev => !prev)}>
                     <MdCancel />
                 </div>
                 <label>
@@ -124,9 +132,9 @@ export default function CreateNewPayment({ setOpenModal, fetchPayments }: Props)
                     disabled={loading}
                     type="submit"
                     className="w-full bg-primary disabled:bg-gray-500 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4 flex items-center justify-center"
-                    onClick={createInvoice}
+                    onClick={editPayment}
                 >
-                    {loading ? <Loader /> : 'Create Payment'}
+                    {loading ? <Loader /> : 'Update Payment'}
                 </button>
             </form>
         </div>

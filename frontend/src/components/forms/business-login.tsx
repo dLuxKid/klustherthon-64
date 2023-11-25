@@ -1,7 +1,11 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import * as Yup from "yup";
 
 const BusinessLoginForm = () => {
+  const navigate = useNavigate()
+
   const validationSchema = Yup.object({
     email: Yup.string().required(),
     password: Yup.string().min(8).max(20).required(),
@@ -18,12 +22,35 @@ const BusinessLoginForm = () => {
           password: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit={async (values, { setSubmitting }) => {
+          setSubmitting(true)
+          try {
+            const res = await fetch('http://localhost:5000/api/users/business/signin', {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                'administratorEmail': values.email,
+                'password': values.password
+              })
+            })
+            console.log(res)
+            console.log(await res.json())
 
-            setSubmitting(false);
-          }, 400);
+            if (res.ok) {
+              toast.success('Welcome back')
+              navigate('/dashboard')
+              setSubmitting(false)
+            } else {
+              toast.error('Invalid username or password')
+              setSubmitting(false)
+            }
+
+          } catch (error) {
+            console.log(error)
+            toast.error('Error logging in')
+          }
         }}
       >
         {({ isSubmitting }) => (

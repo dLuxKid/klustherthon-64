@@ -7,7 +7,7 @@ const Signup = () => {
 
     const base =
         "pb-1 text-lg font-medium text-center whitespace-nowrap text-black";
-    const selected = "text-text border-primary border-b-2";
+    const selected = "text-text border-primary border-b-2 font-semibold";
 
     return (
         <main className="w-full min-h-screen flex items-center justify-center bg-white/10">
