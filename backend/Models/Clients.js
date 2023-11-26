@@ -11,7 +11,7 @@ const clientSchema = new mongoose.Schema({
     phoneNumber:{
         type:String
     },
-    Address:{
+    address:{
         type:String
     },
     business:{

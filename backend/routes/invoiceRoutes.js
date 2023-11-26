@@ -6,14 +6,13 @@ import Staff from "../Models/Staff.js";
 const invoiceRouter = express.Router();
 
 invoiceRouter.get(
-  "/all",
-  // isAuth,
-  expressAsyncHandler(async (req, res) => {
-    console.log("here");
-  })
-);
+    '/all',
+    // isAuth,
+    expressAsyncHandler(async(req,res)=>{
+        console.log("here");
+    })
+)
 invoiceRouter.post(
-<<<<<<< HEAD
     '/create',
     expressAsyncHandler(async(req,res)=>{
         try{
@@ -25,7 +24,7 @@ invoiceRouter.post(
                 paymentStatus:req.body.paymentStatus,
                 paymentType:req.body.paymentType,
                 installmentalAmount:req.body.installmentalAmount,
-                business:req.body.businessId
+                business:req.body.business.Id
             })
             console.log(newInvoice);
             const invoice = await newInvoice.save();
@@ -39,30 +38,8 @@ invoiceRouter.post(
         }
        
     })
-=======
-  "/create",
-  expressAsyncHandler(async (req, res) => {
-    try {
-      const newInvoice = new Invoice({
-        title: req.body.title,
-        email: req.body.email,
-        amount: req.body.amount,
-        paymentStatus: req.body.paymentStatus,
-        paymentType: req.body.paymentType,
-      });
-      console.log(newInvoice);
-      const invoice = await newInvoice.save();
-      res.status(201).send({
-        invoice,
-        message: "New Invoice Created",
-      });
-    } catch (err) {
-      res.status(400).send({
-        message: "An error occured",
-      });
-    }
-  })
-);
->>>>>>> 0a23c94c5ae1cfbf912b07baf4405592b0ad4da0
+
+    
+)
 
 export default invoiceRouter;
