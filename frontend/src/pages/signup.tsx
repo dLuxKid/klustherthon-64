@@ -1,9 +1,10 @@
 import { useState } from "react";
+
 import BusinessSignupForm from "../components/forms/business-signup";
 import StaffSignupForm from "../components/forms/staff-signup";
 
 const Signup = () => {
-    const [signupType, setSignupType] = useState<'business' | 'staff'>('business')
+    const [signupAs, setSignupAs] = useState<'business' | 'staff'>('business')
 
     const base =
         "pb-1 text-lg font-medium text-center whitespace-nowrap text-black";
@@ -15,25 +16,25 @@ const Signup = () => {
                 <nav className="inline-flex items-center justify-around w-full gap-4 pt-5">
                     <button
                         type="button"
-                        className={`${base} ${signupType === 'business' && selected}`}
+                        className={`${base} ${signupAs === 'business' && selected}`}
                         onClick={() => {
-                            setSignupType('business')
+                            setSignupAs('business')
                         }}
                     >
                         Business
                     </button>
                     <button
                         type="button"
-                        className={`${base} ${signupType === 'staff' && selected}`}
+                        className={`${base} ${signupAs === 'staff' && selected}`}
                         onClick={() => {
-                            setSignupType('staff')
+                            setSignupAs('staff')
                         }}
                     >
                         Staff
                     </button>
                 </nav>
-                {signupType === 'business' && <BusinessSignupForm />}
-                {signupType === 'staff' && <StaffSignupForm />}
+                {signupAs === 'business' && <BusinessSignupForm />}
+                {signupAs === 'staff' && <StaffSignupForm />}
             </section>
         </main>
 

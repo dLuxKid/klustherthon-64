@@ -52,7 +52,7 @@ export const staffSignin = expressAsyncHandler(async (req, res) => {
     }
   } else {
     res.status(400).send({
-      message: "Wrong email or password ",
+      message: "Invalid email or password ",
     });
   }
 });

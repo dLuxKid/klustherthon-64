@@ -1,15 +1,19 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Field, Form, Formik } from "formik";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import * as Yup from "yup";
+import Loader from "../loader";
 
 const StaffSignupForm = () => {
+
+  const navigate = useNavigate()
+
   const validationSchema = Yup.object({
     businessId: Yup.string().required(),
     fullName: Yup.string().required(),
     email: Yup.string().email(),
-    employeeId: Yup.string().required(),
+    staffId: Yup.string().required(),
     department: Yup.string().required(),
-    position: Yup.string().required(),
-    phoneNo: Yup.number().required(),
     password: Yup.string().min(8).max(20).required(),
     confirmPassword: Yup.string().oneOf(
       [Yup.ref("password")],
@@ -19,7 +23,6 @@ const StaffSignupForm = () => {
     managerName: Yup.string().required(),
   });
 
-  //   type singup = InferType<typeof validationSchema>;
   const input = 'w-full px-4 h-[45px] rounded outline-none border-none text-text text-base font-normal'
 
   return (
@@ -29,25 +32,51 @@ const StaffSignupForm = () => {
           businessId: "",
           fullName: '',
           email: '',
-          employeeId: '',
+          staffId: '',
           department: '',
-          position: '',
-          phoneNo: '',
           password: "",
           confirmPassword: '',
           username: '',
           managerName: ''
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit={async (values, { setSubmitting }) => {
+          setSubmitting(true)
+          try {
+            const res = await fetch('http://localhost:5000/api/users/staff/signup', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                'name': values.fullName,
+                'staffId': values.staffId,
+                'email': values.email,
+                'department': values.department,
+                'password': values.password,
+                'userName': values.username,
+                'managerName': values.managerName,
+                'businessId': values.businessId,
+              }),
+            })
+            const data = await res.json()
+            console.log(data)
 
-            setSubmitting(false);
-          }, 400);
+            if (res.ok) {
+              toast.success('Business succesfully registered')
+              navigate('/dashboard')
+              setSubmitting(false)
+            } else {
+              toast.error(data.message.message)
+              setSubmitting(false)
+            }
+          } catch (error: any) {
+            toast.error(error.message)
+            setSubmitting(false)
+          }
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, values }) => (
           <Form className="flex items-stretch justify-center flex-col gap-4">
             <Field
               type="text"
@@ -72,9 +101,9 @@ const StaffSignupForm = () => {
             />
             <Field
               type="text"
-              name="employeeId"
+              name="staffId"
               className={input}
-              placeholder="Employee Id"
+              placeholder="Staff Id"
               required
             />
             <Field
@@ -82,20 +111,6 @@ const StaffSignupForm = () => {
               name="department"
               className={input}
               placeholder="Department"
-              required
-            />
-            <Field
-              type="text"
-              name="position"
-              className={input}
-              placeholder="Position"
-              required
-            />
-            <Field
-              type="number"
-              name="phoneNo"
-              className={input}
-              placeholder="Phone Number"
               required
             />
             <Field
@@ -128,13 +143,24 @@ const StaffSignupForm = () => {
             />
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
-              disabled={isSubmitting}
-            // onClick={ }
+              className="w-full bg-primary flex items-center justify-center hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
+              disabled={
+                isSubmitting ||
+                !values.businessId ||
+                !values.fullName ||
+                !values.email ||
+                !values.staffId ||
+                !values.department ||
+                !values.password ||
+                !values.confirmPassword ||
+                !values.username ||
+                !values.managerName
+              }
             >
-              Create Account
+              {isSubmitting ? <Loader /> : 'Create Account'}
             </button>
           </Form>
+
         )}
       </Formik>
     </>

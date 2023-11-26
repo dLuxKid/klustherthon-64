@@ -13,7 +13,7 @@ type Props = {
 
 export default function PaymentTable({ payments, loading, fetchPayments }: Props) {
     const [editModal, setEditModal] = useState<boolean>(false)
-    const [selectedPayment, setSelectedPayment] = useState<paymentType>()
+    const [selectedPayment, setSelectedPayment] = useState<paymentType | null>(null)
 
     return (
         <div className="mt-6 flow-root w-full">
@@ -56,7 +56,12 @@ export default function PaymentTable({ payments, loading, fetchPayments }: Props
                                             {payment.amount}
                                         </p>
                                         <div className="flex justify-end gap-2">
-                                            <UpdateBtn />
+                                            <div onClick={() => {
+                                                setEditModal(true)
+                                                setSelectedPayment(payment)
+                                            }}>
+                                                <UpdateBtn />
+                                            </div>
                                             <DeleteBtn id={payment._id} />
                                         </div>
                                     </div>
@@ -78,7 +83,7 @@ export default function PaymentTable({ payments, loading, fetchPayments }: Props
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {payments?.map((payment, idx) => (
+                                {payments?.map((payment) => (
                                     <tr
                                         key={payment._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

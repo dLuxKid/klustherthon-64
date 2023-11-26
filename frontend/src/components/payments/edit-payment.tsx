@@ -25,6 +25,7 @@ type Props = {
 }
 
 export default function EditPayment({ setOpenEditModal, fetchPayments, payment }: Props) {
+    console.log(payment)
 
     const [state, dispatch] = useReducer(invoiceReducer, {
         name: payment.name,
@@ -61,6 +62,9 @@ export default function EditPayment({ setOpenEditModal, fetchPayments, payment }
                     "amount": Number(state.amount),
                 }),
             });
+
+            const data = await response.json()
+            console.log(data)
 
 
             if (response.ok) {

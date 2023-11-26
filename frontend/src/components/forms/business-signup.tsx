@@ -1,7 +1,8 @@
-import { Formik, Form, Field } from "formik";
+import { Field, Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as Yup from "yup";
+import Loader from "../loader";
 
 const BusinessSignupForm = () => {
   const navigate = useNavigate()
@@ -24,7 +25,6 @@ const BusinessSignupForm = () => {
     ),
   });
 
-  //   type singup = InferType<typeof validationSchema>;
   const input = 'w-full px-4 h-[45px] rounded outline-none border-none text-text text-base font-normal'
 
   return (
@@ -67,23 +67,23 @@ const BusinessSignupForm = () => {
                 'password': values.password,
               }),
             })
-            console.log(res)
-            console.log(await res.json())
+            const data = await res.json()
+
             if (res.ok) {
               toast.success('Business succesfully registered')
               navigate('/dashboard')
               setSubmitting(false)
             } else {
-              toast.error('Error registering business')
+              toast.error(data.message)
               setSubmitting(false)
             }
-          } catch (error) {
-            toast.error('Error registering business')
+          } catch (error: any) {
+            toast.error(error.message)
             setSubmitting(false)
           }
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, values }) => (
           <Form className="flex items-stretch justify-center flex-col gap-4">
             <Field
               type="text"
@@ -162,7 +162,6 @@ const BusinessSignupForm = () => {
               placeholder="Password"
               required
             />
-
             <Field
               type="password"
               name="confirmPassword"
@@ -170,13 +169,26 @@ const BusinessSignupForm = () => {
               placeholder="Confirm Password"
               required
             />
-
             <button
               type="submit"
-              className="w-full bg-primary disabled:bg-gray-600 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
-              disabled={isSubmitting}
+              className="w-full bg-primary flex items-center justify-center hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
+              disabled={
+                isSubmitting ||
+                !values.businessName ||
+                !values.businessType ||
+                !values.businessRegNo ||
+                !values.businessAddress ||
+                !values.industry ||
+                !values.adminName ||
+                !values.adminPosition ||
+                !values.adminEmail ||
+                !values.adminPhone ||
+                !values.username ||
+                !values.password ||
+                !values.confirmPassword
+              }
             >
-              Create Account
+              {isSubmitting ? <Loader /> : 'Create Account'}
             </button>
           </Form>
         )}
