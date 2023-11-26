@@ -1,6 +1,7 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import Invoice from "../Models/Invoice.js";
+import Staff from "../Models/Staff.js";
 // import {generateToken,isAuth} from "..utils.js";
 const invoiceRouter = express.Router();
 
@@ -15,12 +16,15 @@ invoiceRouter.post(
     '/create',
     expressAsyncHandler(async(req,res)=>{
         try{
+            const staff = Staff.findOne({email:req.body.email})
             const newInvoice = new Invoice({
                 title:req.body.title,
-                email:req.body.email,
+                staff:req.body.staff,
                 amount:req.body.amount,
                 paymentStatus:req.body.paymentStatus,
                 paymentType:req.body.paymentType,
+                installmentalAmount:req.body.installmentalAmount,
+                business:req.body.businessId
             })
             console.log(newInvoice);
             const invoice = await newInvoice.save();
