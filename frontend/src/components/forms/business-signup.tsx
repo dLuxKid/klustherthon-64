@@ -1,7 +1,12 @@
-import { Formik, Form, Field } from "formik";
+import { Field, Form, Formik } from "formik";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import * as Yup from "yup";
+import Loader from "../loader";
 
 const BusinessSignupForm = () => {
+  const navigate = useNavigate()
+
   const validationSchema = Yup.object({
     businessName: Yup.string().required(),
     businessType: Yup.string().required(),
@@ -20,7 +25,6 @@ const BusinessSignupForm = () => {
     ),
   });
 
-  //   type singup = InferType<typeof validationSchema>;
   const input = 'w-full px-4 h-[45px] rounded outline-none border-none text-text text-base font-normal'
 
   return (
@@ -41,16 +45,45 @@ const BusinessSignupForm = () => {
           confirmPassword: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log('Form submitted with values', values)
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit={async (values, { setSubmitting }) => {
+          setSubmitting(true)
+          try {
+            const res = await fetch('http://localhost:5000/api/users/business/signup', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                'businessName': values.businessName,
+                'businessType': values.businessType,
+                'businessRegNo': values.businessRegNo,
+                'businessAddress': values.businessAddress,
+                'industry': values.industry,
+                'administratorFullName': values.adminName,
+                'administratorPosition': values.adminPosition,
+                'administratorEmail': values.adminEmail,
+                'administratorPhoneNo': values.adminPhone,
+                'userName': values.username,
+                'password': values.password,
+              }),
+            })
+            const data = await res.json()
 
-            setSubmitting(false);
-          }, 400);
+            if (res.ok) {
+              toast.success('Business succesfully registered')
+              navigate('/dashboard')
+              setSubmitting(false)
+            } else {
+              toast.error(data.message)
+              setSubmitting(false)
+            }
+          } catch (error: any) {
+            toast.error(error.message)
+            setSubmitting(false)
+          }
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, values }) => (
           <Form className="flex items-stretch justify-center flex-col gap-4">
             <Field
               type="text"
@@ -75,7 +108,7 @@ const BusinessSignupForm = () => {
             />
             <Field
               type="text"
-              name="businessAdress"
+              name="businessAddress"
               className={input}
               placeholder="Business Address"
               required
@@ -129,7 +162,6 @@ const BusinessSignupForm = () => {
               placeholder="Password"
               required
             />
-
             <Field
               type="password"
               name="confirmPassword"
@@ -137,13 +169,26 @@ const BusinessSignupForm = () => {
               placeholder="Confirm Password"
               required
             />
-
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
-              disabled={isSubmitting}
+              className="w-full bg-primary flex items-center justify-center hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
+              disabled={
+                isSubmitting ||
+                !values.businessName ||
+                !values.businessType ||
+                !values.businessRegNo ||
+                !values.businessAddress ||
+                !values.industry ||
+                !values.adminName ||
+                !values.adminPosition ||
+                !values.adminEmail ||
+                !values.adminPhone ||
+                !values.username ||
+                !values.password ||
+                !values.confirmPassword
+              }
             >
-              Create Account
+              {isSubmitting ? <Loader /> : 'Create Account'}
             </button>
           </Form>
         )}

@@ -3,7 +3,7 @@ import BusinessLoginForm from "../components/forms/business-login";
 import StaffLoginForm from "../components/forms/staff-login";
 
 const Login = () => {
-    const [loginType, setLoginType] = useState<'business' | 'staff'>('business')
+    const [loginAs, setLoginAs] = useState<'business' | 'staff'>('business')
 
     const base =
         "pb-1 text-lg font-medium text-center whitespace-nowrap text-black";
@@ -15,25 +15,25 @@ const Login = () => {
                 <nav className="inline-flex items-center justify-around w-full gap-4 pt-5">
                     <button
                         type="button"
-                        className={`${base} ${loginType === 'business' && selected}`}
+                        className={`${base} ${loginAs === 'business' && selected}`}
                         onClick={() => {
-                            setLoginType('business')
+                            setLoginAs('business')
                         }}
                     >
                         Business
                     </button>
                     <button
                         type="button"
-                        className={`${base} ${loginType === 'staff' && selected}`}
+                        className={`${base} ${loginAs === 'staff' && selected}`}
                         onClick={() => {
-                            setLoginType('staff')
+                            setLoginAs('staff')
                         }}
                     >
                         Staff
                     </button>
                 </nav>
-                {loginType === 'business' && <BusinessLoginForm />}
-                {loginType === 'staff' && <StaffLoginForm />}
+                {loginAs === 'business' && <BusinessLoginForm />}
+                {loginAs === 'staff' && <StaffLoginForm />}
             </section>
         </main>
 
