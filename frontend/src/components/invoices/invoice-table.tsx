@@ -1,8 +1,21 @@
+import { useState } from 'react';
 import { formatCurrency, formatDateToLocal } from '../../utils/formatter';
 import { DeleteBtn, UpdateBtn } from '../buttons';
 import InvoiceStatus from './invoice-status';
+import Loader from '../loader';
+import EditInvoice from './edit-invoice';
 
-const invoices = [
+export type invoiceType = {
+    id: string;
+    name: string;
+    email: string;
+    amount: number;
+    status: string;
+    date: string; // Assuming the date is represented as a string for simplicity
+};
+
+
+const invoices: invoiceType[] = [
     {
         id: '4419c858-598a-4a0b-a2f7-2996ffc76313',
         name: 'Marvellous',
@@ -87,10 +100,25 @@ const invoices = [
 
 
 export default function InvoicesTable() {
+    const [editModal, setEditModal] = useState<boolean>(false)
+    const [selectedInvoice, setSelectedInvoice] = useState<invoiceType | null>(null)
 
     return (
         <div className="mt-6 flow-root">
             <div className="inline-block min-w-full align-middle">
+                {/* {
+                    loading &&
+                    <div className="w-full flex items-center justify-center pt-20">
+                        <Loader dark />
+                    </div>
+                } */}
+
+                {editModal &&
+                    <EditInvoice
+                        invoice={selectedInvoice as invoiceType}
+                        setOpenEditModal={setEditModal}
+                    // fetchPayments={fetchPayments}
+                    />}
                 <div className="rounded-lg bg-background p-2 md:pt-0">
                     <div className="md:hidden">
                         {invoices?.map((invoice) => (
@@ -118,7 +146,12 @@ export default function InvoicesTable() {
                                         <p>{formatDateToLocal(invoice.date)}</p>
                                     </div>
                                     <div className="flex justify-end gap-2">
-                                        <UpdateBtn id={invoice.id} />
+                                        <div onClick={() => {
+                                            setEditModal(true)
+                                            setSelectedInvoice(invoice)
+                                        }}>
+                                            <UpdateBtn />
+                                        </div>
                                         <DeleteBtn id={invoice.id} />
                                     </div>
                                 </div>
@@ -176,7 +209,12 @@ export default function InvoicesTable() {
                                     </td>
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                         <div className="flex justify-end gap-3">
-                                            <UpdateBtn id={invoice.id} />
+                                            <div onClick={() => {
+                                                setEditModal(true)
+                                                setSelectedInvoice(invoice)
+                                            }}>
+                                                <UpdateBtn />
+                                            </div>
                                             <DeleteBtn id={invoice.id} />
                                         </div>
                                     </td>

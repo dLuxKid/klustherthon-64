@@ -44,3 +44,7 @@ button:focus {
   border: 0;
   outline: none;
 }
+
+button:disabled {
+  @apply disabled:cursor-not-allowed  disabled:bg-gray-600;
+}

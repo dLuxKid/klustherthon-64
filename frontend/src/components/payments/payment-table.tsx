@@ -1,42 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { toast } from "sonner";
-
+import { paymentType } from "../../pages/payments";
 import { DeleteBtn, UpdateBtn } from "../buttons";
 import Loader from "../loader";
+import EditPayment from "./edit-payment";
 
-export default function PaymentTable() {
+type Props = {
+    payments: paymentType[]
+    loading: boolean
+    fetchPayments: () => void
+}
 
-    const [payments, setPayments] = useState<{ _id: string, name: string, notes: string, amount: number, __v: number }[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
-
-    useEffect(() => {
-        (async () => {
-            setLoading(true)
-            try {
-                const res = await fetch('http://localhost:5000/api/payments/all')
-                if (res.ok) {
-                    setPayments(await res.json())
-                    setTimeout(() => {
-                        setLoading(false)
-                    }, 500);
-                } else {
-                    toast.error('Error fetching payments')
-                    setTimeout(() => {
-                        setLoading(false)
-                    }, 500);
-                }
-            } catch (error) {
-                toast.error('Error fetching payments')
-                setTimeout(() => {
-                    setLoading(false)
-                }, 500);
-            }
-        })()
-    }, [])
+export default function PaymentTable({ payments, loading, fetchPayments }: Props) {
+    const [editModal, setEditModal] = useState<boolean>(false)
+    const [selectedPayment, setSelectedPayment] = useState<paymentType | null>(null)
 
     return (
-        <div className="mt-6 flow-root">
+        <div className="mt-6 flow-root w-full">
             <div className="inline-block min-w-full align-middle">
                 {
                     loading &&
@@ -44,6 +24,13 @@ export default function PaymentTable() {
                         <Loader dark />
                     </div>
                 }
+
+                {editModal &&
+                    <EditPayment
+                        payment={selectedPayment as paymentType}
+                        setOpenEditModal={setEditModal}
+                        fetchPayments={fetchPayments}
+                    />}
 
                 {payments && !loading &&
                     <div className="rounded-lg bg-background p-2 md:pt-0">
@@ -69,7 +56,12 @@ export default function PaymentTable() {
                                             {payment.amount}
                                         </p>
                                         <div className="flex justify-end gap-2">
-                                            <UpdateBtn id={payment._id} />
+                                            <div onClick={() => {
+                                                setEditModal(true)
+                                                setSelectedPayment(payment)
+                                            }}>
+                                                <UpdateBtn />
+                                            </div>
                                             <DeleteBtn id={payment._id} />
                                         </div>
                                     </div>
@@ -91,9 +83,9 @@ export default function PaymentTable() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {payments?.map((payment, idx) => (
+                                {payments?.map((payment) => (
                                     <tr
-                                        key={idx}
+                                        key={payment._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                                     >
                                         <td className="whitespace-nowrap py-3 pl-6 pr-3">
@@ -112,7 +104,12 @@ export default function PaymentTable() {
                                         </td>
                                         <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                             <div className="flex justify-end gap-3">
-                                                <UpdateBtn id={payment._id} />
+                                                <div onClick={() => {
+                                                    setEditModal(true)
+                                                    setSelectedPayment(payment)
+                                                }}>
+                                                    <UpdateBtn />
+                                                </div>
                                                 <DeleteBtn id={payment._id} />
                                             </div>
                                         </td>
