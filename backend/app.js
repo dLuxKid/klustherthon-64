@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import paymentRouter from "./routes/paymentRoutes.js";
 import userRouter from "./routes/UserRoutes.js";
+import clientRouter from "./routes/clientsRoutes.js";
 
 dotenv.config();
 
@@ -32,7 +33,7 @@ app.post("/api/posts", (req, res, next) => {
 app.use("/api/users", userRouter);
 app.use("/api/invoices", invoiceRouter);
 app.use("/api/payments", paymentRouter);
-
+app.use("/api/clients",clientRouter);
 app.listen(5000, () => {
   console.log("App listening on port 5000!");
 });

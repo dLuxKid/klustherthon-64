@@ -16,10 +16,10 @@ export function CreateBtn({ setOpenModal, text }: { setOpenModal: React.Dispatch
     );
 }
 
-export function UpdateBtn({ id }: { id: string }) {
+export function UpdateBtn() {
     return (
         <div
-            className="rounded-md border p-2 hover:bg-gray-100"
+            className="rounded-md border p-2 hover:bg-gray-100 cursor-pointer"
         >
             <div className="text-slate-600">
                 <HiPencil />
@@ -33,7 +33,7 @@ export function DeleteBtn({ id }: { id: string }) {
 
     return (
         <form>
-            <button className="rounded-md border p-2 hover:bg-gray-100" type="submit">
+            <button className="rounded-md border p-2 hover:bg-gray-100 cursor-pointer" type="submit">
                 <span className="sr-only">Delete</span>
                 <div className="text-slate-600">
                     <FaTrash />
