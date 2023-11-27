@@ -51,6 +51,7 @@ export const createInvoice =  expressAsyncHandler(async (req, res) => {
                 title: req.body.title,
                 staff: req.body.staffId, // this can be either  staff or business administrator id
                 client: client._id,
+                clientEmail:req.body.clientEmail,
                 amount: req.body.amount,
                 paymentInterval: req.body.paymentInterval,
                 paymentStatus: req.body.paymentStatus,
