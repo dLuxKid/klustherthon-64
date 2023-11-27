@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { paymentType } from "../pages/payments"
-import { useAuthContext } from "./useAuthContext"
 
 type paymentContextType = {
     payments: paymentType[]
