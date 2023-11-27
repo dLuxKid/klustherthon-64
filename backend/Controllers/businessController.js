@@ -5,6 +5,7 @@ import { generateToken } from "../utils.js";
 import Staff from "../Models/Staff.js";
 
 export const businessSignup = expressAsyncHandler(async (req, res) => {
+  console.log(req.body);
   try {
     const newBusiness = new Business({
       businessName: req.body.businessName,

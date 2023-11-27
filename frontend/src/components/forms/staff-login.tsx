@@ -3,9 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
+import { useAuthContext } from "../../context/useAuthContext";
 
-const StaffLoginForm = () => {
+type Props = {
+    loginDetails: {
+        loginAs: 'business' | 'staff',
+        email: string,
+        password: string
+    } | null
+}
+
+
+const StaffLoginForm = ({ loginDetails }: Props) => {
     const navigate = useNavigate()
+
+    const { dispatch } = useAuthContext()
 
     const validationSchema = Yup.object({
         email: Yup.string().required(),
@@ -40,8 +52,20 @@ const StaffLoginForm = () => {
                         console.log(data)
 
                         if (res.ok) {
+                            const userDetails = {
+                                id: data.businessId,
+                                staffId: data.staffId,
+                                username: data.userName,
+                                email: data.email,
+                                isBusiness: data.isBusiness,
+                                token: data.token
+                            }
+
                             toast.success('Welcome back')
+
+                            dispatch({ type: 'login', payload: userDetails })
                             navigate('/dashboard')
+
                             setSubmitting(false)
                         } else {
                             toast.error(data.message)
@@ -61,6 +85,7 @@ const StaffLoginForm = () => {
                             name="email"
                             className={input}
                             placeholder="Staff Email"
+                            value={loginDetails && loginDetails.loginAs === 'staff' && loginDetails.email || values.email}
                             required
                         />
                         <Field
@@ -68,6 +93,7 @@ const StaffLoginForm = () => {
                             name="password"
                             className={input}
                             placeholder="Staff Password"
+                            value={loginDetails && loginDetails.loginAs === 'staff' && loginDetails.password || values.password}
                             required
                         />
                         <button

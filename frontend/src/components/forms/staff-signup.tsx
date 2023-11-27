@@ -64,7 +64,15 @@ const StaffSignupForm = () => {
 
             if (res.ok) {
               toast.success('Business succesfully registered')
-              navigate('/dashboard')
+              navigate('/login', {
+                state: {
+                  loginDetails: {
+                    loginAs: 'staff',
+                    email: values.email,
+                    password: values.password
+                  }
+                }
+              })
               setSubmitting(false)
             } else {
               toast.error(data.message.message)

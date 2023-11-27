@@ -3,9 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
+import { useAuthContext } from "../../context/useAuthContext";
 
-const BusinessLoginForm = () => {
+type Props = {
+  loginDetails: {
+    loginAs: 'business' | 'staff',
+    email: string,
+    password: string
+  } | null
+}
+
+const BusinessLoginForm = ({ loginDetails }: Props) => {
   const navigate = useNavigate()
+
+  const { dispatch } = useAuthContext()
 
   const validationSchema = Yup.object({
     email: Yup.string().required(),
@@ -38,7 +49,18 @@ const BusinessLoginForm = () => {
             const data = await res.json()
 
             if (res.ok) {
+              const userDetails = {
+                id: data.businessRegNo,
+                username: data.userName,
+                email: data.administratorEmail,
+                isBusiness: data.isBusiness,
+                token: data.token
+              }
+
               toast.success('Welcome back')
+              dispatch({
+                type: 'login', payload: userDetails
+              })
               navigate('/dashboard')
               setSubmitting(false)
             } else {
@@ -59,6 +81,7 @@ const BusinessLoginForm = () => {
               name="email"
               className={input}
               placeholder="Admin Email"
+              value={loginDetails && loginDetails.loginAs === 'business' && loginDetails.email || values.email}
               required
             />
             <Field
@@ -66,6 +89,7 @@ const BusinessLoginForm = () => {
               name="password"
               className={input}
               placeholder="Admin Password"
+              value={loginDetails && loginDetails.loginAs === 'business' && loginDetails.password || values.password}
               required
             />
             <button

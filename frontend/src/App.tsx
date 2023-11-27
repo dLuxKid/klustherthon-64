@@ -15,7 +15,7 @@ import Signup from "./pages/signup"
 import { useAuthContext } from "./context/useAuthContext"
 
 function App() {
-  const { user } = useAuthContext()
+  const { user, authIsReady } = useAuthContext()
 
   return (
     <>

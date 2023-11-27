@@ -43,13 +43,13 @@ type Props = {
 export const AuthContextProvider = ({ children }: Props) => {
     const [state, dispatch] = useReducer(authReducer, initialState)
 
-    // useEffect(() => {
-    //     if (sessionStorage.getItem('user')) {
-    //         dispatch({ type: "login", payload: JSON.parse(sessionStorage.getItem('user') as string) });
-    //     } else {
-    //         dispatch({ type: "auth-is-ready", payload: null });
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (sessionStorage.getItem('user')) {
+            dispatch({ type: "login", payload: JSON.parse(sessionStorage.getItem('user') as string) });
+        } else {
+            dispatch({ type: "auth-is-ready", payload: null });
+        }
+    }, []);
 
     return (
         <AuthContext.Provider value={{ ...state, dispatch }}>

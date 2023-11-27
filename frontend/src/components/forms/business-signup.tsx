@@ -16,7 +16,7 @@ const BusinessSignupForm = () => {
     adminName: Yup.string().required(),
     adminPosition: Yup.string().required(),
     adminEmail: Yup.string().email(),
-    adminPhone: Yup.number().required(),
+    adminPhone: Yup.string().required(),
     username: Yup.string().required(),
     password: Yup.string().min(8).max(20).required(),
     confirmPassword: Yup.string().oneOf(
@@ -47,6 +47,7 @@ const BusinessSignupForm = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
+          console.log(values)
           try {
             const res = await fetch('http://localhost:5000/api/users/business/signup', {
               method: 'POST',
@@ -67,18 +68,27 @@ const BusinessSignupForm = () => {
                 'password': values.password,
               }),
             })
+
             const data = await res.json()
 
             if (res.ok) {
               toast.success('Business succesfully registered')
-              navigate('/dashboard')
+              navigate('/login', {
+                state: {
+                  loginDetails: {
+                    loginAs: 'business',
+                    email: values.adminEmail,
+                    password: values.password
+                  }
+                }
+              })
               setSubmitting(false)
             } else {
-              toast.error(data.message)
+              toast.error(data.message.message ?? 'Error registering business')
               setSubmitting(false)
             }
           } catch (error: any) {
-            toast.error(error.message)
+            toast.error(error.message.message ?? 'Error registering business')
             setSubmitting(false)
           }
         }}
@@ -142,7 +152,7 @@ const BusinessSignupForm = () => {
               required
             />
             <Field
-              type="number"
+              type="text"
               name="adminPhone"
               className={input}
               placeholder="Administrator's Phone Number"
