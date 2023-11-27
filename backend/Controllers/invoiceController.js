@@ -46,6 +46,7 @@ export const allClient = expressAsyncHandler(async (req, res) => {
 });
 
 export const createInvoice = expressAsyncHandler(async (req, res) => {
+  console.log(req.body);
   try {
     const client = await Client.findOne({
       email: req.body.email,
@@ -56,13 +57,12 @@ export const createInvoice = expressAsyncHandler(async (req, res) => {
     };
     const business = await Business.findById(client.business);
 
-    businessEmail;
     if (client) {
       const newInvoice = new Invoice({
         title: req.body.title,
         staff: req.body.staffId,
         client: client._id,
-        clientEmail: req.body.clientEmail,
+        clientEmail: req.body.email,
         amount: req.body.amount,
         paymentInterval: req.body.paymentInterval,
         paymentStatus: req.body.paymentStatus,
