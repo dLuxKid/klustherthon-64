@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { AiFillCaretRight } from "react-icons/ai";
-import { BsCash, BsPeopleFill } from "react-icons/bs";
+import { BsCash, BsFillCaretDownFill, BsPeopleFill } from "react-icons/bs";
 import { FaChartBar, FaFileInvoice } from "react-icons/fa";
 import { useAuthContext } from "../context/useAuthContext";
 import { FaPeopleGroup } from "react-icons/fa6";
@@ -22,6 +22,10 @@ const links = [
 export default function SideNavbar() {
     const [activeMenu, setActiveMenu] = useState<boolean>(false);
     const [screenSize, setScreenSize] = useState<number | null>(null);
+
+    const [showLogOutBtn, setShowLogOutBtn] = useState(false)
+
+    const navigate = useNavigate()
 
     const { user } = useAuthContext()
 
@@ -119,10 +123,27 @@ export default function SideNavbar() {
                     </div>
                     <div className="w-full mb-8">
                         <div className="text-text flex items-center">
-                            <NavLink to={'/'}>
-                                <p>Log out</p>
-                            </NavLink>
+                            <p>{user.username}</p>
+                            <span
+                                className="ml-4 self-end cursor-pointer"
+                                onClick={() => {
+                                    setShowLogOutBtn(!showLogOutBtn);
+                                }}
+                            >
+                                <BsFillCaretDownFill />
+                            </span>
                         </div>
+                        {showLogOutBtn ? (
+                            <p
+                                className="shadow-xl w-16 self-center p-2 mx-auto bg-white rounded-lg hover:scale-110 overflow-hidden text-black cursor-pointer"
+                                onClick={() => {
+                                    localStorage.removeItem('user')
+                                    navigate('/')
+                                }}
+                            >
+                                Logout
+                            </p>
+                        ) : null}
                     </div>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import EditPayment from "./edit-payment";
 import { usePaymentContext } from "../../context/usePaymentContext";
 import { useAuthContext } from "../../context/useAuthContext";
 import { toast } from "sonner";
+import { formatCurrency } from "../../utils/formatter";
 
 export default function PaymentTable() {
 
@@ -19,9 +20,10 @@ export default function PaymentTable() {
     const handleDelete = async (payment: paymentType) => {
         try {
             const res = await fetch('http://localhost:5000/api/payments/delete', {
-                method: 'POST',
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                 },
                 body: JSON.stringify({
                     'businessId': user.id
@@ -74,7 +76,7 @@ export default function PaymentTable() {
                                     </div>
                                     <div className="flex w-full items-center justify-between pt-4">
                                         <p className="text-xl font-medium tex-text">
-                                            {payment.amount}
+                                            {formatCurrency(payment.amount)}
                                         </p>
                                         <div className="flex justify-end gap-2">
                                             <div onClick={() => {
@@ -125,7 +127,7 @@ export default function PaymentTable() {
                                             {payment.notes}
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-3 text-text">
-                                            {payment.amount}
+                                            {formatCurrency(payment.amount)}
                                         </td>
                                         <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                             <div className="flex justify-end gap-3">

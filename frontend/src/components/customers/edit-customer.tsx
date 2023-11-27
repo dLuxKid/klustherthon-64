@@ -51,7 +51,7 @@ export default function EditCustomer({ setOpenEditModal, fetchCustomers, custome
 
         try {
             const response = await fetch(`http://localhost:5000/api/clients/profile/${customer._id}`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${user.token}`
@@ -75,7 +75,6 @@ export default function EditCustomer({ setOpenEditModal, fetchCustomers, custome
                     setOpenEditModal(false)
                 }, 500);
             } else {
-                console.error('Failed to send data to the server');
                 toast.error('Error updating client');
                 setTimeout(() => {
                     setLoading(false)

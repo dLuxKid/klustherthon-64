@@ -18,9 +18,9 @@ import { useEffect } from "react"
 
 function App() {
   const { user, authIsReady, dispatch } = useAuthContext()
-  const storedUser = sessionStorage.getItem('user');
 
   useEffect(() => {
+    const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
       dispatch({ type: "login", payload: JSON.parse(storedUser) });
     } else {

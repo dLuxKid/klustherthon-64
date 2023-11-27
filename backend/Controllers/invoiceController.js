@@ -22,23 +22,24 @@ export const allBusiness = expressAsyncHandler(async (req, res) => {
     });
   }
 });
-export const allClient = expressAsyncHandler(async (req,res)=>{
-    try {
-        const invoices = await Invoice.find({
-            client: req.params.id
-        })
-        if (invoices) {
-            res.status(200).send(invoices); 
-        } else {
-            res.status(400).send({}, {
-                message: "No Invoices was found for this Client"
-            });
-        }
-    } catch (err) {
-        res.status(400).send({}, {
-            message: "An error occured"
-        });
+
+export const allClient = expressAsyncHandler(async (req, res) => {
+  try {
+    const invoices = await Invoice.find({
+      client: req.params.id,
+    });
+    if (invoices) {
+      res.status(200).send(invoices);
+    } else {
+      res.status(400).send({
+        message: "No Invoices was found for this Client",
+      });
     }
+  } catch (err) {
+    res.status(400).send({
+      message: "An error occured",
+    });
+  }
 });
 
 export const createInvoice = expressAsyncHandler(async (req, res) => {
@@ -64,8 +65,8 @@ export const createInvoice = expressAsyncHandler(async (req, res) => {
       } else if (req.body.paymentType == 3) {
         setNextPayment(newInvoice, req.body.paymentInterval, res);
       }
-      console.log(newInvoice);
-      const invoice = await newInvoice.save();
+
+      await newInvoice.save();
       res.status(201).send({
         message: "New Invoice Created",
       });

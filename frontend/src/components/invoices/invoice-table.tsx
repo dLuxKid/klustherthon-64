@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { useAuthContext } from '../../context/useAuthContext';
 import { formatCurrency, formatDateToLocal } from '../../utils/formatter';
 import { DeleteBtn, UpdateBtn } from '../buttons';
-import InvoiceStatus from './invoice-status';
 import Loader from '../loader';
 import EditInvoice from './edit-invoice';
-import { useAuthContext } from '../../context/useAuthContext';
-import { toast } from 'sonner';
+import InvoiceStatus from './invoice-status';
 
 export type invoiceType = {
     id: string;
@@ -13,7 +13,7 @@ export type invoiceType = {
     email: string;
     amount: number;
     status: string;
-    date: string; // Assuming the date is represented as a string for simplicity
+    date: string;
 };
 
 
@@ -123,6 +123,7 @@ export default function InvoicesTable() {
             })
             const data = await res.json()
             console.log(data)
+
             if (res.ok) {
                 setAllInvoices(data)
                 setTimeout(() => {
@@ -145,6 +146,10 @@ export default function InvoicesTable() {
     useEffect(() => {
         fetchInvoices()
     }, [])
+
+    const handleDelete = (invoice: invoiceType) => {
+
+    }
 
     return (
         <div className="mt-6 flow-root">
@@ -195,7 +200,11 @@ export default function InvoicesTable() {
                                         }}>
                                             <UpdateBtn />
                                         </div>
-                                        <DeleteBtn />
+                                        {user.isBusiness &&
+                                            <div onClick={() => handleDelete(invoice)}>
+                                                <DeleteBtn />
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +267,11 @@ export default function InvoicesTable() {
                                             }}>
                                                 <UpdateBtn />
                                             </div>
-                                            <DeleteBtn />
+                                            {user.isBusiness &&
+                                                <div onClick={() => handleDelete(invoice)}>
+                                                    <DeleteBtn />
+                                                </div>
+                                            }
                                         </div>
                                     </td>
                                 </tr>

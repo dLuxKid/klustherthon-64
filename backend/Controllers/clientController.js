@@ -50,7 +50,7 @@ export const updateClient = expressAsyncHandler(async (req, res) => {
         (client.phoneNumber = req.body.phoneNumber),
         (client.address = req.body.address);
 
-      const updatedClient = await client.save();
+      await client.save();
       res.status(201).send({
         message: "Client updated succesfully",
       });
