@@ -17,7 +17,6 @@ export const PaymentContextProvider = ({ children }: { children: React.ReactNode
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>('')
 
-    const { user } = useAuthContext()
 
     const fetchPayments = async () => {
         setLoading(true)
