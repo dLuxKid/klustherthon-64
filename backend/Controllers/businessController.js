@@ -29,21 +29,14 @@ export const businessSignup = expressAsyncHandler(async (req, res) => {
         errors: business.validationError.errors,
       });
     }
-    var transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: "7409abb299c423",
-        pass: "b1cc8646397ece",
-      },
-    });
 
-    transport;
+
+
 
     res.status(201).send({
       message: "New business succesfully created",
     });
-  } catch (err) {
+  } catch (err) {console.log(err)
     res.status(400).send({
       message: err,
     });
