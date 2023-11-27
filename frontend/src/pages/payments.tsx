@@ -17,9 +17,6 @@ export default function Payments() {
                 <Search placeholder="Search Payments..." />
                 <CreateBtn setOpenModal={setOpenModal} text="Create Payment" />
             </div>
-            {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-                        <Table query={query} currentPage={currentPage} />
-                    </Suspense> */}
             <PaymentTable />
             {openModal && <CreateNewPayment setOpenModal={setOpenModal} />}
         </div >

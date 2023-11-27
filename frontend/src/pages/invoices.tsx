@@ -16,9 +16,6 @@ export default function Invoices() {
                 <Search placeholder="Search invoices..." />
                 <CreateBtn setOpenModal={setOpenModal} text="Create Invoice" />
             </div>
-            {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-                        <Table query={query} currentPage={currentPage} />
-                    </Suspense> */}
             <InvoicesTable />
             {openModal && <CreateNewInvoice setOpenModal={setOpenModal} />}
         </main>

@@ -46,8 +46,8 @@ export const createInvoice = expressAsyncHandler(async (req, res) => {
       } else if (req.body.paymentType == 3) {
         setNextPayment(newInvoice, req.body.paymentInterval, res);
       }
-      console.log(newInvoice);
-      const invoice = await newInvoice.save();
+
+      await newInvoice.save();
       res.status(201).send({
         message: "New Invoice Created",
       });

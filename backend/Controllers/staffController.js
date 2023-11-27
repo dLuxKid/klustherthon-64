@@ -46,7 +46,6 @@ export const staffSignup = expressAsyncHandler(async (req, res) => {
 export const staffSignin = expressAsyncHandler(async (req, res) => {
   const staff = await Staff.findOne({ email: req.body.email });
   if (staff) {
-    console.log(staff);
     try {
       if (bcrypt.compareSync(req.body.password, staff.password)) {
         res.status(200).send({

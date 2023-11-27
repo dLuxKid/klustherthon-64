@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { paymentType } from "../../pages/payments";
 
 import Loader from "../loader";
+import { useAuthContext } from "../../context/useAuthContext";
 
 type initialStateType = {
     name: string
@@ -25,7 +26,7 @@ type Props = {
 }
 
 export default function EditPayment({ setOpenEditModal, fetchPayments, payment }: Props) {
-    console.log(payment)
+    const { user } = useAuthContext()
 
     const [state, dispatch] = useReducer(invoiceReducer, {
         name: payment.name,
@@ -52,20 +53,20 @@ export default function EditPayment({ setOpenEditModal, fetchPayments, payment }
 
         try {
             const response = await fetch(apiUrl, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                 },
                 body: JSON.stringify({
                     "name": state.name,
                     "notes": state.description,
                     "amount": Number(state.amount),
+                    'businessId': user.id
                 }),
             });
 
             const data = await response.json()
-            console.log(data)
-
 
             if (response.ok) {
                 toast.success('Payment successfully updated')
@@ -76,7 +77,7 @@ export default function EditPayment({ setOpenEditModal, fetchPayments, payment }
                 }, 500);
             } else {
                 console.error('Failed to send data to the server');
-                toast.error('Error updating payment');
+                toast.error(data.message);
                 setTimeout(() => {
                     setLoading(false)
                 }, 500);

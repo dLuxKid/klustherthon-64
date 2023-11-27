@@ -14,16 +14,11 @@ export default function Staffs() {
 
     return (
         <div className="w-full">
-
             <h1 className={'text-black text-2xl font-semibold uppercase'}>Manage Staffs</h1>
-
             <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
                 <Search placeholder="Search Customers..." />
                 <CreateBtn setOpenModal={setOpenModal} text="Create New Staff" />
             </div>
-            {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-                        <Table query={query} currentPage={currentPage} />
-                    </Suspense> */}
             {/* <PaymentTable />
             {openModal && <CreateNewPayment setOpenModal={setOpenModal} />} */}
         </div >

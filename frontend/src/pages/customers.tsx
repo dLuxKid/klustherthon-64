@@ -34,7 +34,6 @@ export default function Customers() {
                 }
             })
             const data = await res.json()
-            console.log(data)
 
             if (res.ok) {
                 setCustomers(data)
@@ -59,11 +58,8 @@ export default function Customers() {
             <h1 className={'text-black text-2xl font-semibold uppercase'}>Clients</h1>
             <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
                 <Search placeholder="Search Clients..." />
-                <CreateBtn setOpenModal={setOpenModal} text="Create New CLient" />
+                <CreateBtn setOpenModal={setOpenModal} text="Create New Client" />
             </div>
-            {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-                        <Table query={query} currentPage={currentPage} />
-                    </Suspense> */}
             <CustomersTable customers={customers} fetchCustomers={fetchCustomers} loading={loading} />
             {openModal && <CreateNewCustomer setOpenModal={setOpenModal} />}
         </div >

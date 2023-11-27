@@ -9,13 +9,14 @@ const Login = () => {
         loginAs: 'business' | 'staff',
         email: string,
         password: string
+        businessRegNo: string
     } | null = location.state && location.state.loginDetails
 
     const [loginAs, setLoginAs] = useState<'business' | 'staff'>(data?.loginAs ?? 'business')
 
     useEffect(() => {
         if (data) setLoginAs(data.loginAs)
-    }, [])
+    }, [data])
 
     const base =
         "pb-1 text-lg font-medium text-center whitespace-nowrap text-black";
