@@ -9,7 +9,7 @@ const StaffSignupForm = () => {
   const navigate = useNavigate()
 
   const validationSchema = Yup.object({
-    businessId: Yup.string().required(),
+    businessRegNo: Yup.string().required(),
     fullName: Yup.string().required(),
     email: Yup.string().email(),
     staffId: Yup.string().required(),
@@ -29,7 +29,7 @@ const StaffSignupForm = () => {
     <>
       <Formik
         initialValues={{
-          businessId: "",
+          businessRegNo: "",
           fullName: '',
           email: '',
           staffId: '',
@@ -56,18 +56,27 @@ const StaffSignupForm = () => {
                 'password': values.password,
                 'userName': values.username,
                 'managerName': values.managerName,
-                'businessId': values.businessId,
+                'businessRegNo': values.businessRegNo,
               }),
             })
             const data = await res.json()
             console.log(data)
 
             if (res.ok) {
-              toast.success('Business succesfully registered')
-              navigate('/dashboard')
+              toast.success('Staff has been registered')
+              navigate('/login', {
+                state: {
+                  loginDetails: {
+                    loginAs: 'staff',
+                    businessRegNo: values.businessRegNo,
+                    email: values.email,
+                    password: values.password
+                  }
+                }
+              })
               setSubmitting(false)
             } else {
-              toast.error(data.message.message)
+              toast.error(data.message)
               setSubmitting(false)
             }
           } catch (error: any) {
@@ -80,9 +89,9 @@ const StaffSignupForm = () => {
           <Form className="flex items-stretch justify-center flex-col gap-4">
             <Field
               type="text"
-              name="businessId"
+              name="businessRegNo"
               className={input}
-              placeholder="Business Id"
+              placeholder="Business Registration Number"
               required
             />
             <Field
@@ -146,7 +155,7 @@ const StaffSignupForm = () => {
               className="w-full bg-primary flex items-center justify-center hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
               disabled={
                 isSubmitting ||
-                !values.businessId ||
+                !values.businessRegNo ||
                 !values.fullName ||
                 !values.email ||
                 !values.staffId ||

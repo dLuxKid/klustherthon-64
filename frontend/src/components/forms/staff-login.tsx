@@ -3,9 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
+import { useAuthContext } from "../../context/useAuthContext";
 
-const StaffLoginForm = () => {
+type Props = {
+    loginDetails: {
+        loginAs: 'business' | 'staff',
+        email: string,
+        password: string
+        businessRegNo: string
+    } | null
+}
+
+
+const StaffLoginForm = ({ loginDetails }: Props) => {
     const navigate = useNavigate()
+    console.log(loginDetails)
+
+    const { dispatch } = useAuthContext()
 
     const validationSchema = Yup.object({
         email: Yup.string().required(),
@@ -18,8 +32,8 @@ const StaffLoginForm = () => {
         <>
             <Formik
                 initialValues={{
-                    email: "",
-                    password: "",
+                    email: loginDetails && loginDetails.loginAs === 'staff' && loginDetails.email || "",
+                    password: loginDetails && loginDetails.loginAs === 'staff' && loginDetails.password || "",
                 }}
                 validationSchema={validationSchema}
                 onSubmit={async (values, { setSubmitting }) => {
@@ -31,17 +45,30 @@ const StaffLoginForm = () => {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                'administratorEmail': values.email,
+                                'email': values.email,
                                 'password': values.password
                             })
                         })
 
                         const data = await res.json()
-                        console.log(data)
 
                         if (res.ok) {
-                            toast.success('Welcome back')
+                            const userDetails = {
+                                id: data.id,
+                                bid: data.businessId,
+                                staffId: data.staffId,
+                                username: data.userName,
+                                email: data.email,
+                                isBusiness: data.isBusiness,
+                                token: data.token
+                            }
+                            localStorage.setItem('user', JSON.stringify(userDetails))
+
+                            toast.success('Welcome back ' + data.userName)
+
+                            dispatch({ type: 'login', payload: userDetails })
                             navigate('/dashboard')
+
                             setSubmitting(false)
                         } else {
                             toast.error(data.message)
@@ -49,7 +76,6 @@ const StaffLoginForm = () => {
                         }
 
                     } catch (error: any) {
-                        console.log(error)
                         toast.error(error.message)
                     }
                 }}

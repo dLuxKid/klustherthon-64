@@ -1,9 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BusinessLoginForm from "../components/forms/business-login";
 import StaffLoginForm from "../components/forms/staff-login";
+import { useLocation } from "react-router-dom";
 
 const Login = () => {
-    const [loginAs, setLoginAs] = useState<'business' | 'staff'>('business')
+    const location = useLocation()
+    const data: {
+        loginAs: 'business' | 'staff',
+        email: string,
+        password: string
+    } | null = location.state && location.state.loginDetails
+
+    const [loginAs, setLoginAs] = useState<'business' | 'staff'>(data?.loginAs ?? 'business')
+
+    useEffect(() => {
+        if (data) setLoginAs(data.loginAs)
+    }, [])
 
     const base =
         "pb-1 text-lg font-medium text-center whitespace-nowrap text-black";
@@ -32,8 +44,8 @@ const Login = () => {
                         Staff
                     </button>
                 </nav>
-                {loginAs === 'business' && <BusinessLoginForm />}
-                {loginAs === 'staff' && <StaffLoginForm />}
+                {loginAs === 'business' && <BusinessLoginForm loginDetails={data} />}
+                {loginAs === 'staff' && <StaffLoginForm loginDetails={data} />}
             </section>
         </main>
 

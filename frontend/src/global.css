@@ -48,3 +48,7 @@ button:focus {
 button:disabled {
   @apply disabled:cursor-not-allowed  disabled:bg-gray-600;
 }
+
+textarea {
+  @apply h-24 p-4 rounded-lg bg-white w-full;
+}
