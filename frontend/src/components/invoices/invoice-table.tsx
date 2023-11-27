@@ -10,6 +10,7 @@ export interface invoiceType {
     amount: number;
     business: string;
     client: string;
+    clientEmail: string;
     createdAt: string;
     installmentAmount: number;
     nextPayment: string;
@@ -71,7 +72,7 @@ export default function InvoicesTable({ loading, allInvoices, fetchInvoices }: P
                                             /> */}
                                                 <p className="text-base font-semibold text-black">{invoice.title}</p>
                                             </div>
-                                            <p className="text-sm text-text">{invoice.client}</p>
+                                            <p className="text-sm text-text">{invoice.clientEmail ?? invoice.client}</p>
                                         </div>
                                         <InvoiceStatus status={invoice.paymentStatus} />
                                     </div>
@@ -137,7 +138,7 @@ export default function InvoicesTable({ loading, allInvoices, fetchInvoices }: P
                                             </div>
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-3 text-text">
-                                            {invoice.client}
+                                            {invoice.clientEmail ?? invoice.client}
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-3 text-text">
                                             {formatCurrency(invoice.amount)}
