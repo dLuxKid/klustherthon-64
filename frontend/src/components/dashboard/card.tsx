@@ -19,9 +19,9 @@ export default function CardWrapper({ customers, payments, invoices }: Props) {
 
     return (
         <>
-            {payments && <Card title="Total Payments" value={payments ?? '-'} type="payments" />}
-            {customers && <Card title="Total Clients" value={customers ?? '-'} type="customers" />}
-            {invoices && <Card title="Total Invoices" value={invoices ?? '-'} type="invoices" />}
+            <Card title="Total Payments" value={payments || '-'} type="payments" />
+            <Card title="Total Clients" value={customers || '-'} type="customers" />
+            <Card title="Total Invoices" value={invoices || '-'} type="invoices" />
             <Card
                 title="Total Staffs"
                 value={10}

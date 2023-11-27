@@ -54,7 +54,7 @@ export default function PaymentTable() {
                         fetchPayments={fetchPayments}
                     />}
 
-                {payments && !loading &&
+                {!!payments.length && !loading &&
                     <div className="rounded-lg bg-background p-2 md:pt-0">
                         <div className="md:hidden">
                             {payments?.map((payment) => (
