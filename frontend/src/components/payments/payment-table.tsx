@@ -1,13 +1,12 @@
 import { useState } from "react";
 
+import { useAuthContext } from "../../context/useAuthContext";
+import { usePaymentContext } from "../../context/usePaymentContext";
 import { paymentType } from "../../pages/payments";
+import { formatCurrency } from "../../utils/formatter";
 import { DeleteBtn, UpdateBtn } from "../buttons";
 import Loader from "../loader";
 import EditPayment from "./edit-payment";
-import { usePaymentContext } from "../../context/usePaymentContext";
-import { useAuthContext } from "../../context/useAuthContext";
-import { toast } from "sonner";
-import { formatCurrency } from "../../utils/formatter";
 
 export default function PaymentTable() {
 

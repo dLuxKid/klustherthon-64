@@ -11,7 +11,7 @@ export default function LatestPayments({ payments }: { payments: paymentType[] }
             </h2>
             <div className="flex grow flex-col justify-between rounded-xl bg-background p-2">
                 <div className="bg-white px-4">
-                    {payments && payments.filter((i, idx) => idx < 5).map((payment, i) => {
+                    {payments && payments.filter((_, idx) => idx < 5).map((payment, i) => {
                         return (
                             <div
                                 key={payment._id}
