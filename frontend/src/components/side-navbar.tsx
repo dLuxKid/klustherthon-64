@@ -133,7 +133,7 @@ export default function SideNavbar() {
                             </NavLink>
                         }
                     </div>
-                    <div className="w-full mb-8">
+                    <div className="w-full mb-8 relative">
                         <div className="text-text flex items-center">
                             <p>{user.username}</p>
                             <span
@@ -147,7 +147,7 @@ export default function SideNavbar() {
                         </div>
                         {showLogOutBtn ? (
                             <p
-                                className="shadow-xl w-16 self-center p-2 mx-auto bg-white rounded-lg hover:scale-110 overflow-hidden text-black cursor-pointer"
+                                className=" absolute top-6 right-16 shadow-lg self-center px-4 py-2 bg-white rounded-lg hover:scale-105 text-black font-medium cursor-pointer"
                                 onClick={() => {
                                     localStorage.removeItem('user')
                                     dispatch({ type: 'logout' })
