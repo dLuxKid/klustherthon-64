@@ -36,7 +36,7 @@ export const staffSignup = expressAsyncHandler(async (req, res) => {
           }
     }else {
         res.status(400).send({
-            message: "No such Business with Reg No: " + req.body.businessRegNo,
+            message: "No such Business with Reg No: " + req.body.businessRegNo
           });
     } 
 
