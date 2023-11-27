@@ -34,9 +34,9 @@ export default function InvoicesTable({ loading, allInvoices, fetchInvoices }: P
 
     const [selectedInvoice, setSelectedInvoice] = useState<invoiceType | null>(null)
 
-    const handleDelete = (invoice: invoiceType) => {
+    // const handleDelete = (invoice: invoiceType) => {
 
-    }
+    // }
 
     const { user } = useAuthContext()
 
@@ -91,7 +91,8 @@ export default function InvoicesTable({ loading, allInvoices, fetchInvoices }: P
                                                 <UpdateBtn />
                                             </div>
                                             {user.isBusiness &&
-                                                <div onClick={() => handleDelete(invoice)}>
+                                                // <div onClick={() => handleDelete(invoice)}>
+                                                <div>
                                                     <DeleteBtn />
                                                 </div>
                                             }
@@ -158,7 +159,8 @@ export default function InvoicesTable({ loading, allInvoices, fetchInvoices }: P
                                                     <UpdateBtn />
                                                 </div>
                                                 {user.isBusiness &&
-                                                    <div onClick={() => handleDelete(invoice)}>
+                                                    // <div onClick={() => handleDelete(invoice)}>
+                                                    <div>
                                                         <DeleteBtn />
                                                     </div>
                                                 }

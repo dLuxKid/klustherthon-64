@@ -30,9 +30,9 @@ export default function Search({ placeholder }: { placeholder: string }) {
             <input
                 className="peer block w-full rounded-md border border-background py-[9px] pl-10 text-text outline-2 placeholder:text-text"
                 placeholder={placeholder}
-                onChange={(e) => {
-                    //   handleSearch(e.target.value);
-                }}
+            // onChange={(e) => {
+            //       handleSearch(e.target.value);
+            // }}
             // defaultValue={ }
             />
             <div className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900">

@@ -17,24 +17,24 @@ export default function PaymentTable() {
     const [editModal, setEditModal] = useState<boolean>(false)
     const [selectedPayment, setSelectedPayment] = useState<paymentType | null>(null)
 
-    const handleDelete = async (payment: paymentType) => {
-        try {
-            const res = await fetch('http://localhost:5000/api/payments/delete', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-                },
-                body: JSON.stringify({
-                    'businessId': user.id
-                }),
-            })
+    // const handleDelete = async (payment: paymentType) => {
+    //     try {
+    //         const res = await fetch('http://localhost:5000/api/payments/delete', {
+    //             method: 'DELETE',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${user.token}`
+    //             },
+    //             body: JSON.stringify({
+    //                 'businessId': user.id
+    //             }),
+    //         })
 
-            console.log(res)
-        } catch (error: any) {
-            toast.error(error.message)
-        }
-    }
+    //         console.log(res)
+    //     } catch (error: any) {
+    //         toast.error(error.message)
+    //     }
+    // }
 
     return (
         <div className="mt-6 flow-root w-full">
@@ -86,7 +86,8 @@ export default function PaymentTable() {
                                                 <UpdateBtn />
                                             </div>
                                             {user.isBusiness &&
-                                                <div onClick={() => handleDelete(payment)}>
+                                                // <div onClick={() => handleDelete(payment)}>
+                                                <div>
                                                     <DeleteBtn />
                                                 </div>
                                             }
@@ -138,7 +139,8 @@ export default function PaymentTable() {
                                                     <UpdateBtn />
                                                 </div>
                                                 {user.isBusiness &&
-                                                    <div onClick={() => handleDelete(payment)}>
+                                                    // <div onClick={() => handleDelete(payment)}>
+                                                    <div>
                                                         <DeleteBtn />
                                                     </div>
                                                 }

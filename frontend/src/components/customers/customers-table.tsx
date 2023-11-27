@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { formatDateToLocal } from '../../utils/formatter';
+import { customerType } from '../../pages/customers';
 import { UpdateBtn } from '../buttons';
 import Loader from '../loader';
-import { customerType } from '../../pages/customers';
 import EditCustomer from './edit-customer';
 
 
