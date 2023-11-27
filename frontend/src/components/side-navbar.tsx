@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 import { AiFillCaretRight } from "react-icons/ai";
 import { BsCash, BsFillCaretDownFill, BsPeopleFill } from "react-icons/bs";
-import { FaChartBar, FaFileInvoice } from "react-icons/fa";
+import { FaBell, FaChartBar, FaFileInvoice } from "react-icons/fa";
 import { useAuthContext } from "../context/useAuthContext";
 import { FaPeopleGroup } from "react-icons/fa6";
 
@@ -24,6 +24,7 @@ export default function SideNavbar() {
     const [screenSize, setScreenSize] = useState<number | null>(null);
 
     const [showLogOutBtn, setShowLogOutBtn] = useState(false)
+    const [openNotification, setOpenNotification] = useState<boolean>(false)
 
     const navigate = useNavigate()
 
@@ -50,6 +51,18 @@ export default function SideNavbar() {
         <div
             className={`${activeMenu ? "w-72" : "w-8"} ${screenSize <= 976 ? "fixed" : "relative"} bg-background shadow-md shadow-text duration-300 z-50 h-screen`}
         >
+            <div className="text-primary h-5 w-5 absolute top-4 right-4 cursor-pointer">
+                <span onClick={() => setOpenNotification(prev => !prev)}>
+                    <FaBell />
+                </span>
+                {
+                    openNotification &&
+                    <div className="mt-2 bg-white p-4 h-64 w-64 flex items-center justify-center left-0 shadow-md rounded-lg">
+                        <p className="text-black">No current notifications</p>
+                    </div>
+                }
+            </div>
+
             {screenSize <= 976 ? (
                 <div
                     className={`h-8 w-8 bg-white text-primary rounded-full flex justify-center items-center absolute cursor-pointer border-2 border-brown top-9 -right-3 duration-250 ${activeMenu ? "rotate-180" : ""
@@ -118,7 +131,6 @@ export default function SideNavbar() {
                                     Staffs
                                 </p>
                             </NavLink>
-
                         }
                     </div>
                     <div className="w-full mb-8">
