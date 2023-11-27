@@ -2,6 +2,10 @@ import express from "express-async-handler";
 import Invoice from "../Models/Invoice.js";
 import Client from "../Models/Clients.js";
 import expressAsyncHandler from "express-async-handler";
+import {
+    scheduleInvoice
+} from "../Services/schedulerService.js";
+import Business from "../Models/Business.js";
 
 export const allBusiness = expressAsyncHandler(async (req, res) => {
   try {
@@ -43,30 +47,39 @@ export const allClient = expressAsyncHandler(async (req, res) => {
 });
 
 export const createInvoice = expressAsyncHandler(async (req, res) => {
-  try {
-    const client = await Client.findOne({
-      email: req.body.email,
-    });
+    try {
+        const client = await Client.findOne({
+            email: req.body.clientEmail,
+        });
+        const staffEmail = async () => {
+            const staff = await Staff.findById(req.body.staffId, );
+            return staff.email;
+        }
+        const business = await Business.findById(
+            client.business
+        );
 
-    if (client) {
-      const newInvoice = new Invoice({
-        title: req.body.title,
-        staff: req.body.staffId,
-        client: client._id,
-        clientEmail: req.body.email,
-        amount: req.body.amount,
-        paymentInterval: req.body.paymentInterval,
-        paymentStatus: req.body.paymentStatus,
-        paymentType: req.body.paymentType,
-        business: client.business,
-      });
 
-      if (req.body.paymentType == 2) {
-        newInvoice.installmentalAmount = req.body.installmentalAmount;
-        setNextPayment(newInvoice, req.body.paymentInterval, res);
-      } else if (req.body.paymentType == 3) {
-        setNextPayment(newInvoice, req.body.paymentInterval, res);
-      }
+        businessEmail
+        if (client) {
+            const newInvoice = new Invoice({
+                title: req.body.title,
+                staff: req.body.staffId,
+                client: client._id,
+                clientEmail: req.body.clientEmail,
+                amount: req.body.amount,
+                paymentInterval: req.body.paymentInterval,
+                paymentStatus: req.body.paymentStatus,
+                paymentType: req.body.paymentType,
+                business: client.business,
+            });
+
+            if (req.body.paymentType == 2) {
+                newInvoice.installmentalAmount = req.body.installmentalAmount;
+                setNextPayment(newInvoice, req.body.paymentInterval, res);
+            } else if (req.body.paymentType == 3) {
+                setNextPayment(newInvoice, req.body.paymentInterval, res);
+            }
 
       await newInvoice.save();
       res.status(201).send({
