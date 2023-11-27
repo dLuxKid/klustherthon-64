@@ -8,7 +8,11 @@ const invoiceSchema = new mongoose.Schema({
         staff: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Staff",
-            required: true
+        },
+        client:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Client",
+            required:true
         },
         amount: {
             type: Number,
@@ -21,6 +25,10 @@ const invoiceSchema = new mongoose.Schema({
         paymentType: {
             type: Number,
             required: true
+        },
+        paymentInterval:{
+            type:Number,
+            required:true
         },
         installmentalAmount:{
             type:Number,
