@@ -27,7 +27,7 @@ export default function SideNavbar() {
 
     const navigate = useNavigate()
 
-    const { user } = useAuthContext()
+    const { user, dispatch } = useAuthContext()
 
     useEffect(() => {
         const handleSize = () => {
@@ -138,6 +138,7 @@ export default function SideNavbar() {
                                 className="shadow-xl w-16 self-center p-2 mx-auto bg-white rounded-lg hover:scale-110 overflow-hidden text-black cursor-pointer"
                                 onClick={() => {
                                     localStorage.removeItem('user')
+                                    dispatch({ type: 'logout' })
                                     navigate('/')
                                 }}
                             >

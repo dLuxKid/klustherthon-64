@@ -28,8 +28,6 @@ export default function Invoices() {
                 }
             })
             const data = await res.json()
-            console.log(data)
-
             if (res.ok) {
                 setAllInvoices(data)
                 setLoading(false)
@@ -39,7 +37,6 @@ export default function Invoices() {
             }
         } catch (error) {
             toast.error('Error fetching invoices')
-
             setLoading(false)
         }
     }

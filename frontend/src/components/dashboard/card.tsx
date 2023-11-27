@@ -1,6 +1,10 @@
 import { BsCash, BsPeopleFill } from "react-icons/bs";
 import { FaFileInvoice } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { usePaymentContext } from "../../context/usePaymentContext";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "../../context/useAuthContext";
+import { customerType } from "../../pages/customers";
 
 const iconMap = {
     staff: <FaPeopleGroup />,
@@ -9,16 +13,23 @@ const iconMap = {
     invoices: <FaFileInvoice />,
 };
 
-export default function CardWrapper() {
+interface Props {
+    customers: number
+    payments: number
+    invoices: number
+}
+
+export default function CardWrapper({ customers, payments, invoices }: Props) {
+
     return (
         <>
-            <Card title="Total Payments" value={10} type="payments" />
-            <Card title="Total Staffs" value={10} type="staff" />
-            <Card title="Total Invoices" value={10} type="invoices" />
+            {payments && <Card title="Total Payments" value={payments ?? '-'} type="payments" />}
+            {customers && <Card title="Total Clients" value={customers ?? '-'} type="customers" />}
+            {invoices && <Card title="Total Invoices" value={invoices ?? '-'} type="invoices" />}
             <Card
-                title="Total Clients"
+                title="Total Staffs"
                 value={10}
-                type="customers"
+                type="staff"
             />
         </>
     );
