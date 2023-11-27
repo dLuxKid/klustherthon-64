@@ -22,6 +22,7 @@ paymentRouter.get(
 );
 paymentRouter.get(
     "/allBusiness",
+    isAuth,
     expressAsyncHandler(async (req, res) => {
       try {
         const payments = await Payment.find({
