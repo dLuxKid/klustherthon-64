@@ -12,9 +12,9 @@ export const PaymentContext = createContext({} as paymentContextType)
 
 export const PaymentContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [payments, setPayments] = useState<paymentType[]>([])
+
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>('')
-
 
     const fetchPayments = async () => {
         setLoading(true)

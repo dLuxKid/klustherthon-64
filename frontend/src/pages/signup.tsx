@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import BusinessSignupForm from "../components/forms/business-signup";
 import StaffSignupForm from "../components/forms/staff-signup";
+import { NavLink } from "react-router-dom";
 
 const Signup = () => {
     const [signupAs, setSignupAs] = useState<'business' | 'staff'>('business')
@@ -35,6 +36,9 @@ const Signup = () => {
                 </nav>
                 {signupAs === 'business' && <BusinessSignupForm />}
                 {signupAs === 'staff' && <StaffSignupForm />}
+                <NavLink to={'/login'}>
+                    <p className="text-black hover:text-primary font-semibold text-base cursor-pointer -mt-3">Click to login</p>
+                </NavLink>
             </section>
         </main>
     );

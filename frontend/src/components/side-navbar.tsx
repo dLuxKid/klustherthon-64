@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 import { AiFillCaretRight } from "react-icons/ai";
 import { BsCash, BsFillCaretDownFill, BsPeopleFill } from "react-icons/bs";
-import { FaChartBar, FaFileInvoice } from "react-icons/fa";
+import { FaBell, FaChartBar, FaFileInvoice } from "react-icons/fa";
 import { useAuthContext } from "../context/useAuthContext";
 import { FaPeopleGroup } from "react-icons/fa6";
 
@@ -24,10 +24,11 @@ export default function SideNavbar() {
     const [screenSize, setScreenSize] = useState<number | null>(null);
 
     const [showLogOutBtn, setShowLogOutBtn] = useState(false)
+    const [openNotification, setOpenNotification] = useState<boolean>(false)
 
     const navigate = useNavigate()
 
-    const { user } = useAuthContext()
+    const { user, dispatch } = useAuthContext()
 
     useEffect(() => {
         const handleSize = () => {
@@ -50,6 +51,18 @@ export default function SideNavbar() {
         <div
             className={`${activeMenu ? "w-72" : "w-8"} ${screenSize <= 976 ? "fixed" : "relative"} bg-background shadow-md shadow-text duration-300 z-50 h-screen`}
         >
+            <div className="text-primary h-5 w-5 absolute top-4 right-4 cursor-pointer">
+                <span onClick={() => setOpenNotification(prev => !prev)}>
+                    <FaBell />
+                </span>
+                {
+                    openNotification &&
+                    <div className="mt-2 bg-white p-4 h-64 w-64 flex items-center justify-center left-0 shadow-md rounded-lg">
+                        <p className="text-black">No current notifications</p>
+                    </div>
+                }
+            </div>
+
             {screenSize <= 976 ? (
                 <div
                     className={`h-8 w-8 bg-white text-primary rounded-full flex justify-center items-center absolute cursor-pointer border-2 border-brown top-9 -right-3 duration-250 ${activeMenu ? "rotate-180" : ""
@@ -118,10 +131,9 @@ export default function SideNavbar() {
                                     Staffs
                                 </p>
                             </NavLink>
-
                         }
                     </div>
-                    <div className="w-full mb-8">
+                    <div className="w-full mb-8 relative">
                         <div className="text-text flex items-center">
                             <p>{user.username}</p>
                             <span
@@ -135,9 +147,10 @@ export default function SideNavbar() {
                         </div>
                         {showLogOutBtn ? (
                             <p
-                                className="shadow-xl w-16 self-center p-2 mx-auto bg-white rounded-lg hover:scale-110 overflow-hidden text-black cursor-pointer"
+                                className=" absolute top-6 right-16 shadow-lg self-center px-4 py-2 bg-white rounded-lg hover:scale-105 text-black font-medium cursor-pointer"
                                 onClick={() => {
                                     localStorage.removeItem('user')
+                                    dispatch({ type: 'logout' })
                                     navigate('/')
                                 }}
                             >

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import BusinessLoginForm from "../components/forms/business-login";
 import StaffLoginForm from "../components/forms/staff-login";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Login = () => {
     const location = useLocation()
@@ -47,6 +47,9 @@ const Login = () => {
                 </nav>
                 {loginAs === 'business' && <BusinessLoginForm loginDetails={data} />}
                 {loginAs === 'staff' && <StaffLoginForm loginDetails={data} />}
+                <NavLink to={'/signup'}>
+                    <p className="text-black hover:text-primary font-semibold text-base cursor-pointer -mt-3">Click to signup</p>
+                </NavLink>
             </section>
         </main>
 

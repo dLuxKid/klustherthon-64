@@ -50,6 +50,7 @@ export default function EditInvoice({ setOpenEditModal, fetchInvoices, invoice }
     const editInvoice = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true)
+        console.log(invoice)
 
         if (!state.amount || !state.email || !state.name || !state.paymentStatus) {
             setLoading(false)
