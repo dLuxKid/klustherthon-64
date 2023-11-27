@@ -45,20 +45,21 @@ export const allClient = expressAsyncHandler(async (req, res) => {
 export const createInvoice = expressAsyncHandler(async (req, res) => {
   try {
     const client = await Client.findOne({
-      email: req.body.clientEmail,
+      email: req.body.email,
     });
 
     if (client) {
       const newInvoice = new Invoice({
         title: req.body.title,
-        staff: req.body.staffId, // this can be either  staff or business administrator id
+        staff: req.body.staffId,
         client: client._id,
         amount: req.body.amount,
         paymentInterval: req.body.paymentInterval,
         paymentStatus: req.body.paymentStatus,
         paymentType: req.body.paymentType,
-        business: req.body.businessId,
+        business: client.business,
       });
+
       if (req.body.paymentType == 2) {
         newInvoice.installmentalAmount = req.body.installmentalAmount;
         setNextPayment(newInvoice, req.body.paymentInterval, res);
@@ -84,12 +85,11 @@ export const createInvoice = expressAsyncHandler(async (req, res) => {
 export const updateInvoice = expressAsyncHandler(async (req, res) => {
   try {
     const client = await Client.findOne({
-      email: req.body.clientEmail,
+      _id: req.body.email,
     });
 
-    const invoiceId = req.params.id; // Assuming the invoice ID is passed as a parameter
+    const invoiceId = req.params.id;
 
-    // Fetch the existing invoice from the database
     const existingInvoice = await Invoice.findById(invoiceId);
 
     if (!existingInvoice) {

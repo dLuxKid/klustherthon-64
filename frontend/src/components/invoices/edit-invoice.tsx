@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { invoiceType } from "./invoice-table";
 
 import Loader from "../loader";
+import { useAuthContext } from "../../context/useAuthContext";
 
 type initialStateType = {
     name: string
@@ -21,7 +22,7 @@ const invoiceReducer = (state: initialStateType, action: { name: string, value: 
 
 type Props = {
     setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>
-    fetchPayments?: () => void
+    fetchInvoices: () => void
     invoice: invoiceType
 }
 
@@ -30,13 +31,14 @@ const paymentStatus_options: Array<{ value: string, label: string }> = [
     { value: 'pending', label: 'Pending' },
 ];
 
-export default function EditInvoice({ setOpenEditModal, fetchPayments, invoice }: Props) {
+export default function EditInvoice({ setOpenEditModal, fetchInvoices, invoice }: Props) {
+    const { user } = useAuthContext()
 
     const [state, dispatch] = useReducer(invoiceReducer, {
-        name: invoice.name,
-        email: invoice.email,
+        name: invoice.title,
+        email: invoice.client,
         amount: invoice.amount.toString(),
-        paymentStatus: invoice.status
+        paymentStatus: invoice.paymentStatus ? 'paid' : 'pending'
     })
 
     const [loading, setLoading] = useState<boolean>(false)
@@ -47,58 +49,50 @@ export default function EditInvoice({ setOpenEditModal, fetchPayments, invoice }
 
     const editInvoice = async (e: React.FormEvent) => {
         e.preventDefault();
-        // setLoading(true)
+        setLoading(true)
 
-        // if (!state.amount || !state.description || !state.name) {
-        //     setLoading(false)
-        //     return toast.error('Please fill all values')
-        // }
+        if (!state.amount || !state.email || !state.name || !state.paymentStatus) {
+            setLoading(false)
+            return toast.error('Please fill all values')
+        }
 
-        // const apiUrl = `http://localhost:5000/api/payments/${payment._id}/update`
+        const apiUrl = `http://localhost:5000/api/invoices/update/${invoice._id}`
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify({
+                    'id': invoice._id,
+                    "title": state.name,
+                    "email": state.email,
+                    "amount": Number(state.amount),
+                    "paymentStatus": state.paymentStatus === 'paid' ? true : false,
+                    "paymentType": (invoice.paymentType),
+                    'installmentalAmount': Number(invoice.installmentAmount),
+                    'paymentInterval': Number(invoice.paymentInterval),
+                    'staff': user.bid,
+                    'business': user.id
+                }),
+            });
 
-        // try {
-        //     const response = await fetch(apiUrl, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify({
-        //             "name": state.name,
-        //             "notes": state.description,
-        //             "amount": Number(state.amount),
-        //         }),
-        //     });
-
-        //     const data = await response.json()
-        //     console.log(data)
-
-
-        //     if (response.ok) {
-        //         toast.success('Payment successfully updated')
-        //         fetchPayments()
-        //         setTimeout(() => {
-        //             setLoading(false)
-        //             setOpenEditModal(false)
-        //         }, 500);
-        //     } else {
-        //         console.error('Failed to send data to the server');
-        //         toast.error('Error updating payment');
-        //         setTimeout(() => {
-        //             setLoading(false)
-        //         }, 500);
-        //     }
-        // } catch (error) {
-        //     console.error('Error sending data:', error);
-        //     toast.error('Error updating payment');
-        //     setTimeout(() => {
-        //         setLoading(false)
-        //     }, 500);
-        // }
-
-        // setTimeout(() => {
-        //     setLoading(false)
-        // }, 500);
-    };
+            if (response.ok) {
+                toast.success('invoice successfully updated')
+                setOpenEditModal(false)
+                fetchInvoices()
+                setLoading(false)
+            } else {
+                setLoading(false)
+                toast.error('Error updating invoice');
+            }
+        } catch (error) {
+            console.error('Error sending data:', error);
+            toast.error('Error updating invoice');
+            setLoading(false)
+        }
+    }
 
     return (
         <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
@@ -158,7 +152,14 @@ export default function EditInvoice({ setOpenEditModal, fetchPayments, invoice }
                             ))}
                     </div>
                 </label>
-                <button type="submit" className="w-full bg-primary hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4" onClick={editInvoice}>Update Invoice</button>
+                <button
+                    type="submit"
+                    className="w-full bg-primary flex items-center justify-center hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
+                    onClick={editInvoice}
+                    disabled={loading}
+                >
+                    {loading ? <Loader /> : 'Save Invoice'}
+                </button>
             </form>
         </div>
     )

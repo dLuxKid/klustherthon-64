@@ -1,15 +1,15 @@
 
 import { FaCheck, FaRegClock } from 'react-icons/fa';
 
-export default function InvoiceStatus({ status }: { status: string }) {
+export default function InvoiceStatus({ status }: { status: boolean }) {
     return (
         <span
             className={` inline-flex items-center rounded-full px-2 py-1 text-xs
-             ${status === 'pending' && 'bg-gray-100 text-text'} 
-            ${status === 'paid' && 'bg-success text-white'}
+             ${status === false && 'bg-gray-100 text-text'} 
+            ${status === true && 'bg-success text-white'}
       `}
         >
-            {status === 'pending' ? (
+            {status === false ? (
                 <>
                     Pending
                     <div className="ml-1 w-4 text-gray-500" >
@@ -17,7 +17,7 @@ export default function InvoiceStatus({ status }: { status: string }) {
                     </div>
                 </>
             ) : null}
-            {status === 'paid' ? (
+            {status === true ? (
                 <>
                     Paid
                     <div className="ml-1 w-4 text-white" >

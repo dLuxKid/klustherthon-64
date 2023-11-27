@@ -11,7 +11,7 @@ const initialState = {
     email: '',
     amount: '',
     paymentStatus: '',
-    paymentType: '',
+    paymentType: 1,
     paymentInterval: 0,
     installmentalPaymentAmount: 0
 }
@@ -21,17 +21,20 @@ const paymentStatus_options: Array<{ value: string, label: string }> = [
     { value: 'pending', label: 'Pending' },
 ];
 
-const paymentType_options: Array<{ value: string, label: string }> = [
-    { value: 'single', label: 'Single' },
-    { value: 'installment', label: 'Installmentally' },
-    { value: 'reoccurring', label: 'Reoccurring' },
+const paymentType_options: Array<{ value: number, label: string }> = [
+    { value: 1, label: 'Single' },
+    { value: 2, label: 'Installmentally' },
+    { value: 3, label: 'Reoccurring' },
 ];
 
-const invoiceReducer = (state: typeof initialState, action: { name: string, value: string }) => {
+const invoiceReducer = (state: typeof initialState, action: { name: string, value: string | number }) => {
     return { ...state, [action.name]: action.value }
 }
 
-export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React.Dispatch<React.SetStateAction<boolean>> }) {
+export default function CreateNewInvoice(
+    { setOpenModal, fetchInvoices }:
+        { setOpenModal: React.Dispatch<React.SetStateAction<boolean>>, fetchInvoices: () => void }
+) {
     const [state, dispatch] = useReducer(invoiceReducer, initialState)
 
     const [loading, setLoading] = useState<boolean>(false)
@@ -63,17 +66,20 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                 body: JSON.stringify({
                     "title": state.name,
                     "email": state.email,
-                    "amount": state.amount,
-                    "paymentStatus": state.paymentStatus,
-                    "paymentType": state.paymentType,
-                    'installmentalAmount': state.installmentalPaymentAmount,
-                    'paymentInterval': state.paymentInterval
+                    "amount": Number(state.amount),
+                    "paymentStatus": state.paymentStatus === 'paid' ? true : false,
+                    "paymentType": (state.paymentType),
+                    'installmentalAmount': Number(state.installmentalPaymentAmount),
+                    'paymentInterval': Number(state.paymentInterval),
+                    'staff': user.bid,
+                    'business': user.id
                 }),
             });
 
             if (response.ok) {
                 toast.success('invoice successfully created')
                 setOpenModal(false)
+                fetchInvoices()
                 setLoading(false)
             } else {
                 setLoading(false)
@@ -126,7 +132,7 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                         onChange={handleChange}
                         value={state.amount}
                         name="amount"
-                        readOnly={state.paymentType !== 'installment'}
+                        readOnly={state.paymentType !== 2}
                     />
                 </label>
                 <label>
@@ -162,7 +168,7 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                                             checked={state.paymentType === item.value}
                                             onChange={() => {
                                                 dispatch({ name: 'paymentType', value: item.value })
-                                                if (state.paymentType !== 'single') dispatch({ name: 'paymentInterval', value: '1' })
+                                                if (state.paymentType !== 1) dispatch({ name: 'paymentInterval', value: 1 })
                                             }}
                                             className="cursor-pointer appearance-none checked:bg-black checked:border-none focus:outline-none"
                                         />
@@ -173,7 +179,7 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                             ))}
                     </div>
                     <div className="flex gap-4 items-center justify-start">
-                        {state.paymentType !== 'single' &&
+                        {state.paymentType !== 1 &&
                             <select value={state.paymentInterval} onChange={handleChange} name="paymentInterval" >
                                 <option value={1}>Daily</option>
                                 <option value={2}>Weekly</option>
@@ -181,7 +187,7 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                                 <option value={4}>Yearly</option>
                             </select>
                         }
-                        {state.paymentType === 'installment' &&
+                        {state.paymentType === 2 &&
                             <input
                                 required
                                 type="number"
