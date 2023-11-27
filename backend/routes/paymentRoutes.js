@@ -20,6 +20,21 @@ paymentRouter.get(
     }
   })
 );
+paymentRouter.get(
+    "/allBusiness",
+    expressAsyncHandler(async (req, res) => {
+      try {
+        const payments = await Payment.find({
+            business:req.body.businessId
+        });
+        res.status(200).send(payments);
+      } catch (err) {
+        res.status(400).send({
+          message: "Error fetching payments",
+        });
+      }
+    })
+  );
 paymentRouter.post(
   "/create",
   expressAsyncHandler(async (req, res) => {
