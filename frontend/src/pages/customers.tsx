@@ -61,7 +61,7 @@ export default function Customers() {
                 <CreateBtn setOpenModal={setOpenModal} text="Create New Client" />
             </div>
             <CustomersTable customers={customers} fetchCustomers={fetchCustomers} loading={loading} />
-            {openModal && <CreateNewCustomer setOpenModal={setOpenModal} />}
+            {openModal && <CreateNewCustomer setOpenModal={setOpenModal} fetchCustomers={fetchCustomers} />}
         </div >
     )
 }

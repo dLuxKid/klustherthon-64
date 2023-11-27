@@ -5,7 +5,6 @@ import { AiFillCaretRight } from "react-icons/ai";
 import { BsCash, BsFillCaretDownFill, BsPeopleFill } from "react-icons/bs";
 import { FaBell, FaChartBar, FaFileInvoice } from "react-icons/fa";
 import { useAuthContext } from "../context/useAuthContext";
-import { FaPeopleGroup } from "react-icons/fa6";
 
 const links = [
     { name: "clients", icon: <BsPeopleFill /> },
@@ -115,23 +114,6 @@ export default function SideNavbar() {
                                 </p>
                             </NavLink>
                         ))}
-                        {user.isBusiness &&
-                            <NavLink
-                                onClick={() => setActiveMenu(!activeMenu)}
-                                to={`/dashboard/staffs`}
-                                className={({ isActive }: { isActive: boolean }) =>
-                                    isActive
-                                        ? "bg-primary flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90 text-white"
-                                        : "flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90 hover:text-white text-text"
-                                }
-                                end
-                            >
-                                <FaPeopleGroup />
-                                <p className="capitalize">
-                                    Staffs
-                                </p>
-                            </NavLink>
-                        }
                     </div>
                     <div className="w-full mb-8 relative">
                         <div className="text-text flex items-center">

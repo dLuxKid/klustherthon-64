@@ -23,32 +23,28 @@ export const PaymentContextProvider = ({ children }: { children: React.ReactNode
         setLoading(true)
         setPayments([])
         try {
-            const res = await fetch('http://localhost:5000/api/payments/allBusiness', {
+            const res = await fetch('http://localhost:5000/api/payments/all', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
+                    // 'Authorization': `Bearer ${user.token}`
                 },
-                body: JSON.stringify({
-                    'businessId': user.id
-                })
+                // body: JSON.stringify({
+                //     'businessId': user.id
+                // })
             })
+            const data = await res.json()
+            console.log(data)
             if (res.ok) {
-                setPayments(await res.json())
-                setTimeout(() => {
-                    setLoading(false)
-                }, 500);
+                setPayments(data)
+                setLoading(false);
             } else {
                 setError('Error fetching payments')
-                setTimeout(() => {
-                    setLoading(false)
-                }, 500);
+                setLoading(false);
             }
         } catch (error) {
             setError('Error fetching payments')
-            setTimeout(() => {
-                setLoading(false)
-            }, 500);
+            setLoading(false)
         }
     }
 

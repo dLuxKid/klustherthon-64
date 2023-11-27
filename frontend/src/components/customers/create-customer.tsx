@@ -18,9 +18,10 @@ const invoiceReducer = (state: typeof initialState, action: { name: string, valu
 
 type Props = {
     setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+    fetchCustomers: () => void
 }
 
-export default function CreateNewCustomer({ setOpenModal }: Props) {
+export default function CreateNewCustomer({ setOpenModal, fetchCustomers }: Props) {
 
     const { user } = useAuthContext()
 
@@ -62,7 +63,7 @@ export default function CreateNewCustomer({ setOpenModal }: Props) {
 
             if (response.ok) {
                 toast.success('Client successfully registered')
-                // fetchPayments()
+                fetchCustomers()
                 setTimeout(() => {
                     setLoading(false)
                     setOpenModal(false)

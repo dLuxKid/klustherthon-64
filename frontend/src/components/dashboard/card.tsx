@@ -22,11 +22,6 @@ export default function CardWrapper({ customers, payments, invoices }: Props) {
             <Card title="Total Payments" value={payments || '-'} type="payments" />
             <Card title="Total Clients" value={customers || '-'} type="customers" />
             <Card title="Total Invoices" value={invoices || '-'} type="invoices" />
-            <Card
-                title="Total Staffs"
-                value={10}
-                type="staff"
-            />
         </>
     );
 }
