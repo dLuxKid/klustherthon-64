@@ -34,7 +34,8 @@ userRouter.put(
     "/business/profile",
     // isAuth,
     expressAsyncHandler(async (req, res) => {
-        // this will update business 
+        // this will update business
+
     })
 )
 userRouter.put(
@@ -56,7 +57,7 @@ userRouter.put(
     "/staff/profile",
     // isAuth,
     expressAsyncHandler(async (req, res) => {
-        // this will update Staff profile 
+        // this will update Staff profile   
     })
 )
 

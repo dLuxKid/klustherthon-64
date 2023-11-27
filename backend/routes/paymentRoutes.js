@@ -2,7 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import expressAsyncHandler from "express-async-handler";
 import Payment from "../Models/Payment.js";
-import { isBusiness } from "../utils.js";
+import Staff from "../Models/Staff.js";
+import { isAuth, isBusiness } from "../utils.js";
 
 const paymentRouter = express.Router();
 
@@ -27,11 +28,12 @@ paymentRouter.post(
         name: req.body.name,
         notes: req.body.notes,
         amount: req.body.amount,
-        business:req.body.businessId
+        business: req.body.businessId,
       });
       const payment = await newPayment.save();
       res.status(201).send({ payment, message: "New Payment Created" });
     } catch (err) {
+      console.log(err);
       res.status(400).send({ message: "Payment Creation Failed" });
     }
   })
@@ -52,6 +54,7 @@ paymentRouter.put(
           .status(201)
           .send({ updatedPayment, message: "Payment Update Successfully." });
       } catch (err) {
+        console.log(err);
         res.status(400).send({ message: "Payment Failed to update." });
       }
     } else {
@@ -60,22 +63,24 @@ paymentRouter.put(
   })
 );
 paymentRouter.delete(
-    "/delete",
-    isBusiness,
-    expressAsyncHandler(async (req, res) => {
-        try {
-            const staff = await Staff.findById(staffId);
-        
-            if (staff.business.toString() !== businessId) {
-              return res.status(403).send({ message: "Unauthorized" });
-            }else{
-                await staff.remove();
-                return res.status(200).send({ message: "Payment Deleted" });
-            }
-        }catch(err){
-
-        }
-    
-    })
-)
+  "/delete",
+  isAuth,
+  // isBusiness,
+  expressAsyncHandler(async (req, res) => {
+    try {
+      const staff = await Staff.findById(req.body.staffId);
+      console.log(staff);
+      if (staff && staff.business.toString() !== req.body.businessId) {
+        return res.status(403).send({ message: "Unauthorized" });
+      } else {
+        await Staff.deleteOne({ _id: req.body.staffId });
+        // await Staff.remove({ _id: req.body.staffId });
+        return res.status(200).send({ message: "Payment Deleted" });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(400).send({ message: "something went wrong" });
+    }
+  })
+);
 export default paymentRouter;
