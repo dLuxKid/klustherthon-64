@@ -3,9 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
+import { useAuthContext } from "../../context/useAuthContext";
 
-const BusinessLoginForm = () => {
+type Props = {
+  loginDetails: {
+    loginAs: 'business' | 'staff',
+    email: string,
+    password: string
+  } | null
+}
+
+const BusinessLoginForm = ({ loginDetails }: Props) => {
   const navigate = useNavigate()
+
+  const { dispatch } = useAuthContext()
 
   const validationSchema = Yup.object({
     email: Yup.string().required(),
@@ -18,8 +29,8 @@ const BusinessLoginForm = () => {
     <>
       <Formik
         initialValues={{
-          email: "",
-          password: "",
+          email: loginDetails && loginDetails.loginAs === 'business' && loginDetails.email || "",
+          password: loginDetails && loginDetails.loginAs === 'business' && loginDetails.password || "",
         }}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
@@ -35,10 +46,26 @@ const BusinessLoginForm = () => {
                 'password': values.password
               })
             })
+
             const data = await res.json()
 
             if (res.ok) {
-              toast.success('Welcome back')
+
+              const userDetails = {
+                id: data.id,
+                bid: data.businessRegNo,
+                username: data.userName,
+                email: data.administratorEmail,
+                isBusiness: data.isBusiness,
+                token: data.token
+              }
+              localStorage.setItem('user', JSON.stringify(userDetails))
+
+              toast.success('Welcome back ' + data.userName)
+
+              dispatch({
+                type: 'login', payload: userDetails
+              })
               navigate('/dashboard')
               setSubmitting(false)
             } else {

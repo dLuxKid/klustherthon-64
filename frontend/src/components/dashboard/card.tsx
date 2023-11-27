@@ -16,7 +16,7 @@ export default function CardWrapper() {
             <Card title="Total Staffs" value={10} type="staff" />
             <Card title="Total Invoices" value={10} type="invoices" />
             <Card
-                title="Total Customers"
+                title="Total Clients"
                 value={10}
                 type="customers"
             />

@@ -1,16 +1,19 @@
-import React, { useReducer } from "react"
+import React, { useEffect, useReducer, useState } from "react"
 
 import { MdCancel } from "react-icons/md";
 import { toast } from "sonner";
+import { usePaymentContext } from "../../context/usePaymentContext";
+import Loader from "../loader";
+import { useAuthContext } from "../../context/useAuthContext";
 
 const initialState = {
     name: '',
     email: '',
-    amount: 300,
+    amount: '',
     paymentStatus: '',
-    paymentType: '',
-    periodicPayment: 0, // optional
-    installmentalPaymentAmount: 0 // optional
+    paymentType: 1,
+    paymentInterval: 0,
+    installmentalPaymentAmount: 0
 }
 
 const paymentStatus_options: Array<{ value: string, label: string }> = [
@@ -18,28 +21,39 @@ const paymentStatus_options: Array<{ value: string, label: string }> = [
     { value: 'pending', label: 'Pending' },
 ];
 
-const paymentType_options: Array<{ value: string, label: string }> = [
-    { value: 'single', label: 'Single' },
-    { value: 'installment', label: 'Installmentally' },
-    { value: 'reoccurring', label: 'Reoccurring' },
+const paymentType_options: Array<{ value: number, label: string }> = [
+    { value: 1, label: 'Single' },
+    { value: 2, label: 'Installmentally' },
+    { value: 3, label: 'Reoccurring' },
 ];
 
-const invoiceReducer = (state: typeof initialState, action: { name: string, value: string }) => {
+const invoiceReducer = (state: typeof initialState, action: { name: string, value: string | number }) => {
     return { ...state, [action.name]: action.value }
 }
 
-export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React.Dispatch<React.SetStateAction<boolean>> }) {
+export default function CreateNewInvoice(
+    { setOpenModal, fetchInvoices }:
+        { setOpenModal: React.Dispatch<React.SetStateAction<boolean>>, fetchInvoices: () => void }
+) {
     const [state, dispatch] = useReducer(invoiceReducer, initialState)
+
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         dispatch({ name: e.target.name, value: e.target.value })
     }
 
+    const { payments } = usePaymentContext()
+    const { user } = useAuthContext()
+
     const createInvoice = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true)
 
-        if (!initialState.amount || !initialState.email || !initialState.name || !initialState.paymentStatus || !initialState.paymentType)
+        if (!state.amount || !state.email || !state.name || !state.paymentStatus || !state.paymentType) {
+            setLoading(false)
             return toast.error('Please fill all values')
+        }
 
         const apiUrl = 'http://localhost:5000/api/invoices/create'
         try {
@@ -47,31 +61,41 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                 },
                 body: JSON.stringify({
-                    "title": initialState.name,
-                    "email": initialState.email,
-                    "amount": initialState.amount,
-                    "paymentStatus": initialState.paymentStatus,
-                    "paymentType": initialState.paymentType,
+                    "title": state.name,
+                    "email": state.email,
+                    "amount": Number(state.amount),
+                    "paymentStatus": state.paymentStatus === 'paid' ? true : false,
+                    "paymentType": (state.paymentType),
+                    'installmentalAmount': Number(state.installmentalPaymentAmount),
+                    'paymentInterval': Number(state.paymentInterval),
+                    'staff': user.bid,
+                    'business': user.id
                 }),
             });
 
             if (response.ok) {
                 toast.success('invoice successfully created')
-                console.log('Data successfully sent to the server', await response.json());
-                // Handle success, e.g., show a success message or redirect
+                setOpenModal(false)
+                fetchInvoices()
+                setLoading(false)
             } else {
-                console.error('Failed to send data to the server');
+                setLoading(false)
                 toast.error('Error creating invoice');
-                // Handle error, e.g., show an error message to the user
             }
         } catch (error) {
             console.error('Error sending data:', error);
             toast.error('Error creating invoice');
-            // Handle network errors or other issues
+            setLoading(false)
         }
     };
+
+    useEffect(() => {
+        const amount = payments.find(i => i.name === state.name)?.amount.toString()
+        dispatch({ name: 'amount', value: amount as string })
+    }, [state.name])
 
     return (
         <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
@@ -81,16 +105,17 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                 </div>
                 <label>
                     <p>Name</p>
-                    <input
-                        required
-                        type="name"
-                        onChange={handleChange}
-                        value={state.name}
-                        name="name"
-                    />
+                    <select name="name" className="w-full" onChange={handleChange}>
+                        <option value="">Select product..</option>
+                        {payments.map((payment) => (
+                            <option key={payment._id} value={payment.name} className="capitalize">
+                                {payment.name}
+                            </option>
+                        ))}
+                    </select>
                 </label>
                 <label>
-                    <p>Email</p>
+                    <p>Customer email</p>
                     <input
                         required
                         type="email"
@@ -105,9 +130,9 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                         required
                         type="number"
                         onChange={handleChange}
-                        value={state.paymentType !== 'installment' ? '300' : state.amount}
+                        value={state.amount}
                         name="amount"
-                        readOnly={state.paymentType !== 'installment'}
+                        readOnly={state.paymentType !== 2}
                     />
                 </label>
                 <label>
@@ -143,7 +168,7 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                                             checked={state.paymentType === item.value}
                                             onChange={() => {
                                                 dispatch({ name: 'paymentType', value: item.value })
-                                                if (state.paymentType !== 'single') dispatch({ name: 'periodicPayment', value: '1' })
+                                                if (state.paymentType !== 1) dispatch({ name: 'paymentInterval', value: 1 })
                                             }}
                                             className="cursor-pointer appearance-none checked:bg-black checked:border-none focus:outline-none"
                                         />
@@ -154,15 +179,15 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                             ))}
                     </div>
                     <div className="flex gap-4 items-center justify-start">
-                        {state.paymentType !== 'single' &&
-                            <select value={state.periodicPayment} onChange={handleChange} name="periodicPayment" >
+                        {state.paymentType !== 1 &&
+                            <select value={state.paymentInterval} onChange={handleChange} name="paymentInterval" >
                                 <option value={1}>Daily</option>
                                 <option value={2}>Weekly</option>
                                 <option value={3}>Monthly</option>
                                 <option value={4}>Yearly</option>
                             </select>
                         }
-                        {state.paymentType === 'installment' &&
+                        {state.paymentType === 2 &&
                             <input
                                 required
                                 type="number"
@@ -174,7 +199,14 @@ export default function CreateNewInvoice({ setOpenModal }: { setOpenModal: React
                     </div>
                 </label>
 
-                <button type="submit" className="w-full bg-primary  disabled:bg-slate-600 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4" onClick={createInvoice}>Create Invoice</button>
+                <button
+                    type="submit"
+                    className="w-full bg-primary flex items-center justify-center hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
+                    onClick={createInvoice}
+                    disabled={loading}
+                >
+                    {loading ? <Loader /> : 'Create Invoice'}
+                </button>
             </form>
         </div>
     )

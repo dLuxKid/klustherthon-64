@@ -32,7 +32,7 @@
 }
 
 select {
-  @apply px-4 py-2 rounded-md text-text text-base font-medium;
+  @apply px-4 py-2 rounded-md text-text text-base font-medium h-[45px];
 }
 
 select option {
@@ -40,11 +40,17 @@ select option {
 }
 
 button:active,
-button:focus {
+button:focus,
+select:active,
+select:focus {
   border: 0;
   outline: none;
 }
 
 button:disabled {
   @apply disabled:cursor-not-allowed  disabled:bg-gray-600;
+}
+
+textarea {
+  @apply h-24 p-4 rounded-lg bg-white w-full;
 }

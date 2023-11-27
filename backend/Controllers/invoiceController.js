@@ -3,113 +3,115 @@ import Invoice from "../Models/Invoice.js";
 import Client from "../Models/Clients.js";
 import expressAsyncHandler from "express-async-handler";
 
-export const allBusiness = expressAsyncHandler(async (req,res)=>{
+export const allBusiness = expressAsyncHandler(async (req, res) => {
     try {
         const invoices = await Invoice.find({
-            business: req.params.id
-        })
-        if (invoices) {
-            res.status(200).send(invoices); 
-        } else {
-            res.status(400).send({}, {
-                message: "No Invoices was found for this Business"
-            });
-        }
-    } catch (err) {
-        res.status(400).send({}, {
-            message: "An error occured"
+            business: req.params.id,
         });
-    }
-});
-export const allClient = expressAsyncHandler(async (req,res)=>{
-    try {
-        const invoices = await Invoice.find({
-            client: req.params.id
-        })
         if (invoices) {
-            res.status(200).send(invoices); 
+            res.status(200).send(invoices);
         } else {
-            res.status(400).send({}, {
-                message: "No Invoices was found for this Client"
+            res.status(400).send({
+                message: "No Invoices was found for this Business",
             });
         }
     } catch (err) {
-        res.status(400).send({}, {
-            message: "An error occured"
+        console.log(err);
+        res.status(400).send({
+            message: "An error occured",
         });
     }
 });
 
-export const createInvoice =  expressAsyncHandler(async (req, res) => {
+export const allClient = expressAsyncHandler(async (req, res) => {
+    try {
+        const invoices = await Invoice.find({
+            client: req.params.id,
+        });
+        if (invoices) {
+            res.status(200).send(invoices);
+        } else {
+            res.status(400).send({
+                message: "No Invoices was found for this Client",
+            });
+        }
+    } catch (err) {
+        res.status(400).send({
+            message: "An error occured",
+        });
+    }
+});
+
+export const createInvoice = expressAsyncHandler(async (req, res) => {
     try {
         const client = await Client.findOne({
-            email: req.body.clientEmail
+            email: req.body.email,
         });
 
         if (client) {
             const newInvoice = new Invoice({
                 title: req.body.title,
-                staff: req.body.staffId, // this can be either  staff or business administrator id
+                staff: req.body.staffId,
                 client: client._id,
-                clientEmail:req.body.clientEmail,
+                clientEmail: req.body.clientEmail,
                 amount: req.body.amount,
                 paymentInterval: req.body.paymentInterval,
                 paymentStatus: req.body.paymentStatus,
                 paymentType: req.body.paymentType,
-                business: req.body.businessId
-            })
+                business: client.business,
+            });
+
             if (req.body.paymentType == 2) {
                 newInvoice.installmentalAmount = req.body.installmentalAmount;
-                setNextPayment(newInvoice, req.body.paymentInterval,res);
+                setNextPayment(newInvoice, req.body.paymentInterval, res);
             } else if (req.body.paymentType == 3) {
-                setNextPayment(newInvoice, req.body.paymentInterval,res);
+                setNextPayment(newInvoice, req.body.paymentInterval, res);
             }
-            console.log(newInvoice);
-            const invoice = await newInvoice.save();
+
+            await newInvoice.save();
             res.status(201).send({
-                message: "New Invoice Created"
-            })
+                message: "New Invoice Created",
+            });
         } else {
             res.status(400).send(new Error("Client with such email was not found"));
         }
-
     } catch (err) {
-        console.log(err)
+        console.log(err);
         res.status(400).send({
-            message: "An error occured"
-        })
+            message: "An error occured",
+        });
     }
-
 });
 
-export const  updateInvoice = expressAsyncHandler(async(req,res)=>{
+export const updateInvoice = expressAsyncHandler(async (req, res) => {
     try {
         const client = await Client.findOne({
-            email: req.body.clientEmail
+            _id: req.body.email,
         });
 
-        const invoiceId = req.params.id; // Assuming the invoice ID is passed as a parameter
+        const invoiceId = req.params.id;
 
-        // Fetch the existing invoice from the database
         const existingInvoice = await Invoice.findById(invoiceId);
 
         if (!existingInvoice) {
-            return res.status(404).send({ message: "Invoice not found" });
+            return res.status(404).send({
+                message: "Invoice not found"
+            });
         }
 
         existingInvoice.title = req.body.title || existingInvoice.title;
-        existingInvoice.title= req.body.title,
-        existingInvoice.staff= req.body.staffId, // this can be either  staff or business administrator id
-        existingInvoice.client= client.id,
-        existingInvoice.amount= req.body.amount,
-        existingInvoice.paymentInterval= req.body.paymentInterval,
-        existingInvoice.paymentStatus= req.body.paymentStatus,
-        existingInvoice.paymentType= req.body.paymentType
+        (existingInvoice.title = req.body.title),
+        (existingInvoice.staff = req.body.staffId), // this can be either  staff or business administrator id
+        (existingInvoice.client = client.id),
+        (existingInvoice.amount = req.body.amount),
+        (existingInvoice.paymentInterval = req.body.paymentInterval),
+        (existingInvoice.paymentStatus = req.body.paymentStatus),
+        (existingInvoice.paymentType = req.body.paymentType);
 
-
-        if (req.body.paymentType !== existingInvoice.paymentType){
-             if (req.body.paymentType == 2) {
-                existingInvoice.installmentalAmount = req.body.installmentalAmount || existingInvoice.installmentalAmount;
+        if (req.body.paymentType !== existingInvoice.paymentType) {
+            if (req.body.paymentType == 2) {
+                existingInvoice.installmentalAmount =
+                    req.body.installmentalAmount || existingInvoice.installmentalAmount;
                 setNextPayment(existingInvoice, req.body.paymentInterval);
             } else if (req.body.paymentType == 3) {
                 setNextPayment(existingInvoice, req.body.paymentInterval);
@@ -128,10 +130,9 @@ export const  updateInvoice = expressAsyncHandler(async(req,res)=>{
             message: "An error occurred while updating the invoice",
         });
     }
-
 });
 
-const setNextPayment = (newInvoice, paymentInterval,res) => {
+const setNextPayment = (newInvoice, paymentInterval, res) => {
     let nextPayment = new Date();
 
     if (paymentInterval == 1) {
@@ -146,10 +147,9 @@ const setNextPayment = (newInvoice, paymentInterval,res) => {
     } else if (paymentInterval == 4) {
         nextPayment.setFullYear(nextPayment.getFullYear() + 1);
         newInvoice.nextPayment = nextPayment;
-    }
-    else{
+    } else {
         res.status(400).send({
-            message:"Invalid Payment Interval"
-        })
+            message: "Invalid Payment Interval",
+        });
     }
 };

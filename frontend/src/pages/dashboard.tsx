@@ -1,8 +1,10 @@
 import CardWrapper from "../components/dashboard/card";
 import LatestInvoices from "../components/dashboard/latest-invoices";
+import { useAuthContext } from "../context/useAuthContext";
 
 
 export default function Dashboard() {
+    const { user } = useAuthContext()
     return (
         <main>
             <h1 className={'text-black text-2xl font-semibold uppercase mb-4'}>Dashboard</h1>

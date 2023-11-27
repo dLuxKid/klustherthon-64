@@ -38,6 +38,7 @@ paymentRouter.post(
     }
   })
 );
+
 paymentRouter.put(
   "/:id/update",
   expressAsyncHandler(async (req, res) => {
@@ -62,6 +63,7 @@ paymentRouter.put(
     }
   })
 );
+
 paymentRouter.delete(
   "/delete",
   isAuth,

@@ -13,9 +13,22 @@ import Payments from "./pages/payments"
 import Signup from "./pages/signup"
 
 import { useAuthContext } from "./context/useAuthContext"
+import Staffs from "./pages/manage-staffs"
+import { useEffect } from "react"
 
 function App() {
-  const { user } = useAuthContext()
+  const { user, authIsReady, dispatch } = useAuthContext()
+
+  useEffect(() => {
+    const storedUser = sessionStorage.getItem('user');
+    if (storedUser) {
+      dispatch({ type: "login", payload: JSON.parse(storedUser) });
+    } else {
+      dispatch({ type: "auth-is-ready", payload: null });
+    }
+  }, []);
+
+  if (!authIsReady) return null
 
   return (
     <>
@@ -30,21 +43,22 @@ function App() {
 
         {/* authenticated routes */}
         <Route path="/dashboard" element={
-          // user?.id ?
-          <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-            <div className="w-full flex-none md:w-64">
-              <SideNavbar />
+          user?.id ?
+            <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+              <div className="w-full flex-none md:w-64">
+                <SideNavbar />
+              </div>
+              <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+                <Outlet />
+              </div>
             </div>
-            <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
-              <Outlet />
-            </div>
-          </div>
-          // : <Navigate to='/login' />
+            : <Navigate to='/login' />
         }>
           <Route path="" element={<Dashboard />} />
           <Route path="invoices" element={<Invoices />} />
-          <Route path="customers" element={<Customers />} />
+          <Route path="clients" element={<Customers />} />
           <Route path="payments" element={<Payments />} />
+          <Route path='staffs' element={<Staffs />} />
         </Route>
       </Routes >
     </>

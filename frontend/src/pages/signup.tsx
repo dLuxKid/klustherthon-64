@@ -37,7 +37,6 @@ const Signup = () => {
                 {signupAs === 'staff' && <StaffSignupForm />}
             </section>
         </main>
-
     );
 };
 
