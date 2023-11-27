@@ -2,6 +2,10 @@ import express from "express-async-handler";
 import Invoice from "../Models/Invoice.js";
 import Client from "../Models/Clients.js";
 import expressAsyncHandler from "express-async-handler";
+import {
+    scheduleInvoice
+} from "../Services/schedulerService.js";
+import Business from "../Models/Business.js";
 
 export const allBusiness = expressAsyncHandler(async (req, res) => {
     try {
@@ -45,9 +49,18 @@ export const allClient = expressAsyncHandler(async (req, res) => {
 export const createInvoice = expressAsyncHandler(async (req, res) => {
     try {
         const client = await Client.findOne({
-            email: req.body.email,
+            email: req.body.clientEmail,
         });
+        const staffEmail = async () => {
+            const staff = await Staff.findById(req.body.staffId, );
+            return staff.email;
+        }
+        const business = await Business.findById(
+            client.business
+        );
 
+
+        businessEmail
         if (client) {
             const newInvoice = new Invoice({
                 title: req.body.title,
@@ -64,6 +77,14 @@ export const createInvoice = expressAsyncHandler(async (req, res) => {
             if (req.body.paymentType == 2) {
                 newInvoice.installmentalAmount = req.body.installmentalAmount;
                 setNextPayment(newInvoice, req.body.paymentInterval, res);
+                scheduleInvoice(newInvoice.nextPayment,
+                    `${clientEmail},${business.administratorEmail},${staffEmail()}`,//it will send mail to the business and administrator and staff also for better management
+                     business.businessName,
+                     req.body.installmentalAmount,
+                     nextPayment,
+                     req.body.title,
+                     client.name
+                     );
             } else if (req.body.paymentType == 3) {
                 setNextPayment(newInvoice, req.body.paymentInterval, res);
             }
