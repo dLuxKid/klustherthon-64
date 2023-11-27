@@ -19,6 +19,7 @@ export default function Staffs() {
                 <Search placeholder="Search Customers..." />
                 <CreateBtn setOpenModal={setOpenModal} text="Create New Staff" />
             </div>
+            {openModal && ''}
             {/* <PaymentTable />
             {openModal && <CreateNewPayment setOpenModal={setOpenModal} />} */}
         </div >

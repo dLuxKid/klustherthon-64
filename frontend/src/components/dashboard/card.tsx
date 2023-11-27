@@ -1,10 +1,6 @@
 import { BsCash, BsPeopleFill } from "react-icons/bs";
 import { FaFileInvoice } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
-import { usePaymentContext } from "../../context/usePaymentContext";
-import { useEffect, useState } from "react";
-import { useAuthContext } from "../../context/useAuthContext";
-import { customerType } from "../../pages/customers";
 
 const iconMap = {
     staff: <FaPeopleGroup />,

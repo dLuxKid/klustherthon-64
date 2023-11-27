@@ -11,7 +11,7 @@ export default function LatestInvoices({ invoices }: { invoices: invoiceType[] }
             </h2>
             <div className="flex grow flex-col justify-between rounded-xl bg-background p-2">
                 <div className="bg-white px-4">
-                    {invoices && invoices.filter((i, idx) => idx < 5).map((invoice, i) => {
+                    {invoices && invoices.filter((_, idx) => idx < 5).map((invoice, i) => {
                         return (
                             <div
                                 key={invoice._id}
