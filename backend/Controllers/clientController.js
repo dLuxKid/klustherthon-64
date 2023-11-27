@@ -9,20 +9,14 @@ export const allBusiness = expressAsyncHandler(async (req, res) => {
     if (clients) {
       res.status(200).send(clients);
     } else {
-      res.status(400).send(
-        {},
-        {
-          message: "No Client was found for this Business",
-        }
-      );
+      res.status(400).send({
+        message: "No Client was found for this Business",
+      });
     }
   } catch (err) {
-    res.status(400).send(
-      {},
-      {
-        message: "An error occured",
-      }
-    );
+    res.status(400).send({
+      message: "An error occured",
+    });
   }
 });
 
@@ -40,6 +34,7 @@ export const createClient = expressAsyncHandler(async (req, res) => {
       message: "Client created succesfully!",
     });
   } catch (err) {
+    console.log(err);
     res.status(400).send({
       message: "An error occured",
     });
@@ -65,6 +60,7 @@ export const updateClient = expressAsyncHandler(async (req, res) => {
       });
     }
   } catch (err) {
+    console.log(err);
     res.status(400).send({
       message: "An error occured",
     });

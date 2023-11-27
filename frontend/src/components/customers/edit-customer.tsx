@@ -1,31 +1,38 @@
-import React, { useReducer, useState } from "react"
+import React, { useReducer, useState } from "react";
 
 import { MdCancel } from "react-icons/md";
 import { toast } from "sonner";
-import Loader from "../loader";
-import { usePaymentContext } from "../../context/usePaymentContext";
 import { useAuthContext } from "../../context/useAuthContext";
+import Loader from "../loader";
+import { customerType } from "../../pages/customers";
 
-const initialState = {
+const formState = {
     name: '',
-    description: '',
-    amount: ''
+    email: '',
+    phoneNumber: '',
+    address: ''
 }
 
-const invoiceReducer = (state: typeof initialState, action: { name: string, value: string }) => {
+const customerReducer = (state: typeof formState, action: { name: string, value: string }) => {
     return { ...state, [action.name]: action.value }
 }
 
 type Props = {
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+    setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>,
+    fetchCustomers: () => void
+    customer: customerType
 }
 
-export default function CreateNewPayment({ setOpenModal }: Props) {
+export default function EditCustomer({ setOpenEditModal, fetchCustomers, customer }: Props) {
 
-    const { fetchPayments } = usePaymentContext()
     const { user } = useAuthContext()
 
-    const [state, dispatch] = useReducer(invoiceReducer, initialState)
+    const [state, dispatch] = useReducer(customerReducer, {
+        name: customer.name,
+        email: customer.email,
+        phoneNumber: customer.phoneNumber,
+        address: customer.address
+    })
 
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -33,62 +40,60 @@ export default function CreateNewPayment({ setOpenModal }: Props) {
         dispatch({ name: e.target.name, value: e.target.value })
     }
 
-    const createInvoice = async (e: React.FormEvent) => {
+    const editInvoice = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true)
 
-        if (!state.amount || !state.description || !state.name) {
+        if (!state.email || !state.address || !state.name || !state.phoneNumber) {
             setLoading(false)
             return toast.error('Please fill all values')
         }
 
-        const apiUrl = 'http://localhost:5000/api/payments/create'
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch(`http://localhost:5000/api/clients/profile/${customer._id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                 },
                 body: JSON.stringify({
                     "name": state.name,
-                    "notes": state.description,
-                    "amount": Number(state.amount),
+                    "email": state.email,
+                    "phoneNumber": state.phoneNumber,
+                    'address': state.address,
                     'businessId': user.id
                 }),
             });
 
+            console.log(response)
+
             if (response.ok) {
-                toast.success('Payment successfully created')
-                fetchPayments()
+                toast.success('Client successfully saved')
+                fetchCustomers()
                 setTimeout(() => {
                     setLoading(false)
-                    setOpenModal(false)
+                    setOpenEditModal(false)
                 }, 500);
-                console.log('Data successfully sent to the server', response);
             } else {
                 console.error('Failed to send data to the server');
-                toast.error('Error creating payment');
+                toast.error('Error updating client');
                 setTimeout(() => {
                     setLoading(false)
                 }, 500);
             }
         } catch (error) {
-            console.error('Error sending data:', error);
-            toast.error('Error creating invoice');
+            console.error(error);
+            toast.error('Error updating client');
             setTimeout(() => {
                 setLoading(false)
             }, 500);
         }
-
-        setTimeout(() => {
-            setLoading(false)
-        }, 500);
     };
 
     return (
         <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
-            <form onSubmit={createInvoice} className="form relative">
-                <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenModal(false)}>
+            <form onSubmit={editInvoice} className="form relative">
+                <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenEditModal(false)}>
                     <MdCancel />
                 </div>
                 <label>
@@ -102,34 +107,41 @@ export default function CreateNewPayment({ setOpenModal }: Props) {
                     />
                 </label>
                 <label>
-                    <p>Description</p>
-                    <textarea
+                    <p>Email</p>
+                    <input
                         required
                         onChange={handleChange}
-                        value={state.description}
-                        name="description"
+                        value={state.email}
+                        name="email"
                         className="w-full h-40 rounded-lg text-text outline-none border-none p-4"
-                        maxLength={250}
-                        minLength={10}
                     />
                 </label>
                 <label >
-                    <p>Amount</p>
+                    <p>Phone Number</p>
                     <input
                         required
                         type="number"
                         onChange={handleChange}
-                        value={state.amount}
-                        name="amount"
+                        value={state.phoneNumber}
+                        name="phoneNumber"
+                    />
+                </label>
+                <label >
+                    <p>Address</p>
+                    <textarea
+                        required
+                        onChange={handleChange}
+                        value={state.address}
+                        name="address"
                     />
                 </label>
                 <button
                     disabled={loading}
                     type="submit"
                     className="w-full bg-primary disabled:bg-gray-500 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4 flex items-center justify-center"
-                    onClick={createInvoice}
+                    onClick={editInvoice}
                 >
-                    {loading ? <Loader /> : 'Create Payment'}
+                    {loading ? <Loader /> : 'Save Client'}
                 </button>
             </form>
         </div>

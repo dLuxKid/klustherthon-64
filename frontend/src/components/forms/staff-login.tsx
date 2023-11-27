@@ -10,12 +10,14 @@ type Props = {
         loginAs: 'business' | 'staff',
         email: string,
         password: string
+        businessRegNo: string
     } | null
 }
 
 
 const StaffLoginForm = ({ loginDetails }: Props) => {
     const navigate = useNavigate()
+    console.log(loginDetails)
 
     const { dispatch } = useAuthContext()
 
@@ -30,8 +32,8 @@ const StaffLoginForm = ({ loginDetails }: Props) => {
         <>
             <Formik
                 initialValues={{
-                    email: "",
-                    password: "",
+                    email: loginDetails && loginDetails.loginAs === 'staff' && loginDetails.email || "",
+                    password: loginDetails && loginDetails.loginAs === 'staff' && loginDetails.password || "",
                 }}
                 validationSchema={validationSchema}
                 onSubmit={async (values, { setSubmitting }) => {
@@ -43,25 +45,26 @@ const StaffLoginForm = ({ loginDetails }: Props) => {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                'administratorEmail': values.email,
+                                'email': values.email,
                                 'password': values.password
                             })
                         })
 
                         const data = await res.json()
-                        console.log(data)
 
                         if (res.ok) {
                             const userDetails = {
-                                id: data.businessId,
+                                id: data.id,
+                                bid: data.businessId,
                                 staffId: data.staffId,
                                 username: data.userName,
                                 email: data.email,
                                 isBusiness: data.isBusiness,
                                 token: data.token
                             }
+                            localStorage.setItem('user', JSON.stringify(userDetails))
 
-                            toast.success('Welcome back')
+                            toast.success('Welcome back ' + data.userName)
 
                             dispatch({ type: 'login', payload: userDetails })
                             navigate('/dashboard')
@@ -73,7 +76,6 @@ const StaffLoginForm = ({ loginDetails }: Props) => {
                         }
 
                     } catch (error: any) {
-                        console.log(error)
                         toast.error(error.message)
                     }
                 }}
@@ -85,7 +87,6 @@ const StaffLoginForm = ({ loginDetails }: Props) => {
                             name="email"
                             className={input}
                             placeholder="Staff Email"
-                            value={loginDetails && loginDetails.loginAs === 'staff' && loginDetails.email || values.email}
                             required
                         />
                         <Field
@@ -93,7 +94,6 @@ const StaffLoginForm = ({ loginDetails }: Props) => {
                             name="password"
                             className={input}
                             placeholder="Staff Password"
-                            value={loginDetails && loginDetails.loginAs === 'staff' && loginDetails.password || values.password}
                             required
                         />
                         <button

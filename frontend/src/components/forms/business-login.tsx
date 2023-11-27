@@ -29,8 +29,8 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
     <>
       <Formik
         initialValues={{
-          email: "",
-          password: "",
+          email: loginDetails && loginDetails.loginAs === 'business' && loginDetails.email || "",
+          password: loginDetails && loginDetails.loginAs === 'business' && loginDetails.password || "",
         }}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
@@ -46,18 +46,23 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
                 'password': values.password
               })
             })
+
             const data = await res.json()
 
             if (res.ok) {
+
               const userDetails = {
-                id: data.businessRegNo,
+                id: data.id,
+                bid: data.businessRegNo,
                 username: data.userName,
                 email: data.administratorEmail,
                 isBusiness: data.isBusiness,
                 token: data.token
               }
+              localStorage.setItem('user', JSON.stringify(userDetails))
 
-              toast.success('Welcome back')
+              toast.success('Welcome back ' + data.userName)
+
               dispatch({
                 type: 'login', payload: userDetails
               })
@@ -81,7 +86,6 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
               name="email"
               className={input}
               placeholder="Admin Email"
-              value={loginDetails && loginDetails.loginAs === 'business' && loginDetails.email || values.email}
               required
             />
             <Field
@@ -89,7 +93,6 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
               name="password"
               className={input}
               placeholder="Admin Password"
-              value={loginDetails && loginDetails.loginAs === 'business' && loginDetails.password || values.password}
               required
             />
             <button

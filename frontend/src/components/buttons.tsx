@@ -28,17 +28,13 @@ export function UpdateBtn() {
     );
 }
 
-export function DeleteBtn({ id }: { id: string }) {
-    // const deleteInvoiceWithId = deleteInvoice.bind(null, id);
-
+export function DeleteBtn() {
     return (
-        <form>
-            <button className="rounded-md border p-2 hover:bg-gray-100 cursor-pointer" type="submit">
-                <span className="sr-only">Delete</span>
-                <div className="text-slate-600">
-                    <FaTrash />
-                </div>
-            </button>
-        </form>
+        <div className="rounded-md border p-2 hover:bg-gray-100 cursor-pointer">
+            <span className="sr-only">Delete</span>
+            <div className="text-slate-600">
+                <FaTrash />
+            </div>
+        </div>
     );
 }

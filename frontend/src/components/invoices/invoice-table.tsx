@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatCurrency, formatDateToLocal } from '../../utils/formatter';
 import { DeleteBtn, UpdateBtn } from '../buttons';
 import InvoiceStatus from './invoice-status';
 import Loader from '../loader';
 import EditInvoice from './edit-invoice';
+import { useAuthContext } from '../../context/useAuthContext';
+import { toast } from 'sonner';
 
 export type invoiceType = {
     id: string;
@@ -101,17 +103,58 @@ const invoices: invoiceType[] = [
 
 export default function InvoicesTable() {
     const [editModal, setEditModal] = useState<boolean>(false)
+
+    const [allInvoices, setAllInvoices] = useState<any>([])
     const [selectedInvoice, setSelectedInvoice] = useState<invoiceType | null>(null)
+    const [loading, setLoading] = useState<boolean>(false)
+
+    const { user } = useAuthContext()
+
+    const fetchInvoices = async () => {
+        setLoading(true)
+        setAllInvoices([])
+        try {
+            const res = await fetch(`http://localhost:5000/api/invoices/all-business/${user.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
+            const data = await res.json()
+            console.log(data)
+            if (res.ok) {
+                setAllInvoices(data)
+                setTimeout(() => {
+                    setLoading(false)
+                }, 500);
+            } else {
+                toast.error('Error fetching invoices')
+                setTimeout(() => {
+                    setLoading(false)
+                }, 500);
+            }
+        } catch (error) {
+            toast.error('Error fetching invoices')
+            setTimeout(() => {
+                setLoading(false)
+            }, 500);
+        }
+    }
+
+    useEffect(() => {
+        fetchInvoices()
+    }, [])
 
     return (
         <div className="mt-6 flow-root">
             <div className="inline-block min-w-full align-middle">
-                {/* {
+                {
                     loading &&
                     <div className="w-full flex items-center justify-center pt-20">
                         <Loader dark />
                     </div>
-                } */}
+                }
 
                 {editModal &&
                     <EditInvoice
@@ -152,7 +195,7 @@ export default function InvoicesTable() {
                                         }}>
                                             <UpdateBtn />
                                         </div>
-                                        <DeleteBtn id={invoice.id} />
+                                        <DeleteBtn />
                                     </div>
                                 </div>
                             </div>
@@ -215,7 +258,7 @@ export default function InvoicesTable() {
                                             }}>
                                                 <UpdateBtn />
                                             </div>
-                                            <DeleteBtn id={invoice.id} />
+                                            <DeleteBtn />
                                         </div>
                                     </td>
                                 </tr>

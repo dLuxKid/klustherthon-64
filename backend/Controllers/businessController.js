@@ -25,18 +25,16 @@ export const businessSignup = expressAsyncHandler(async (req, res) => {
     const business = await newBusiness.save();
     if (business.validationError) {
       return res.status(400).send({
-        message: "Validation failed",
+        message: "Validation failed, check input fields",
         errors: business.validationError.errors,
       });
     }
 
-
-
-
     res.status(201).send({
       message: "New business succesfully created",
     });
-  } catch (err) {console.log(err)
+  } catch (err) {
+    console.log(err);
     res.status(400).send({
       message: err,
     });
@@ -50,6 +48,7 @@ export const businessSignin = expressAsyncHandler(async (req, res) => {
   if (businessAdmin) {
     if (bcrypt.compareSync(req.body.password, businessAdmin.password)) {
       res.status(200).send({
+        id: businessAdmin._id,
         businessName: businessAdmin.businessName,
         businessType: businessAdmin.businessType,
         businessRegNo: businessAdmin.businessRegNo,
@@ -59,7 +58,7 @@ export const businessSignin = expressAsyncHandler(async (req, res) => {
         administratorPosition: businessAdmin.administratorPhoneNo,
         administratorEmail: businessAdmin.administratorEmail,
         administratorPhoneNo: businessAdmin.administratorPhoneNo,
-        userName: businessAdmin.desiredUsername,
+        userName: businessAdmin.userName,
         isBusiness: true,
         token: generateToken(businessAdmin),
       });
