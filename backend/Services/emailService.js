@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
-
+import dotenv from "dotenv";
+dotenv.config();
 var smtpConfig = {
   host: "smtp.gmail.com",
   port: 465,
@@ -28,7 +29,6 @@ export async function sendMail(
     text: `Hello ${userName}`, // plain text body
     html: `<b>Hello ${userName}, \nYour Payment for ${title} of ${paymentAmount} is due on ${dueDate}</b>`, // html body
   });
-
   console.log("Message sent: %s", info.messageId);
   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
