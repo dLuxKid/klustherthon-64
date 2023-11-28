@@ -1,10 +1,5 @@
 import schedule from "node-schedule";
-import {
-    sendMail
-} from "./EmailService.js";
-
-
-
+import { sendMail } from "./EmailService.js";
 
 export const scheduleInvoice = (
   date,
