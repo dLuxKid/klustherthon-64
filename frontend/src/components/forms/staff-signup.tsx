@@ -44,7 +44,7 @@ const StaffSignupForm = () => {
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
           try {
-            const res = await fetch(usersUrl + '/business/signup', {
+            const res = await fetch(usersUrl + '/staff/signup', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
