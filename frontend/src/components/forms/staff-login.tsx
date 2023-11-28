@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
 import { useAuthContext } from "../../context/useAuthContext";
+import { usersUrl } from "../../utils/urls";
 
 type Props = {
     loginDetails: {
@@ -39,7 +40,7 @@ const StaffLoginForm = ({ loginDetails }: Props) => {
                 onSubmit={async (values, { setSubmitting }) => {
                     setSubmitting(true)
                     try {
-                        const res = await fetch('http://localhost:5000/api/users/staff/signin', {
+                        const res = await fetch(usersUrl + '/staff/signin', {
                             method: "POST",
                             headers: {
                                 'Content-Type': 'application/json'

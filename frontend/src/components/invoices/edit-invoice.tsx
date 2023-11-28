@@ -1,13 +1,10 @@
 import React, { useReducer, useState } from "react";
-
 import { MdCancel } from "react-icons/md";
-
 import { toast } from "sonner";
-
 import { invoiceType } from "./invoice-table";
-
 import Loader from "../loader";
 import { useAuthContext } from "../../context/useAuthContext";
+import { invoiceUrl } from "../../utils/urls";
 
 type initialStateType = {
     name: string
@@ -50,16 +47,13 @@ export default function EditInvoice({ setOpenEditModal, fetchInvoices, invoice }
     const editInvoice = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true)
-        console.log(invoice)
-
         if (!state.amount || !state.email || !state.name || !state.paymentStatus) {
             setLoading(false)
             return toast.error('Please fill all values')
         }
 
-        const apiUrl = `http://localhost:5000/api/invoices/update/${invoice._id}`
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch(`${invoiceUrl}/update/${invoice._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,7 +62,8 @@ export default function EditInvoice({ setOpenEditModal, fetchInvoices, invoice }
                 body: JSON.stringify({
                     'id': invoice._id,
                     "title": state.name,
-                    "email": state.email,
+                    'clientid': invoice.client,
+                    "email": invoice.clientEmail ?? invoice.client,
                     "amount": Number(state.amount),
                     "paymentStatus": state.paymentStatus === 'paid' ? true : false,
                     "paymentType": (invoice.paymentType),

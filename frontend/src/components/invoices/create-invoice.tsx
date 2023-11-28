@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { usePaymentContext } from "../../context/usePaymentContext";
 import Loader from "../loader";
 import { useAuthContext } from "../../context/useAuthContext";
+import { invoiceUrl } from "../../utils/urls";
 
 const initialState = {
     name: '',
@@ -55,9 +56,8 @@ export default function CreateNewInvoice(
             return toast.error('Please fill all values')
         }
 
-        const apiUrl = 'http://localhost:5000/api/invoices/create'
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch(invoiceUrl + '/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

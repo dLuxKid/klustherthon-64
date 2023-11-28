@@ -6,6 +6,7 @@ import { useAuthContext } from "../context/useAuthContext";
 import { customerType } from "./customers";
 import { invoiceType } from "../components/invoices/invoice-table";
 import LatestPayments from "../components/dashboard/latest-payments";
+import { clientUrl, invoiceUrl } from "../utils/urls";
 
 export default function Dashboard() {
     const { payments } = usePaymentContext()
@@ -17,7 +18,7 @@ export default function Dashboard() {
 
     const fetchCustomers = async () => {
         setCustomers([])
-        const res = await fetch(`http://localhost:5000/api/clients/all-business/${user.id}`, {
+        const res = await fetch(`${clientUrl}/all-business/${user.id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ export default function Dashboard() {
 
     const fetchInvoices = async () => {
         setAllInvoices([])
-        const res = await fetch(`http://localhost:5000/api/invoices/all-business/${user.id}`, {
+        const res = await fetch(`${invoiceUrl}/all-business/${user.id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

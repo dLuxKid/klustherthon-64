@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import Loader from "../loader";
 import { usePaymentContext } from "../../context/usePaymentContext";
 import { useAuthContext } from "../../context/useAuthContext";
+import { paymentsUrl } from "../../utils/urls";
 
 const initialState = {
     name: '',
@@ -44,7 +45,7 @@ export default function CreateNewPayment({ setOpenModal }: Props) {
 
         const apiUrl = 'http://localhost:5000/api/payments/create'
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch(paymentsUrl + '/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
