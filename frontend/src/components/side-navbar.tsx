@@ -50,17 +50,17 @@ export default function SideNavbar() {
         <div
             className={`${activeMenu ? "w-72" : "w-8"} ${screenSize <= 976 ? "fixed" : "relative"} bg-background shadow-md shadow-text duration-300 z-50 h-screen`}
         >
-            <div className="text-primary h-5 w-5 absolute top-4 right-4 cursor-pointer">
+            <div className={`text-primary h-5 w-5 absolute top-4 right-4 cursor-pointer ${!activeMenu && 'hidden'}`}>
                 <span onClick={() => setOpenNotification(prev => !prev)}>
                     <FaBell />
                 </span>
-                {
-                    openNotification &&
-                    <div className="mt-2 bg-white p-4 h-64 w-64 flex items-center justify-center left-0 shadow-md rounded-lg">
-                        <p className="text-black">No current notifications</p>
-                    </div>
-                }
             </div>
+            {
+                openNotification && activeMenu &&
+                <div className="mt-2 bg-white p-4 h-64 w-64 flex items-center justify-center shadow-md rounded-lg absolute left-2 top-6">
+                    <p className="text-black">No current notifications</p>
+                </div>
+            }
 
             {screenSize <= 976 ? (
                 <div
