@@ -13,7 +13,7 @@ var smtpConfig = {
 var transporter = nodemailer.createTransport(smtpConfig);
 
 // async..await is not allowed in global scope, must use a wrapper
-async function sendMail(
+export async function sendMail(
   emailAddresses,
   businessName,
   paymentAmount,
@@ -42,5 +42,3 @@ async function sendMail(
 // sendMail("damilolaadeeso@gmail.com, baz@example.com","Hair lock Factory",
 //     5000,23-12-2023,"Hairlocks","Geremy"
 // ).catch(console.error);
-
-module.exports = sendMail;
