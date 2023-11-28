@@ -94,7 +94,6 @@ export const createInvoice = expressAsyncHandler(async (req, res) => {
       res.status(400).send(new Error("Client with such email was not found"));
     }
   } catch (err) {
-    console.log(err);
     res.status(400).send({
       message: "An error occured",
     });
@@ -104,7 +103,7 @@ export const createInvoice = expressAsyncHandler(async (req, res) => {
 export const updateInvoice = expressAsyncHandler(async (req, res) => {
   try {
     const client = await Client.findOne({
-      _id: req.body.email,
+      _id: req.body.clientid,
     });
 
     const invoiceId = req.params.id;

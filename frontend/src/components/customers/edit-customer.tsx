@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useAuthContext } from "../../context/useAuthContext";
 import Loader from "../loader";
 import { customerType } from "../../pages/customers";
+import { clientUrl } from "../../utils/urls";
 
 const formState = {
     name: '',
@@ -50,7 +51,7 @@ export default function EditCustomer({ setOpenEditModal, fetchCustomers, custome
         }
 
         try {
-            const response = await fetch(`http://localhost:5000/api/clients/profile/${customer._id}`, {
+            const response = await fetch(clientUrl + `/profile/${customer._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

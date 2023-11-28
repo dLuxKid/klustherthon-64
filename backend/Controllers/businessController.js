@@ -89,16 +89,15 @@ export const verifyStaff = expressAsyncHandler(async (req, res) => {
   }
 });
 
-   export const allBusiness =  expressAsyncHandler(async (req, res) => {
-      try {
-        const staffs = await Staff.find({
-            business:req.body.businessId
-        });
-        res.status(200).send(staffs);
-      } catch (err) {
-        res.status(400).send({
-          message: "Error fetching Staff",
-        });
-      }
-    })
-  
+export const allBusiness = expressAsyncHandler(async (req, res) => {
+  try {
+    const staffs = await Staff.find({
+      business: req.body.businessId,
+    });
+    res.status(200).send(staffs);
+  } catch (err) {
+    res.status(400).send({
+      message: "Error fetching Staff",
+    });
+  }
+});

@@ -6,6 +6,7 @@ import Search from "../components/search";
 import CreateNewInvoice from "../components/invoices/create-invoice";
 import { useAuthContext } from "../context/useAuthContext";
 import { toast } from "sonner";
+import { invoiceUrl } from "../utils/urls";
 
 
 export default function Invoices() {
@@ -20,7 +21,7 @@ export default function Invoices() {
         setLoading(true)
         setAllInvoices([])
         try {
-            const res = await fetch(`http://localhost:5000/api/invoices/all-business/${user.id}`, {
+            const res = await fetch(`${invoiceUrl}/all-business/${user.id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

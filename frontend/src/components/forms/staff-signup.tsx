@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
+import { usersUrl } from "../../utils/urls";
 
 const StaffSignupForm = () => {
 
@@ -43,7 +44,7 @@ const StaffSignupForm = () => {
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
           try {
-            const res = await fetch('http://localhost:5000/api/users/staff/signup', {
+            const res = await fetch(usersUrl + '/business/signup', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
