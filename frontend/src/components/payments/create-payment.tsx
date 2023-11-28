@@ -43,7 +43,6 @@ export default function CreateNewPayment({ setOpenModal }: Props) {
             return toast.error('Please fill all values')
         }
 
-        const apiUrl = 'http://localhost:5000/api/payments/create'
         try {
             const response = await fetch(paymentsUrl + '/create', {
                 method: 'POST',
