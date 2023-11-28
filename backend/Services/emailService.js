@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
-
+import dotenv from "dotenv";
+dotenv.config();
 var smtpConfig = {
     host: 'smtp.gmail.com',
     port: 465,
@@ -19,7 +20,7 @@ export async function sendMail(emailAddresses,businessName,paymentAmount,dueDate
         to: emailAddresses, // list of receivers
         subject: "Invoice for " + title, // Subject line
         text: `Hello ${userName}`, // plain text body
-        html: `<b>Hello ${userName}, \nYour Payment for ${title} of ${paymentAmount}is due on ${dueDate}</b>`, // html body
+        html: `<b>Hello ${userName}, \nYour Payment for ${title} of ${paymentAmount} is due on ${dueDate}</b>`, // html body
     });
 
     console.log("Message sent: %s", info.messageId);
@@ -32,6 +33,3 @@ export async function sendMail(emailAddresses,businessName,paymentAmount,dueDate
     //
 }
 
-// sendMail("damilolaadeeso@gmail.com, baz@example.com","Hair lock Factory",
-//     5000,23-12-2023,"Hairlocks","Geremy"
-// ).catch(console.error);
