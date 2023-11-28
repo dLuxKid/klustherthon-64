@@ -1,7 +1,7 @@
 import schedule from "node-schedule";
 import {
     sendMail
-} from "./emailService.js";
+} from "./EmailService.js";
 
 
 
