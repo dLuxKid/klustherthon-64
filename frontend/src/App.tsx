@@ -32,7 +32,7 @@ function App() {
 
   return (
     <>
-      <Toaster richColors position="top-right" />
+      <Toaster richColors position="top-right" duration={5000} />
       <Routes>
         {/* unauthenticated routes */}
         <Route element={user?.id ? <Navigate to='/dashboard' /> : <Outlet />}>
@@ -44,11 +44,11 @@ function App() {
         {/* authenticated routes */}
         <Route path="/dashboard" element={
           user?.id ?
-            <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+            <div className="flex h-screen flex-col md:flex-row md:overflow-hidden w-full">
               <div className="w-full flex-none md:w-64">
                 <SideNavbar />
               </div>
-              <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+              <div className="flex-grow p-6 pl-14 md:overflow-y-auto md:p-12">
                 <Outlet />
               </div>
             </div>

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
 import { useAuthContext } from "../../context/useAuthContext";
+import { usersUrl } from "../../utils/urls";
 
 type Props = {
     loginDetails: {
@@ -17,8 +18,6 @@ type Props = {
 
 const StaffLoginForm = ({ loginDetails }: Props) => {
     const navigate = useNavigate()
-    console.log(loginDetails)
-
     const { dispatch } = useAuthContext()
 
     const validationSchema = Yup.object({
@@ -39,7 +38,7 @@ const StaffLoginForm = ({ loginDetails }: Props) => {
                 onSubmit={async (values, { setSubmitting }) => {
                     setSubmitting(true)
                     try {
-                        const res = await fetch('https://easyledger.onrender.com/api/users/staff/signin', {
+                        const res = await fetch(usersUrl + '/staff/signin', {
                             method: "POST",
                             headers: {
                                 'Content-Type': 'application/json'

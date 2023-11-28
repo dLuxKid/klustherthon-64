@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
+import { usersUrl } from "../../utils/urls";
 
 const BusinessSignupForm = () => {
   const navigate = useNavigate()
@@ -47,9 +48,8 @@ const BusinessSignupForm = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
-          console.log(values)
           try {
-            const res = await fetch('https://easyledger.onrender.com/api/users/business/signup', {
+            const res = await fetch(usersUrl + '/business/signup', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

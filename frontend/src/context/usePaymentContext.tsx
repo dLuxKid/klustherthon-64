@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { paymentType } from "../pages/payments"
+import { paymentsUrl } from "../utils/urls"
 
 type paymentContextType = {
     payments: paymentType[]
@@ -21,7 +22,7 @@ export const PaymentContextProvider = ({ children }: { children: React.ReactNode
         setLoading(true)
         setPayments([])
         try {
-            const res = await fetch('http://localhost:5000/api/payments/all', {
+            const res = await fetch(paymentsUrl + '/all', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,7 +33,6 @@ export const PaymentContextProvider = ({ children }: { children: React.ReactNode
                 // })
             })
             const data = await res.json()
-            console.log(data)
             if (res.ok) {
                 setPayments(data)
                 setLoading(false);

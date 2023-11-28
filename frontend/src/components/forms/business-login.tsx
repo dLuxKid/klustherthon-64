@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
 import { useAuthContext } from "../../context/useAuthContext";
+import { usersUrl } from "../../utils/urls";
 
 type Props = {
   loginDetails: {
@@ -36,7 +37,7 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
           try {
-            const res = await fetch('https://easyledger.onrender.com/api/users/business/signin', {
+            const res = await fetch(usersUrl + '/business/signin', {
               method: "POST",
               headers: {
                 'Content-Type': 'application/json'
@@ -72,9 +73,7 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
               toast.error(data.message)
               setSubmitting(false)
             }
-
           } catch (error: any) {
-            console.log(error)
             toast.error(error.message)
           }
         }}

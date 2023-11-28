@@ -5,6 +5,7 @@ import Search from "../components/search"
 import CreateNewCustomer from "../components/customers/create-customer"
 import { useAuthContext } from "../context/useAuthContext"
 import { toast } from "sonner"
+import { clientUrl } from "../utils/urls"
 
 export type customerType = {
     _id: string;
@@ -26,7 +27,7 @@ export default function Customers() {
         setLoading(true)
         setCustomers([])
         try {
-            const res = await fetch(`http://localhost:5000/api/clients/all-business/${user.id}`, {
+            const res = await fetch(`${clientUrl}/all-business/${user.id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
