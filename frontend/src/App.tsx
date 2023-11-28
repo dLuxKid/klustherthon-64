@@ -32,7 +32,7 @@ function App() {
 
   return (
     <>
-      <Toaster richColors position="top-right" />
+      <Toaster richColors position="top-right" duration={5000} />
       <Routes>
         {/* unauthenticated routes */}
         <Route element={user?.id ? <Navigate to='/dashboard' /> : <Outlet />}>

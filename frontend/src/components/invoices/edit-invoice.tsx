@@ -33,7 +33,7 @@ export default function EditInvoice({ setOpenEditModal, fetchInvoices, invoice }
 
     const [state, dispatch] = useReducer(invoiceReducer, {
         name: invoice.title,
-        email: invoice.client,
+        email: invoice.clientEmail ?? invoice.client,
         amount: invoice.amount.toString(),
         paymentStatus: invoice.paymentStatus ? 'paid' : 'pending'
     })
