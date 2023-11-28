@@ -49,7 +49,7 @@ const BusinessSignupForm = () => {
           setSubmitting(true)
           console.log(values)
           try {
-            const res = await fetch('http://localhost:5000/api/users/business/signup', {
+            const res = await fetch('https://easyledger.onrender.com/api/users/business/signup', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

@@ -43,7 +43,7 @@ const StaffSignupForm = () => {
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
           try {
-            const res = await fetch('http://localhost:5000/api/users/staff/signup', {
+            const res = await fetch('https://easyledger.onrender.com/api/users/staff/signup', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
