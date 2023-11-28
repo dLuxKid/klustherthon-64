@@ -59,8 +59,6 @@ export default function CreateNewCustomer({ setOpenModal, fetchCustomers }: Prop
                 }),
             });
 
-            console.log(response)
-
             if (response.ok) {
                 toast.success('Client successfully registered')
                 fetchCustomers()

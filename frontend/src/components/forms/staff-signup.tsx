@@ -61,7 +61,6 @@ const StaffSignupForm = () => {
               }),
             })
             const data = await res.json()
-            console.log(data)
 
             if (res.ok) {
               toast.success('Staff has been registered')

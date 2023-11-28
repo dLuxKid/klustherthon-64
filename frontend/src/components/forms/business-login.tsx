@@ -73,9 +73,7 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
               toast.error(data.message)
               setSubmitting(false)
             }
-
           } catch (error: any) {
-            console.log(error)
             toast.error(error.message)
           }
         }}
