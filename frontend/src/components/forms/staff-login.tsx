@@ -18,8 +18,6 @@ type Props = {
 
 const StaffLoginForm = ({ loginDetails }: Props) => {
     const navigate = useNavigate()
-    console.log(loginDetails)
-
     const { dispatch } = useAuthContext()
 
     const validationSchema = Yup.object({

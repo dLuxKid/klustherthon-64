@@ -64,7 +64,6 @@ export default function CreateNewPayment({ setOpenModal }: Props) {
                     setLoading(false)
                     setOpenModal(false)
                 }, 500);
-                console.log('Data successfully sent to the server', response);
             } else {
                 console.error('Failed to send data to the server');
                 toast.error('Error creating payment');

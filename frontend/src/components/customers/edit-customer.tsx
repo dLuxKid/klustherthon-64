@@ -66,8 +66,6 @@ export default function EditCustomer({ setOpenEditModal, fetchCustomers, custome
                 }),
             });
 
-            console.log(response)
-
             if (response.ok) {
                 toast.success('Client successfully saved')
                 fetchCustomers()

@@ -33,7 +33,6 @@ export const PaymentContextProvider = ({ children }: { children: React.ReactNode
                 // })
             })
             const data = await res.json()
-            console.log(data)
             if (res.ok) {
                 setPayments(data)
                 setLoading(false);

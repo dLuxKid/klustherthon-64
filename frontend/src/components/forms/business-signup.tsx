@@ -48,7 +48,6 @@ const BusinessSignupForm = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
-          console.log(values)
           try {
             const res = await fetch(usersUrl + '/business/signup', {
               method: 'POST',
