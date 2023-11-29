@@ -40,7 +40,6 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
-          console.log(values)
           try {
             const res = await fetch(usersUrl + '/business/signin', {
               method: "POST",

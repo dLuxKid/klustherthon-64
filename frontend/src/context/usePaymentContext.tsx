@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { paymentType } from "../pages/payments"
 import { paymentsUrl } from "../utils/urls"
+import { useAuthContext } from "./useAuthContext"
 
 type paymentContextType = {
     payments: paymentType[]
@@ -17,22 +18,23 @@ export const PaymentContextProvider = ({ children }: { children: React.ReactNode
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>('')
 
+    const { user } = useAuthContext()
 
     const fetchPayments = async () => {
         setLoading(true)
         setPayments([])
         try {
-            const res = await fetch(paymentsUrl + '/all', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'Authorization': `Bearer ${user.token}`
-                },
-                // body: JSON.stringify({
-                //     'businessId': user.id
-                // })
-            })
+            const res = await fetch(`${paymentsUrl}/all-business/${user.id}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${user.token}`
+                    },
+                })
+            console.log(res)
             const data = await res.json()
+            console.log(data)
             if (res.ok) {
                 setPayments(data)
                 setLoading(false);
