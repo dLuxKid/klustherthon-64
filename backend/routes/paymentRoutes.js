@@ -22,7 +22,7 @@ paymentRouter.get(
 );
 
 paymentRouter.get(
-  "/allBusiness/:businessId",
+  "/all-business/:businessId",
   isAuth,
   expressAsyncHandler(async (req, res) => {
     try {
