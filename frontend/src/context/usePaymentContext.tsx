@@ -32,9 +32,7 @@ export const PaymentContextProvider = ({ children }: { children: React.ReactNode
                         'Authorization': `Bearer ${user.token}`
                     },
                 })
-            console.log(res)
             const data = await res.json()
-            console.log(data)
             if (res.ok) {
                 setPayments(data)
                 setLoading(false);
@@ -49,8 +47,8 @@ export const PaymentContextProvider = ({ children }: { children: React.ReactNode
     }
 
     useEffect(() => {
-        fetchPayments()
-    }, [])
+        if (user) fetchPayments()
+    }, [user])
 
     return <PaymentContext.Provider value={{ payments, loading, fetchPayments, error }}>
         {children}
