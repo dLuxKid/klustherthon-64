@@ -19,7 +19,7 @@ export default function Customers() {
     const [openModal, setOpenModal] = useState<boolean>(false)
 
     const [customers, setCustomers] = useState<customerType[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(true)
 
     const { user } = useAuthContext()
 

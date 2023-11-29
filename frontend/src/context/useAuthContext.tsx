@@ -30,7 +30,7 @@ const authReducer = (state: authState, action: authActions) => {
         case 'logout':
             return { ...state, user: null, authIsReady: true }
         case 'auth-is-ready':
-            return { ...state, user: null, authIsReady: true }
+            return { ...state, user: action.payload, authIsReady: true }
         default:
             return state;
     }

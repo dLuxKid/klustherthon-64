@@ -13,7 +13,7 @@ export default function Invoices() {
     const [openModal, setOpenModal] = useState<boolean>(false)
 
     const [allInvoices, setAllInvoices] = useState<any>([])
-    const [loading, setLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(true)
 
     const { user } = useAuthContext()
 
@@ -54,6 +54,7 @@ export default function Invoices() {
                 <Search placeholder="Search invoices..." />
                 <CreateBtn setOpenModal={setOpenModal} text="Create Invoice" />
             </div>
+            {!loading && allInvoices.length === 0 && <p className="w-full text-center mt-8">No available invoices</p>}
             <InvoicesTable loading={loading} allInvoices={allInvoices} fetchInvoices={fetchInvoices} />
             {openModal && <CreateNewInvoice setOpenModal={setOpenModal} fetchInvoices={fetchInvoices} />}
         </main>

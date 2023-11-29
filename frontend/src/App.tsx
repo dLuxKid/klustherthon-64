@@ -35,30 +35,34 @@ function App() {
       <Toaster richColors position="top-right" duration={5000} />
       <Routes>
         {/* unauthenticated routes */}
-        <Route element={user?.id ? <Navigate to='/dashboard' /> : <Outlet />}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+        <Route element={user && user.id ? <Navigate to='/dashboard' /> : <Outlet />}>
+          <Route index element={<LandingPage />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
         </Route>
 
         {/* authenticated routes */}
-        <Route path="/dashboard" element={
-          user?.id ?
-            <div className="flex h-screen flex-col md:flex-row md:overflow-hidden w-full">
-              <div className="w-full flex-none md:w-64">
-                <SideNavbar />
+        <Route
+          path="/dashboard"
+          element={
+            user && user.id ? (
+              <div className="flex h-screen flex-col md:flex-row md:overflow-hidden w-full">
+                <div className="w-full flex-none md:w-64">
+                  <SideNavbar />
+                </div>
+                <div className="flex-grow p-6 pl-14 md:overflow-y-auto md:p-12">
+                  <Outlet />
+                </div>
               </div>
-              <div className="flex-grow p-6 pl-14 md:overflow-y-auto md:p-12">
-                <Outlet />
-              </div>
-            </div>
-            : <Navigate to='/login' />
-        }>
-          <Route path="" element={<Dashboard />} />
+            ) : (
+              <Navigate to="/login" />
+            )}
+        >
+          <Route index element={<Dashboard />} />
           <Route path="invoices" element={<Invoices />} />
           <Route path="clients" element={<Customers />} />
           <Route path="payments" element={<Payments />} />
-          <Route path='staffs' element={<Staffs />} />
+          <Route path="staffs" element={<Staffs />} />
         </Route>
       </Routes >
     </>
