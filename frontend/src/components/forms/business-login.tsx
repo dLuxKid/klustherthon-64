@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import Loader from "../loader";
 import { useAuthContext } from "../../context/useAuthContext";
 import { usersUrl } from "../../utils/urls";
+import { useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 type Props = {
   loginDetails: {
@@ -18,6 +20,9 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
   const navigate = useNavigate()
 
   const { dispatch } = useAuthContext()
+
+  const [visibility, setVisibility] = useState<boolean>(false);
+
 
   const validationSchema = Yup.object({
     email: Yup.string().required('Admininstrator email is required'),
@@ -97,13 +102,22 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
             </div>
             <div>
               <p className="text-black font-medium mb-1">Admin Password</p>
-              <Field
-                type="password"
-                name="password"
-                className={input}
-                placeholder="Admin Password"
-                required
-              />
+              <div className="relative">
+                <Field
+                  type={visibility ? 'text' : "password"}
+                  name="password"
+                  className={input}
+                  placeholder="Admin Password"
+                  required
+                />
+                <div onClick={() => setVisibility((prev) => !prev)} className="absolute right-4 top-4 cursor-pointer">
+                  {visibility ? (
+                    <FaRegEye />
+                  ) : (
+                    <FaRegEyeSlash />
+                  )}
+                </div>
+              </div>
               <ErrorMessage name="password" component='p' className="text-red-600 font-medium" />
             </div>
             <button

@@ -4,8 +4,11 @@ import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
 import { usersUrl } from "../../utils/urls";
+import { useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const StaffSignupForm = () => {
+  const [visibility, setVisibility] = useState<boolean>(false);
 
   const navigate = useNavigate()
 
@@ -147,13 +150,22 @@ const StaffSignupForm = () => {
             </div>
             <div>
               <p className="text-black font-medium mb-1">Password</p>
-              <Field
-                type="password"
-                name="password"
-                className={input}
-                placeholder="Password"
-                required
-              />
+              <div className="relative">
+                <Field
+                  type={visibility ? 'text' : "password"}
+                  name="password"
+                  className={input}
+                  placeholder="Password"
+                  required
+                />
+                <div onClick={() => setVisibility((prev) => !prev)} className="absolute right-4 top-4 cursor-pointer">
+                  {visibility ? (
+                    <FaRegEye />
+                  ) : (
+                    <FaRegEyeSlash />
+                  )}
+                </div>
+              </div>
               <ErrorMessage name="password" component='p' className="text-red-600 font-medium" />
             </div>
             <div>
