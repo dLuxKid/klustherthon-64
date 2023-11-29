@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import Loader from "../loader";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { usersUrl } from "../../utils/urls";
 
 const BusinessSignupForm = () => {
   const navigate = useNavigate()
@@ -54,8 +55,7 @@ const BusinessSignupForm = () => {
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
           try {
-            console.log("Here");
-            const res = await fetch('http://localhost:5000/api/users/business/signup/', {
+            const res = await fetch(usersUrl + '/business/signup', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
