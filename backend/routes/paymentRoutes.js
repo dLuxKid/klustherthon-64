@@ -22,12 +22,12 @@ paymentRouter.get(
 );
 
 paymentRouter.get(
-  "/allBusiness",
+  "/allBusiness/:businessId",
   isAuth,
   expressAsyncHandler(async (req, res) => {
     try {
       const payments = await Payment.find({
-        business: req.params.id,
+        business: req.params.businessId,
       });
       res.status(200).send(payments);
     } catch (err) {
