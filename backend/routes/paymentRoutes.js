@@ -27,7 +27,7 @@ paymentRouter.get(
   expressAsyncHandler(async (req, res) => {
     try {
       const payments = await Payment.find({
-        business: req.body.businessId,
+        business: req.params.id,
       });
       res.status(200).send(payments);
     } catch (err) {
