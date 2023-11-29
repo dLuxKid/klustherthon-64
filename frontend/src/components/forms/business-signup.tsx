@@ -51,8 +51,8 @@ const BusinessSignupForm = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
-          try {
-            const res = await fetch(usersUrl + '/business/signup', {
+          try {console.log("Here");
+            const res = await fetch('http://localhost:5000/api/users/business/signup/', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
