@@ -31,7 +31,6 @@ paymentRouter.get(
       });
       res.status(200).send(payments);
     } catch (err) {
-      console.log(err);
       res.status(400).send({
         err: err,
         message: "Error fetching payments",
