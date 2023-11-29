@@ -26,7 +26,6 @@ const initialState = {
 const authReducer = (state: authState, action: authActions) => {
     switch (action.type) {
         case 'login':
-            console.log(action.payload)
             return { ...state, user: action.payload, authIsReady: true }
         case 'logout':
             return { ...state, user: null, authIsReady: true }

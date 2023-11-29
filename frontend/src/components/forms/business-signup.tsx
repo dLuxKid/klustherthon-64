@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as Yup from "yup";
 import Loader from "../loader";
-import { usersUrl } from "../../utils/urls";
 
 const BusinessSignupForm = () => {
   const navigate = useNavigate()
@@ -51,7 +50,8 @@ const BusinessSignupForm = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true)
-          try {console.log("Here");
+          try {
+            console.log("Here");
             const res = await fetch('http://localhost:5000/api/users/business/signup/', {
               method: 'POST',
               headers: {
