@@ -9,7 +9,7 @@ const Signup = () => {
     const [signupAs, setSignupAs] = useState<'business' | 'staff'>('business')
 
     const base =
-        "pb-1 text-lg font-medium text-center whitespace-nowrap text-black";
+        "pb-1 text-lg font-medium text-center whitespace-nowrap text-black cursor-pointer";
     const selected = "text-text border-primary border-b-2 font-semibold";
 
     return (
@@ -17,24 +17,22 @@ const Signup = () => {
             <Back />
             <section className="w-[90%] max-w-2xl my-14 mx-auto p-4 md:p-10 bg-background rounded-lg shadow-lg border border-white flex items-stretch justify-center flex-col gap-4">
                 <nav className="inline-flex items-center justify-around w-full gap-4 pt-5">
-                    <button
-                        type="button"
+                    <p
                         className={`${base} ${signupAs === 'business' && selected}`}
                         onClick={() => {
                             setSignupAs('business')
                         }}
                     >
                         Business
-                    </button>
-                    <button
-                        type="button"
+                    </p>
+                    <p
                         className={`${base} ${signupAs === 'staff' && selected}`}
                         onClick={() => {
                             setSignupAs('staff')
                         }}
                     >
                         Staff
-                    </button>
+                    </p>
                 </nav>
                 {signupAs === 'business' && <BusinessSignupForm />}
                 {signupAs === 'staff' && <StaffSignupForm />}

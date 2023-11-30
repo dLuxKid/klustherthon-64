@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { useAuthContext } from "../../context/useAuthContext";
 import Loader from "../loader";
 import { clientUrl } from "../../utils/urls";
+import { useDataContext } from "../../context/useFetchDataContext";
+import useMutateClient from "../../hooks/useMutateClient";
 
 const initialState = {
     name: '',
@@ -19,76 +21,25 @@ const invoiceReducer = (state: typeof initialState, action: { name: string, valu
 
 type Props = {
     setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
-    fetchCustomers: () => void
 }
 
-export default function CreateNewCustomer({ setOpenModal, fetchCustomers }: Props) {
-
-    const { user } = useAuthContext()
+export default function CreateNewClient({ setOpenModal }: Props) {
+    const { createClient, loading } = useMutateClient()
 
     const [state, dispatch] = useReducer(invoiceReducer, initialState)
-
-    const [loading, setLoading] = useState<boolean>(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         dispatch({ name: e.target.name, value: e.target.value })
     }
 
-    const createInvoice = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true)
-
-        if (!state.email || !state.address || !state.name || !state.phoneNumber) {
-            setLoading(false)
-            return toast.error('Please fill all values')
-        }
-
-        try {
-            const response = await fetch(clientUrl + '/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-                },
-                body: JSON.stringify({
-                    "name": state.name,
-                    "email": state.email,
-                    "phoneNumber": state.phoneNumber,
-                    'address': state.address,
-                    'businessId': user.id
-                }),
-            });
-
-            if (response.ok) {
-                toast.success('Client successfully registered')
-                fetchCustomers()
-                setTimeout(() => {
-                    setLoading(false)
-                    setOpenModal(false)
-                }, 500);
-            } else {
-                console.error('Failed to send data to the server');
-                toast.error('Error registering client');
-                setTimeout(() => {
-                    setLoading(false)
-                }, 500);
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error('Error registering client');
-            setTimeout(() => {
-                setLoading(false)
-            }, 500);
-        }
-
-        setTimeout(() => {
-            setLoading(false)
-        }, 500);
+        createClient(state, setOpenModal)
     };
 
     return (
         <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
-            <form onSubmit={createInvoice} className="form relative">
+            <form onSubmit={handleSubmit} className="form relative">
                 <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenModal(false)}>
                     <MdCancel />
                 </div>
@@ -135,7 +86,7 @@ export default function CreateNewCustomer({ setOpenModal, fetchCustomers }: Prop
                     disabled={loading}
                     type="submit"
                     className="w-full bg-primary disabled:bg-gray-500 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4 flex items-center justify-center"
-                    onClick={createInvoice}
+                    onClick={handleSubmit}
                 >
                     {loading ? <Loader /> : 'Register Client'}
                 </button>
