@@ -1,17 +1,10 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 
 import { MdCancel } from "react-icons/md";
 
-import { toast } from "sonner";
-
-
-
-import Loader from "../loader";
-import { useAuthContext } from "../../context/useAuthContext";
-import { paymentsUrl } from "../../utils/urls";
-import { paymentType } from "../../utils/types";
-import { useDataContext } from "../../context/useFetchDataContext";
 import useMutatePayments from "../../hooks/useMutatePayments";
+import { paymentType } from "../../utils/types";
+import Loader from "../loader";
 
 type initialStateType = {
     name: string
