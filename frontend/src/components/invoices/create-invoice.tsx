@@ -1,11 +1,8 @@
-import React, { useEffect, useReducer, useState } from "react"
-
+import React, { useEffect, useReducer } from "react";
 import { MdCancel } from "react-icons/md";
-import { toast } from "sonner";
-import { usePaymentContext } from "../../context/usePaymentContext";
+import { useDataContext } from "../../context/useFetchDataContext";
+import useMutateInvoice from "../../hooks/useMutateInvoice";
 import Loader from "../loader";
-import { useAuthContext } from "../../context/useAuthContext";
-import { invoiceUrl } from "../../utils/urls";
 
 const initialState = {
     name: '',
@@ -33,63 +30,21 @@ const invoiceReducer = (state: typeof initialState, action: { name: string, valu
 }
 
 export default function CreateNewInvoice(
-    { setOpenModal, fetchInvoices }:
-        { setOpenModal: React.Dispatch<React.SetStateAction<boolean>>, fetchInvoices: () => void }
+    { setOpenModal }: { setOpenModal: React.Dispatch<React.SetStateAction<boolean>> }
 ) {
     const [state, dispatch] = useReducer(invoiceReducer, initialState)
 
-    const [loading, setLoading] = useState<boolean>(false)
+    const { createInvoice, loading } = useMutateInvoice()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         dispatch({ name: e.target.name, value: e.target.value })
     }
 
-    const { payments } = usePaymentContext()
-    const { user } = useAuthContext()
+    const { payments } = useDataContext()
 
-    const createInvoice = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true)
-
-        if (!state.amount || !state.email || !state.name || !state.paymentStatus || !state.paymentType) {
-            setLoading(false)
-            return toast.error('Please fill all values')
-        }
-
-        try {
-            const response = await fetch(invoiceUrl + '/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-                },
-                body: JSON.stringify({
-                    "title": state.name,
-                    "email": state.email,
-                    "amount": Number(state.amount),
-                    "paymentStatus": state.paymentStatus === 'paid' ? true : false,
-                    "paymentType": (state.paymentType),
-                    'installmentalAmount': Number(state.installmentalPaymentAmount),
-                    'paymentInterval': Number(state.paymentInterval),
-                    'staff': user.bid,
-                    'business': user.id
-                }),
-            });
-
-            if (response.ok) {
-                toast.success('invoice successfully created')
-                setOpenModal(false)
-                fetchInvoices()
-                setLoading(false)
-            } else {
-                setLoading(false)
-                toast.error('Error creating invoice');
-            }
-        } catch (error) {
-            console.error('Error sending data:', error);
-            toast.error('Error creating invoice');
-            setLoading(false)
-        }
+        createInvoice(state, setOpenModal)
     };
 
     useEffect(() => {
@@ -99,7 +54,7 @@ export default function CreateNewInvoice(
 
     return (
         <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
-            <form onSubmit={createInvoice} className="form relative">
+            <form onSubmit={handleSubmit} className="form relative">
                 <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenModal(false)}>
                     <MdCancel />
                 </div>
@@ -202,7 +157,7 @@ export default function CreateNewInvoice(
                 <button
                     type="submit"
                     className="w-full bg-primary flex items-center justify-center hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
-                    onClick={createInvoice}
+                    onClick={handleSubmit}
                     disabled={loading}
                 >
                     {loading ? <Loader /> : 'Create Invoice'}

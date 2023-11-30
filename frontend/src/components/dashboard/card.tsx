@@ -2,6 +2,8 @@ import { BsCash, BsPeopleFill } from "react-icons/bs";
 import { FaFileInvoice } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 
+import { useDataContext } from "../../context/useFetchDataContext";
+
 const iconMap = {
     staff: <FaPeopleGroup />,
     customers: <BsPeopleFill />,
@@ -9,19 +11,15 @@ const iconMap = {
     invoices: <FaFileInvoice />,
 };
 
-interface Props {
-    customers: number
-    payments: number
-    invoices: number
-}
+export default function CardWrapper() {
 
-export default function CardWrapper({ customers, payments, invoices }: Props) {
+    const { payments, clients, invoices } = useDataContext()
 
     return (
         <>
-            <Card title="Total Payments" value={payments || '-'} type="payments" />
-            <Card title="Total Clients" value={customers || '-'} type="customers" />
-            <Card title="Total Invoices" value={invoices || '-'} type="invoices" />
+            <Card title="Total Payments" value={payments.length || '-'} type="payments" />
+            <Card title="Total Clients" value={clients.length || '-'} type="customers" />
+            <Card title="Total Invoices" value={invoices.length || '-'} type="invoices" />
         </>
     );
 }

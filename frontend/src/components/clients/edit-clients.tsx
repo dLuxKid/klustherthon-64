@@ -4,8 +4,10 @@ import { MdCancel } from "react-icons/md";
 import { toast } from "sonner";
 import { useAuthContext } from "../../context/useAuthContext";
 import Loader from "../loader";
-import { customerType } from "../../pages/customers";
 import { clientUrl } from "../../utils/urls";
+import { clientsType } from "../../utils/types";
+import { useDataContext } from "../../context/useFetchDataContext";
+import useMutateClient from "../../hooks/useMutateClient";
 
 const formState = {
     name: '',
@@ -20,77 +22,31 @@ const customerReducer = (state: typeof formState, action: { name: string, value:
 
 type Props = {
     setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>,
-    fetchCustomers: () => void
-    customer: customerType
+    client: clientsType
 }
 
-export default function EditCustomer({ setOpenEditModal, fetchCustomers, customer }: Props) {
-
-    const { user } = useAuthContext()
+export default function EditClient({ setOpenEditModal, client }: Props) {
+    const { editClient, loading } = useMutateClient()
 
     const [state, dispatch] = useReducer(customerReducer, {
-        name: customer.name,
-        email: customer.email,
-        phoneNumber: customer.phoneNumber,
-        address: customer.address
+        name: client.name,
+        email: client.email,
+        phoneNumber: client.phoneNumber,
+        address: client.address
     })
-
-    const [loading, setLoading] = useState<boolean>(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         dispatch({ name: e.target.name, value: e.target.value })
     }
 
-    const editInvoice = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true)
-
-        if (!state.email || !state.address || !state.name || !state.phoneNumber) {
-            setLoading(false)
-            return toast.error('Please fill all values')
-        }
-
-        try {
-            const response = await fetch(clientUrl + `/profile/${customer._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-                },
-                body: JSON.stringify({
-                    "name": state.name,
-                    "email": state.email,
-                    "phoneNumber": state.phoneNumber,
-                    'address': state.address,
-                    'businessId': user.id
-                }),
-            });
-
-            if (response.ok) {
-                toast.success('Client successfully saved')
-                fetchCustomers()
-                setTimeout(() => {
-                    setLoading(false)
-                    setOpenEditModal(false)
-                }, 500);
-            } else {
-                toast.error('Error updating client');
-                setTimeout(() => {
-                    setLoading(false)
-                }, 500);
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error('Error updating client');
-            setTimeout(() => {
-                setLoading(false)
-            }, 500);
-        }
+        editClient(client._id, state, setOpenEditModal)
     };
 
     return (
         <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
-            <form onSubmit={editInvoice} className="form relative">
+            <form onSubmit={handleSubmit} className="form relative">
                 <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenEditModal(false)}>
                     <MdCancel />
                 </div>
@@ -137,7 +93,7 @@ export default function EditCustomer({ setOpenEditModal, fetchCustomers, custome
                     disabled={loading}
                     type="submit"
                     className="w-full bg-primary disabled:bg-gray-500 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4 flex items-center justify-center"
-                    onClick={editInvoice}
+                    onClick={handleSubmit}
                 >
                     {loading ? <Loader /> : 'Save Client'}
                 </button>

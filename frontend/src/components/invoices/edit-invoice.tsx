@@ -1,10 +1,8 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 import { MdCancel } from "react-icons/md";
-import { toast } from "sonner";
-import { invoiceType } from "./invoice-table";
+import useMutateInvoice from "../../hooks/useMutateInvoice";
+import { invoiceType } from "../../utils/types";
 import Loader from "../loader";
-import { useAuthContext } from "../../context/useAuthContext";
-import { invoiceUrl } from "../../utils/urls";
 
 type initialStateType = {
     name: string
@@ -19,7 +17,6 @@ const invoiceReducer = (state: initialStateType, action: { name: string, value: 
 
 type Props = {
     setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>
-    fetchInvoices: () => void
     invoice: invoiceType
 }
 
@@ -28,8 +25,8 @@ const paymentStatus_options: Array<{ value: string, label: string }> = [
     { value: 'pending', label: 'Pending' },
 ];
 
-export default function EditInvoice({ setOpenEditModal, fetchInvoices, invoice }: Props) {
-    const { user } = useAuthContext()
+export default function EditInvoice({ setOpenEditModal, invoice }: Props) {
+    const { editInvoice, loading } = useMutateInvoice()
 
     const [state, dispatch] = useReducer(invoiceReducer, {
         name: invoice.title,
@@ -38,61 +35,18 @@ export default function EditInvoice({ setOpenEditModal, fetchInvoices, invoice }
         paymentStatus: invoice.paymentStatus ? 'paid' : 'pending'
     })
 
-    const [loading, setLoading] = useState<boolean>(false)
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         dispatch({ name: e.target.name, value: e.target.value })
     }
 
-    const editInvoice = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true)
-        if (!state.amount || !state.email || !state.name || !state.paymentStatus) {
-            setLoading(false)
-            return toast.error('Please fill all values')
-        }
-
-        try {
-            const response = await fetch(`${invoiceUrl}/update/${invoice._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-                },
-                body: JSON.stringify({
-                    'id': invoice._id,
-                    "title": state.name,
-                    'clientid': invoice.client,
-                    "email": invoice.clientEmail ?? invoice.client,
-                    "amount": Number(state.amount),
-                    "paymentStatus": state.paymentStatus === 'paid' ? true : false,
-                    "paymentType": (invoice.paymentType),
-                    'installmentalAmount': Number(invoice.installmentAmount),
-                    'paymentInterval': Number(invoice.paymentInterval),
-                    'staff': user.bid,
-                    'business': user.id
-                }),
-            });
-
-            if (response.ok) {
-                toast.success('invoice successfully updated')
-                setOpenEditModal(false)
-                fetchInvoices()
-                setLoading(false)
-            } else {
-                setLoading(false)
-                toast.error('Error updating invoice');
-            }
-        } catch (error) {
-            console.error('Error sending data:', error);
-            toast.error('Error updating invoice');
-            setLoading(false)
-        }
+        editInvoice(state, setOpenEditModal, invoice)
     }
 
     return (
         <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
-            <form onSubmit={editInvoice} className="form relative">
+            <form onSubmit={handleSubmit} className="form relative">
                 <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenEditModal(false)}>
                     <MdCancel />
                 </div>
@@ -151,7 +105,7 @@ export default function EditInvoice({ setOpenEditModal, fetchInvoices, invoice }
                 <button
                     type="submit"
                     className="w-full bg-primary flex items-center justify-center hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4"
-                    onClick={editInvoice}
+                    onClick={handleSubmit}
                     disabled={loading}
                 >
                     {loading ? <Loader /> : 'Save Invoice'}

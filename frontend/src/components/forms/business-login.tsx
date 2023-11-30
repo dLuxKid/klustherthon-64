@@ -58,9 +58,7 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
             })
 
             const data = await res.json()
-
             if (res.ok) {
-
               const userDetails = {
                 id: data.id,
                 bid: data.businessRegNo,
@@ -70,9 +68,7 @@ const BusinessLoginForm = ({ loginDetails }: Props) => {
                 token: data.token
               }
               localStorage.setItem('user', JSON.stringify(userDetails))
-
               toast.success('Welcome back ' + data.userName)
-
               dispatch({
                 type: 'login', payload: userDetails
               })

@@ -4,7 +4,7 @@ import SideNavbar from "./components/side-navbar"
 
 import { Toaster } from "sonner"
 
-import Customers from "./pages/customers"
+import Customers from "./pages/clients"
 import Dashboard from "./pages/dashboard"
 import Invoices from "./pages/invoices"
 import LandingPage from "./pages/landing-page"

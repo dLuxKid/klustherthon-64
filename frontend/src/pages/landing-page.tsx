@@ -45,7 +45,7 @@ export default function LandingPage() {
           </div>
         </div>
         <div className='w-full md:w-[50%]'>
-          <img src={img} alt="illustration of bookkeeping" className='object-contain object-center' />
+          <img src={img} alt="illustration of bookkeeping" className='object-contain object-center' loading='eager' />
         </div>
       </section>
       <section className=" p-[5%] md:p-[7.5%] py-[10%] bg-natural flex justify-center items-center w-full">

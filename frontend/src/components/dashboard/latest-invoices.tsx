@@ -1,9 +1,10 @@
 import { formatCurrency } from "../../utils/formatter";
-
 import { GrUpdate } from "react-icons/gr";
-import { invoiceType } from "../invoices/invoice-table";
+import { useDataContext } from "../../context/useFetchDataContext";
 
-export default function LatestInvoices({ invoices }: { invoices: invoiceType[] }) {
+export default function LatestInvoices() {
+    const { invoices } = useDataContext()
+
     return (
         <div className="flex w-full flex-col md:col-span-4 lg:col-span-4">
             <h2 className={`mb-4 text-xl md:text-2xl`}>
@@ -24,7 +25,7 @@ export default function LatestInvoices({ invoices }: { invoices: invoiceType[] }
                                             {invoice.title}
                                         </p>
                                         <p className="hidden text-sm text-text sm:block">
-                                            {invoice.clientEmail ?? invoice.client}
+                                            {invoice.clientEmail}
                                         </p>
                                     </div>
                                 </div>
