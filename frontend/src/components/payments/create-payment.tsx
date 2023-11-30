@@ -1,12 +1,8 @@
-import React, { useReducer, useState } from "react"
+import React, { useReducer } from "react";
 
 import { MdCancel } from "react-icons/md";
-import { toast } from "sonner";
-import Loader from "../loader";
-import { useDataContext } from "../../context/useFetchDataContext";
-import { useAuthContext } from "../../context/useAuthContext";
-import { paymentsUrl } from "../../utils/urls";
 import useMutatePayments from "../../hooks/useMutatePayments";
+import Loader from "../loader";
 
 const initialState = {
     name: '',

@@ -1,13 +1,9 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 
 import { MdCancel } from "react-icons/md";
-import { toast } from "sonner";
-import { useAuthContext } from "../../context/useAuthContext";
-import Loader from "../loader";
-import { clientUrl } from "../../utils/urls";
-import { clientsType } from "../../utils/types";
-import { useDataContext } from "../../context/useFetchDataContext";
 import useMutateClient from "../../hooks/useMutateClient";
+import { clientsType } from "../../utils/types";
+import Loader from "../loader";
 
 const formState = {
     name: '',
