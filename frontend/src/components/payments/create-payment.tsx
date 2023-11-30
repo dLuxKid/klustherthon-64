@@ -48,6 +48,7 @@ export default function CreateNewPayment({ setOpenModal }: Props) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                 },
                 body: JSON.stringify({
                     "name": state.name,
@@ -73,7 +74,7 @@ export default function CreateNewPayment({ setOpenModal }: Props) {
             }
         } catch (error) {
             console.error('Error sending data:', error);
-            toast.error('Error creating invoice');
+            toast.error('Error creating Payment');
             setTimeout(() => {
                 setLoading(false)
             }, 500);

@@ -31,7 +31,7 @@ paymentRouter.get(
       });
       res.status(200).send(payments);
     } catch (err) {
-      console.log(err);
+      console.log("here"+err);
       res.status(400).send({
         err: err,
         message: "Error fetching payments",
@@ -42,6 +42,7 @@ paymentRouter.get(
 
 paymentRouter.post(
   "/create",
+  isAuth,
   expressAsyncHandler(async (req, res) => {
     try {
       const newPayment = new Payment({
