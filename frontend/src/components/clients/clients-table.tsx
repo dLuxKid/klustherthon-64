@@ -1,45 +1,47 @@
 import { useState } from 'react';
-import { customerType } from '../../pages/customers';
+
 import { UpdateBtn } from '../buttons';
+import ErrorMessage from '../err-message';
 import Loader from '../loader';
-import EditCustomer from './edit-customer';
+import EditClient from './edit-clients';
 
+import { clientsType } from '../../utils/types';
 
-type Props = {
-    fetchCustomers: () => void
-    customers: customerType[]
-    loading: boolean
-}
+import { useDataContext } from '../../context/useFetchDataContext';
 
-export default function CustomersTable({ fetchCustomers, customers, loading }: Props) {
+export default function ClientsTable() {
     const [editModal, setEditModal] = useState<boolean>(false)
+    const [selectedClient, setSelectedClient] = useState<clientsType | null>(null)
+    const { clients, isLoadingClients, clientsErrMsg } = useDataContext()
 
-    const [selectedCustomer, setSelectedCustomer] = useState<customerType | null>(null)
 
     return (
         <div className="mt-6 flow-root">
             <div className="inline-block min-w-full align-middle">
                 {
-                    loading &&
+                    isLoadingClients &&
                     <div className="w-full flex items-center justify-center pt-20">
                         <Loader dark />
                     </div>
                 }
 
-                {!loading && customers.length === 0 && <p className='text-black font-semibold text-base w-full text-center mt-8'>No Clients is associated with your business, Please create one.</p>}
+                {!isLoadingClients && clients.length === 0 &&
+                    <p className='text-black font-semibold text-base w-full text-center mt-8'>No Clients is associated with your business, Please create one.</p>
+                }
+
+                {!isLoadingClients && clientsErrMsg && <ErrorMessage>{clientsErrMsg}</ErrorMessage>}
 
                 {editModal &&
-                    <EditCustomer
-                        customer={selectedCustomer as customerType}
+                    <EditClient
+                        client={selectedClient as clientsType}
                         setOpenEditModal={setEditModal}
-                        fetchCustomers={fetchCustomers}
                     />}
-                {!!customers.length &&
+                {!!clients.length &&
                     <div className="rounded-lg bg-background w-full p-2 md:pt-0">
                         <div className="md:hidden">
-                            {customers.map((customer) => (
+                            {clients.map((client) => (
                                 <div
-                                    key={customer._id}
+                                    key={client._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
                                 >
                                     <div className="flex items-center justify-between border-b pb-4">
@@ -48,23 +50,23 @@ export default function CustomersTable({ fetchCustomers, customers, loading }: P
                                                 {/* <div
                                                 className="mr-2 rounded-full w-7 h-7 bg-slate-600"
                                             /> */}
-                                                <p className="text-base font-semibold text-black">{customer.name}</p>
+                                                <p className="text-base font-semibold text-black">{client.name}</p>
                                             </div>
-                                            <p className="text-sm text-text">{customer.email}</p>
+                                            <p className="text-sm text-text">{client.email}</p>
                                         </div>
 
                                     </div>
                                     <div className="flex w-full items-center justify-between pt-4">
                                         <div className='text-text'>
                                             <p className="text-xl font-medium">
-                                                {customer.phoneNumber}
+                                                {client.phoneNumber}
                                             </p>
-                                            <p className='overflow-x-scroll'>{(customer.address)}</p>
+                                            <p className='overflow-x-scroll'>{(client.address)}</p>
                                         </div>
                                         <div className="flex justify-end gap-2">
                                             <div onClick={() => {
                                                 setEditModal(true)
-                                                setSelectedCustomer(customer)
+                                                setSelectedClient(client)
                                             }}>
                                                 <UpdateBtn />
                                             </div>
@@ -91,9 +93,9 @@ export default function CustomersTable({ fetchCustomers, customers, loading }: P
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {customers?.map((customer) => (
+                                {clients?.map((client) => (
                                     <tr
-                                        key={customer._id}
+                                        key={client._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                                     >
                                         <td className="whitespace-nowrap py-3 pl-6 pr-3">
@@ -101,23 +103,23 @@ export default function CustomersTable({ fetchCustomers, customers, loading }: P
                                                 {/* <div
                                                 className="mr-2 rounded-full w-7 h-7 bg-slate-600"
                                             /> */}
-                                                <p className="text-base font-semibold text-black">{customer.name}</p>
+                                                <p className="text-base font-semibold text-black">{client.name}</p>
                                             </div>
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-3 text-text">
-                                            {customer.email}
+                                            {client.email}
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-3 text-text">
-                                            {customer.phoneNumber}
+                                            {client.phoneNumber}
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-3 text-text">
-                                            {(customer.address)}
+                                            {(client.address)}
                                         </td>
                                         <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                             <div className="flex justify-end gap-3">
                                                 <div onClick={() => {
                                                     setEditModal(true)
-                                                    setSelectedCustomer(customer)
+                                                    setSelectedClient(client)
                                                 }}>
                                                     <UpdateBtn />
                                                 </div>

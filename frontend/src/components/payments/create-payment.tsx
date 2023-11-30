@@ -1,15 +1,12 @@
-import React, { useReducer, useState } from "react"
+import React, { useReducer } from "react";
 
 import { MdCancel } from "react-icons/md";
-import { toast } from "sonner";
+import useMutatePayments from "../../hooks/useMutatePayments";
 import Loader from "../loader";
-import { usePaymentContext } from "../../context/usePaymentContext";
-import { useAuthContext } from "../../context/useAuthContext";
-import { paymentsUrl } from "../../utils/urls";
 
 const initialState = {
     name: '',
-    description: '',
+    notes: '',
     amount: ''
 }
 
@@ -22,72 +19,22 @@ type Props = {
 }
 
 export default function CreateNewPayment({ setOpenModal }: Props) {
-
-    const { fetchPayments } = usePaymentContext()
-    const { user } = useAuthContext()
+    const { createPayments, loading } = useMutatePayments()
 
     const [state, dispatch] = useReducer(invoiceReducer, initialState)
-
-    const [loading, setLoading] = useState<boolean>(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         dispatch({ name: e.target.name, value: e.target.value })
     }
 
-    const createInvoice = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true)
-
-        if (!state.amount || !state.description || !state.name) {
-            setLoading(false)
-            return toast.error('Please fill all values')
-        }
-
-        try {
-            const response = await fetch(paymentsUrl + '/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-                },
-                body: JSON.stringify({
-                    "name": state.name,
-                    "notes": state.description,
-                    "amount": Number(state.amount),
-                    'businessId': user.id
-                }),
-            });
-
-            if (response.ok) {
-                toast.success('Payment successfully created')
-                fetchPayments()
-                setTimeout(() => {
-                    setLoading(false)
-                    setOpenModal(false)
-                }, 500);
-            } else {
-                console.error('Failed to send data to the server');
-                toast.error('Error creating payment');
-                setTimeout(() => {
-                    setLoading(false)
-                }, 500);
-            }
-        } catch (error) {
-            console.error('Error sending data:', error);
-            toast.error('Error creating Payment');
-            setTimeout(() => {
-                setLoading(false)
-            }, 500);
-        }
-
-        setTimeout(() => {
-            setLoading(false)
-        }, 500);
+        createPayments({ ...state, amount: Number(state.amount) }, setOpenModal)
     };
 
     return (
         <div className="w-full h-screen flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 bg-white/20 z-50 backdrop-blur-sm">
-            <form onSubmit={createInvoice} className="form relative">
+            <form onSubmit={handleSubmit} className="form relative">
                 <div className="absolute top-0 right-0 text-primary text-2xl cursor-pointer" onClick={() => setOpenModal(false)}>
                     <MdCancel />
                 </div>
@@ -102,12 +49,12 @@ export default function CreateNewPayment({ setOpenModal }: Props) {
                     />
                 </label>
                 <label>
-                    <p>Description</p>
+                    <p>Descrition</p>
                     <textarea
                         required
                         onChange={handleChange}
-                        value={state.description}
-                        name="description"
+                        value={state.notes}
+                        name="notes"
                         className="w-full h-40 rounded-lg text-text outline-none border-none p-4"
                         maxLength={250}
                         minLength={10}
@@ -127,7 +74,7 @@ export default function CreateNewPayment({ setOpenModal }: Props) {
                     disabled={loading}
                     type="submit"
                     className="w-full bg-primary disabled:bg-gray-500 hover:bg-opacity-90 text-white font-semibold text-lg px-9 py-3 rounded-lg mt-4 flex items-center justify-center"
-                    onClick={createInvoice}
+                    onClick={handleSubmit}
                 >
                     {loading ? <Loader /> : 'Create Payment'}
                 </button>

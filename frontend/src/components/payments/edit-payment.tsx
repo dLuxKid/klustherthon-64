@@ -1,18 +1,14 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 
 import { MdCancel } from "react-icons/md";
 
-import { toast } from "sonner";
-
-import { paymentType } from "../../pages/payments";
-
+import useMutatePayments from "../../hooks/useMutatePayments";
+import { paymentType } from "../../utils/types";
 import Loader from "../loader";
-import { useAuthContext } from "../../context/useAuthContext";
-import { paymentsUrl } from "../../utils/urls";
 
 type initialStateType = {
     name: string
-    description: string,
+    notes: string,
     amount: string
 }
 
@@ -22,20 +18,17 @@ const invoiceReducer = (state: initialStateType, action: { name: string, value: 
 
 type Props = {
     setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>
-    fetchPayments: () => void
     payment: paymentType
 }
 
-export default function EditPayment({ setOpenEditModal, fetchPayments, payment }: Props) {
-    const { user } = useAuthContext()
+export default function EditPayment({ setOpenEditModal, payment }: Props) {
+    const { editPayments, loading } = useMutatePayments()
 
     const [state, dispatch] = useReducer(invoiceReducer, {
         name: payment.name,
-        description: payment.notes,
+        notes: payment.notes,
         amount: payment.amount.toString()
     })
-
-    const [loading, setLoading] = useState<boolean>(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         dispatch({ name: e.target.name, value: e.target.value })
@@ -43,57 +36,7 @@ export default function EditPayment({ setOpenEditModal, fetchPayments, payment }
 
     const editPayment = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true)
-
-        if (!state.amount || !state.description || !state.name) {
-            setLoading(false)
-            return toast.error('Please fill all values')
-        }
-
-
-
-        try {
-            const response = await fetch(paymentsUrl + `/${payment._id}/update`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-                },
-                body: JSON.stringify({
-                    "name": state.name,
-                    "notes": state.description,
-                    "amount": Number(state.amount),
-                    'businessId': user.id
-                }),
-            });
-
-            const data = await response.json()
-
-            if (response.ok) {
-                toast.success('Payment successfully updated')
-                fetchPayments()
-                setTimeout(() => {
-                    setLoading(false)
-                    setOpenEditModal(false)
-                }, 500);
-            } else {
-                console.error('Failed to send data to the server');
-                toast.error(data.message);
-                setTimeout(() => {
-                    setLoading(false)
-                }, 500);
-            }
-        } catch (error) {
-            console.error('Error sending data:', error);
-            toast.error('Error updating payment');
-            setTimeout(() => {
-                setLoading(false)
-            }, 500);
-        }
-
-        setTimeout(() => {
-            setLoading(false)
-        }, 500);
+        editPayments(payment._id, { ...state, amount: Number(state.amount) }, setOpenEditModal)
     };
 
     return (
@@ -117,7 +60,7 @@ export default function EditPayment({ setOpenEditModal, fetchPayments, payment }
                     <textarea
                         required
                         onChange={handleChange}
-                        value={state.description}
+                        value={state.notes}
                         name="description"
                         className="w-full h-40 rounded-lg text-text outline-none border-none p-4"
                         maxLength={250}

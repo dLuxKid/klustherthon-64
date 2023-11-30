@@ -4,15 +4,15 @@ import App from './App.tsx'
 import './global.css'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthContextProvider } from './context/useAuthContext.tsx'
-import { PaymentContextProvider } from './context/usePaymentContext.tsx'
+import { DataContextProvider } from './context/useFetchDataContext.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
-        <PaymentContextProvider>
+        <DataContextProvider>
           <App />
-        </PaymentContextProvider>
+        </DataContextProvider>
       </AuthContextProvider>
     </BrowserRouter>
   </React.StrictMode>,

@@ -1,20 +1,22 @@
 import { useState } from "react";
 
 import { useAuthContext } from "../../context/useAuthContext";
-import { usePaymentContext } from "../../context/usePaymentContext";
-import { paymentType } from "../../pages/payments";
+import { useDataContext } from "../../context/useFetchDataContext";
+
 import { formatCurrency } from "../../utils/formatter";
+
 import { DeleteBtn, UpdateBtn } from "../buttons";
 import Loader from "../loader";
 import EditPayment from "./edit-payment";
+import { paymentType } from "../../utils/types";
+import ErrorMessage from "../err-message";
 
 export default function PaymentTable() {
-
-    const { payments, loading, error, fetchPayments } = usePaymentContext()
-    const { user } = useAuthContext()
-
+    const { payments, isLoadingPayments, paymentsErrMsg } = useDataContext()
     const [editModal, setEditModal] = useState<boolean>(false)
     const [selectedPayment, setSelectedPayment] = useState<paymentType | null>(null)
+
+    const { user } = useAuthContext()
 
     // const handleDelete = async (payment: paymentType) => {
     //     try {
@@ -39,22 +41,25 @@ export default function PaymentTable() {
         <div className="mt-6 flow-root w-full">
             <div className="inline-block min-w-full align-middle">
                 {
-                    loading &&
+                    isLoadingPayments &&
                     <div className="w-full flex items-center justify-center pt-20">
                         <Loader dark />
                     </div>
                 }
 
-                {error && <p className="mt-8 text-red-600 font-semibold text-lg text-center w-full">{error}</p>}
+                {!isLoadingPayments && paymentsErrMsg && <ErrorMessage>{paymentsErrMsg}</ErrorMessage>}
+
+                {!isLoadingPayments && payments.length === 0 &&
+                    <p className="w-full text-center mt-8">You have no payments available, create one</p>
+                }
 
                 {editModal &&
                     <EditPayment
                         payment={selectedPayment as paymentType}
                         setOpenEditModal={setEditModal}
-                        fetchPayments={fetchPayments}
                     />}
 
-                {!!payments.length && !loading &&
+                {!!payments.length && !isLoadingPayments &&
                     <div className="rounded-lg bg-background p-2 md:pt-0">
                         <div className="md:hidden">
                             {payments?.map((payment) => (

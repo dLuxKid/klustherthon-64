@@ -5,7 +5,6 @@ import CreateNewPayment from "../components/payments/create-payment";
 import PaymentTable from "../components/payments/payment-table";
 import Search from "../components/search";
 
-export type paymentType = { _id: string, name: string, notes: string, amount: number, __v: number }
 
 export default function Payments() {
     const [openModal, setOpenModal] = useState<boolean>(false)

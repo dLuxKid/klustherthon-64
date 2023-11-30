@@ -5,61 +5,45 @@ import { DeleteBtn, UpdateBtn } from '../buttons';
 import Loader from '../loader';
 import EditInvoice from './edit-invoice';
 import InvoiceStatus from './invoice-status';
+import { useDataContext } from '../../context/useFetchDataContext';
+import { invoiceType } from '../../utils/types';
+import ErrorMessage from '../err-message';
 
-export interface invoiceType {
-    amount: number;
-    business: string;
-    client: string;
-    clientEmail: string;
-    createdAt: string;
-    installmentAmount: number;
-    nextPayment: string;
-    paymentInterval: number;
-    paymentStatus: boolean;
-    paymentType: number;
-    title: string;
-    updatedAt: string;
-    __v: number;
-    _id: string;
-}
 
-type Props = {
-    loading: boolean
-    allInvoices: invoiceType[]
-    fetchInvoices: () => void
-}
-
-export default function InvoicesTable({ loading, allInvoices, fetchInvoices }: Props) {
+export default function InvoicesTable() {
     const [editModal, setEditModal] = useState<boolean>(false)
-
+    const { invoices, isLoadingInvoices, invoicesErrMsg } = useDataContext()
     const [selectedInvoice, setSelectedInvoice] = useState<invoiceType | null>(null)
+
+    const { user } = useAuthContext()
 
     // const handleDelete = (invoice: invoiceType) => {
 
     // }
-
-    const { user } = useAuthContext()
-
     return (
         <div className="mt-6 flow-root">
             <div className="inline-block min-w-full align-middle">
                 {
-                    loading &&
+                    isLoadingInvoices &&
                     <div className="w-full flex items-center justify-center pt-20">
                         <Loader dark />
                     </div>
                 }
 
+                {!isLoadingInvoices && invoicesErrMsg && <ErrorMessage>{invoicesErrMsg}</ErrorMessage>}
+
+                {!isLoadingInvoices && invoices.length === 0 && <p className="w-full text-center mt-8">No available invoices</p>}
+
                 {editModal &&
                     <EditInvoice
                         invoice={selectedInvoice as invoiceType}
                         setOpenEditModal={setEditModal}
-                        fetchInvoices={fetchInvoices}
                     />}
-                {!!allInvoices.length &&
+
+                {!!invoices.length &&
                     <div className="rounded-lg bg-background p-2 md:pt-0">
                         <div className="md:hidden">
-                            {allInvoices?.map((invoice) => (
+                            {invoices?.map((invoice) => (
                                 <div
                                     key={invoice._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -125,7 +109,7 @@ export default function InvoicesTable({ loading, allInvoices, fetchInvoices }: P
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {allInvoices?.map((invoice) => (
+                                {invoices?.map((invoice) => (
                                     <tr
                                         key={invoice._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

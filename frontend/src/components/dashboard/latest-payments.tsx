@@ -1,9 +1,10 @@
 import { formatCurrency } from "../../utils/formatter";
-
 import { GrUpdate } from "react-icons/gr";
-import { paymentType } from "../../pages/payments";
+import { useDataContext } from "../../context/useFetchDataContext";
 
-export default function LatestPayments({ payments }: { payments: paymentType[] }) {
+export default function LatestPayments() {
+    const { payments } = useDataContext()
+
     return (
         <div className="flex w-full flex-col md:col-span-4 lg:col-span-4">
             <h2 className={`mb-4 text-xl md:text-2xl`}>
