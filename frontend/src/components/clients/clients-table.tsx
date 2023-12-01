@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { UpdateBtn } from '../buttons';
 import ErrorMessage from '../err-message';
@@ -10,10 +11,23 @@ import { clientsType } from '../../utils/types';
 import { useDataContext } from '../../context/useFetchDataContext';
 
 export default function ClientsTable() {
-    const [editModal, setEditModal] = useState<boolean>(false)
-    const [selectedClient, setSelectedClient] = useState<clientsType | null>(null)
     const { clients, isLoadingClients, clientsErrMsg } = useDataContext()
 
+    const [editModal, setEditModal] = useState<boolean>(false)
+    const [selectedClient, setSelectedClient] = useState<clientsType | null>(null)
+    const [filteredClients, setFilteredClients] = useState<clientsType[]>(clients)
+
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const query = params.get('query')
+
+    useEffect(() => {
+        if (query) {
+            setFilteredClients(clients.filter(clients => clients.name.toLowerCase().includes(query.toLowerCase()) || clients.email.toLowerCase().includes(query.toLowerCase())))
+        } else {
+            setFilteredClients(clients)
+        }
+    }, [query])
 
     return (
         <div className="mt-6 flow-root">
@@ -36,10 +50,11 @@ export default function ClientsTable() {
                         client={selectedClient as clientsType}
                         setOpenEditModal={setEditModal}
                     />}
+
                 {!!clients.length &&
                     <div className="rounded-lg bg-background w-full p-2 md:pt-0">
                         <div className="md:hidden">
-                            {clients.map((client) => (
+                            {filteredClients.map((client) => (
                                 <div
                                     key={client._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -93,7 +108,7 @@ export default function ClientsTable() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {clients?.map((client) => (
+                                {filteredClients?.map((client) => (
                                     <tr
                                         key={client._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

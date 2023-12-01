@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAuthContext } from "../../context/useAuthContext";
 import { useDataContext } from "../../context/useFetchDataContext";
@@ -10,6 +10,7 @@ import Loader from "../loader";
 import EditPayment from "./edit-payment";
 import { paymentType } from "../../utils/types";
 import ErrorMessage from "../err-message";
+import { useLocation } from "react-router-dom";
 
 export default function PaymentTable() {
     const { payments, isLoadingPayments, paymentsErrMsg } = useDataContext()
@@ -17,6 +18,20 @@ export default function PaymentTable() {
     const [selectedPayment, setSelectedPayment] = useState<paymentType | null>(null)
 
     const { user } = useAuthContext()
+
+    const [filteredPayments, setFilteredPayments] = useState<paymentType[]>(payments)
+
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const query = params.get('query')
+
+    useEffect(() => {
+        if (query) {
+            setFilteredPayments(payments.filter(payment => payment.name.toLowerCase().includes(query.toLowerCase())))
+        } else {
+            setFilteredPayments(payments)
+        }
+    }, [query])
 
     // const handleDelete = async (payment: paymentType) => {
     //     try {
@@ -62,7 +77,7 @@ export default function PaymentTable() {
                 {!!payments.length && !isLoadingPayments &&
                     <div className="rounded-lg bg-background p-2 md:pt-0">
                         <div className="md:hidden">
-                            {payments?.map((payment) => (
+                            {filteredPayments?.map((payment) => (
                                 <div
                                     key={payment._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -115,7 +130,7 @@ export default function PaymentTable() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {payments?.map((payment) => (
+                                {filteredPayments?.map((payment) => (
                                     <tr
                                         key={payment._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

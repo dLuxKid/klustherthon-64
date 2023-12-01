@@ -1,21 +1,39 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import { useAuthContext } from '../../context/useAuthContext';
+import { useDataContext } from '../../context/useFetchDataContext';
+
 import { formatCurrency, formatDateToLocal } from '../../utils/formatter';
+import { invoiceType } from '../../utils/types';
+
 import { DeleteBtn, UpdateBtn } from '../buttons';
+import ErrorMessage from '../err-message';
 import Loader from '../loader';
 import EditInvoice from './edit-invoice';
 import InvoiceStatus from './invoice-status';
-import { useDataContext } from '../../context/useFetchDataContext';
-import { invoiceType } from '../../utils/types';
-import ErrorMessage from '../err-message';
 
 
 export default function InvoicesTable() {
-    const [editModal, setEditModal] = useState<boolean>(false)
     const { invoices, isLoadingInvoices, invoicesErrMsg } = useDataContext()
+
+    const [editModal, setEditModal] = useState<boolean>(false)
     const [selectedInvoice, setSelectedInvoice] = useState<invoiceType | null>(null)
+    const [filteredInvoices, setFilteredInvoices] = useState<invoiceType[]>(invoices)
 
     const { user } = useAuthContext()
+
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const query = params.get('query')
+
+    useEffect(() => {
+        if (query) {
+            setFilteredInvoices(invoices.filter(invoice => invoice.title.toLowerCase().includes(query.toLowerCase()) || invoice.clientEmail.toLowerCase().includes(query.toLowerCase())))
+        } else {
+            setFilteredInvoices(invoices)
+        }
+    }, [query])
 
     // const handleDelete = (invoice: invoiceType) => {
 
@@ -43,7 +61,7 @@ export default function InvoicesTable() {
                 {!!invoices.length &&
                     <div className="rounded-lg bg-background p-2 md:pt-0">
                         <div className="md:hidden">
-                            {invoices?.map((invoice) => (
+                            {filteredInvoices?.map((invoice) => (
                                 <div
                                     key={invoice._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -109,7 +127,7 @@ export default function InvoicesTable() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {invoices?.map((invoice) => (
+                                {filteredInvoices?.map((invoice) => (
                                     <tr
                                         key={invoice._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
