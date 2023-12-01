@@ -84,15 +84,33 @@ export const verifyStaff = expressAsyncHandler(async (req, res) => {
     await staff.save();
 
     res.status(200).send({ message: "Staff verified successfully" });
-  } catch (err) {
+  } catch (err) {console.log("error")
     res.status(500).send({ message: "An error occurred" });
   }
 });
 
-export const allBusiness = expressAsyncHandler(async (req, res) => {
+export const unVerifyStaff = expressAsyncHandler(async (req, res) => {
+  const { businessId, staffId } = req.body;
+
+  try {
+    const staff = await Staff.findById(staffId);
+
+    if (staff.business.toString() !== businessId) {
+      return res.status(403).send({ message: "Unauthorized" });
+    }
+
+    staff.isVerified = false;
+    await staff.save();
+
+    res.status(200).send({ message: "unverified Staff successfully" });
+  } catch (err) {
+    res.status(500).send({ message: "An error occurred" });
+  }
+});
+export const allStaff = expressAsyncHandler(async (req, res) => {
   try {
     const staffs = await Staff.find({
-      business: req.body.businessId,
+      business: req.params.businessId,
     });
     res.status(200).send(staffs);
   } catch (err) {

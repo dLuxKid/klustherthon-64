@@ -9,9 +9,10 @@ import {
 import expressAsyncHandler from "express-async-handler";
 import Business from "../Models/Business.js";
 import {
-    allBusiness,
+    allStaff,
     businessSignin,
     businessSignup,
+    unVerifyStaff,
     verifyStaff
 } from "../Controllers/businessController.js";
 import {
@@ -45,6 +46,12 @@ userRouter.put(
     isBusiness,
     verifyStaff
 )
+userRouter.put(
+    "/business/unverify-staff",
+    isAuth,
+    isBusiness,
+    unVerifyStaff
+)
 
 userRouter.post(
     "/staff/signup",
@@ -62,9 +69,10 @@ userRouter.put(
     })
 )
 userRouter.get(
-    "/staff/allBusiness",
+    "/business/all-staff/:businessId",
     isAuth,
-    allBusiness
+    isBusiness,
+    allStaff
 );
 
 export default userRouter

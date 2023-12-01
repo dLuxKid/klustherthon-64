@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken"; 
+import Business from "./Models/Business.js";
 
 export const generateToken = (user) => {
   return jwt.sign(
@@ -31,8 +32,9 @@ export const isAuth = (req, res, next) => {
     res.status(401).send({ message: "No Token" });
   }
 };
-export const isBusiness = (req, res, next) => {
-  if (req.user && req.business.isBusiness) {
+export const isBusiness = async (req, res, next) => {
+  const business = await Business.findById(req.body.businessId);
+  if (business && business.isBusiness) {
     next();
   } else {
     res.status(401).send({ message: "Invalid Business Token" });
