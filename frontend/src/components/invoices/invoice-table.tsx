@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import { useAuthContext } from '../../context/useAuthContext';
 import { useDataContext } from '../../context/useFetchDataContext';
@@ -23,9 +23,8 @@ export default function InvoicesTable() {
 
     const { user } = useAuthContext()
 
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
-    const query = params.get('query')
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get('query')
 
     useEffect(() => {
         if (query) {

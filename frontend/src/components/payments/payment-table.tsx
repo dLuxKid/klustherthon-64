@@ -5,12 +5,12 @@ import { useDataContext } from "../../context/useFetchDataContext";
 
 import { formatCurrency } from "../../utils/formatter";
 
+import { useSearchParams } from "react-router-dom";
+import { paymentType } from "../../utils/types";
 import { DeleteBtn, UpdateBtn } from "../buttons";
+import ErrorMessage from "../err-message";
 import Loader from "../loader";
 import EditPayment from "./edit-payment";
-import { paymentType } from "../../utils/types";
-import ErrorMessage from "../err-message";
-import { useLocation } from "react-router-dom";
 
 export default function PaymentTable() {
     const { payments, isLoadingPayments, paymentsErrMsg } = useDataContext()
@@ -21,9 +21,8 @@ export default function PaymentTable() {
 
     const [filteredPayments, setFilteredPayments] = useState<paymentType[]>(payments)
 
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
-    const query = params.get('query')
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get('query')
 
     useEffect(() => {
         if (query) {

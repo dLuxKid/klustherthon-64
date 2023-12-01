@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { UpdateBtn } from '../buttons';
 import ErrorMessage from '../err-message';
@@ -9,6 +8,7 @@ import EditClient from './edit-clients';
 import { clientsType } from '../../utils/types';
 
 import { useDataContext } from '../../context/useFetchDataContext';
+import { useSearchParams } from 'react-router-dom';
 
 export default function ClientsTable() {
     const { clients, isLoadingClients, clientsErrMsg } = useDataContext()
@@ -17,9 +17,8 @@ export default function ClientsTable() {
     const [selectedClient, setSelectedClient] = useState<clientsType | null>(null)
     const [filteredClients, setFilteredClients] = useState<clientsType[]>(clients)
 
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
-    const query = params.get('query')
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get('query')
 
     useEffect(() => {
         if (query) {

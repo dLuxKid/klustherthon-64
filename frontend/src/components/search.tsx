@@ -5,7 +5,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 
 export default function Search({ placeholder }: { placeholder: string }) {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const location = useLocation();
     const navigate = useNavigate()
 
