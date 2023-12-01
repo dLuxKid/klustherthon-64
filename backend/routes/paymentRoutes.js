@@ -4,6 +4,7 @@ import expressAsyncHandler from "express-async-handler";
 import Payment from "../Models/Payment.js";
 import Staff from "../Models/Staff.js";
 import { isAuth, isBusiness } from "../utils.js";
+import Business from "../Models/Business.js";
 
 const paymentRouter = express.Router();
 
@@ -41,6 +42,7 @@ paymentRouter.get(
 
 paymentRouter.post(
   "/create",
+  isAuth,
   expressAsyncHandler(async (req, res) => {
     try {
       const newPayment = new Payment({
@@ -86,12 +88,12 @@ paymentRouter.put(
 paymentRouter.delete(
   "/delete",
   isAuth,
-  // isBusiness,
+  isBusiness,
   expressAsyncHandler(async (req, res) => {
     try {
-      const staff = await Staff.findById(req.body.staffId);
-      console.log(staff);
-      if (staff && staff.business.toString() !== req.body.businessId) {
+      const business = await Business.findById(req.body.staffId);
+      console.log(business);
+      if (staff && business.id.toString() !== req.body.businessId) {
         return res.status(403).send({ message: "Unauthorized" });
       } else {
         await Staff.deleteOne({ _id: req.body.staffId });
