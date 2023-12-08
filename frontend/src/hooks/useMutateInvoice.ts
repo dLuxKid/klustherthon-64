@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import { useAuthContext } from "../context/useAuthContext";
 import { useDataContext } from "../context/useFetchDataContext";
 
-import { invoiceUrl } from "../utils/urls";
 import { invoiceType } from "../utils/types";
+import { invoiceUrl } from "../utils/urls";
 
 type editInvoiceType = {
   name: string;
@@ -60,18 +60,19 @@ export default function useMutateInvoice() {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        toast.success("invoice successfully created");
+        toast.success(data.message);
         setOpenModal(false);
         fetchInvoices();
         setLoading(false);
       } else {
         setLoading(false);
-        toast.error("Error creating invoice");
+        toast.error(data.message);
       }
-    } catch (error) {
-      console.error("Error sending data:", error);
-      toast.error("Error creating invoice");
+    } catch (error: any) {
+      toast.error(error.message);
       setLoading(false);
     }
   };
@@ -109,18 +110,19 @@ export default function useMutateInvoice() {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        toast.success("invoice successfully updated");
+        toast.success(data.message);
         setOpenEditModal(false);
         fetchInvoices();
         setLoading(false);
       } else {
         setLoading(false);
-        toast.error("Error updating invoice");
+        toast.error(data.message);
       }
-    } catch (error) {
-      console.error("Error sending data:", error);
-      toast.error("Error updating invoice");
+    } catch (error: any) {
+      toast.error(error.message);
       setLoading(false);
     }
   };

@@ -39,14 +39,15 @@ export default function useMutatePayments() {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        toast.success("Payment successfully created");
+        toast.success(data.message);
         fetchPayments();
         setLoading(false);
         setOpenModal(false);
       } else {
-        console.error("Failed to send data to the server");
-        toast.error("Error creating payment");
+        toast.error(data.message);
         setLoading(false);
       }
     } catch (error) {
@@ -86,12 +87,11 @@ export default function useMutatePayments() {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success("Payment successfully updated");
+        toast.success(data.message);
         fetchPayments();
         setLoading(false);
         setOpenEditModal(false);
       } else {
-        console.error("Failed to send data to the server");
         toast.error(data.message);
         setLoading(false);
       }
@@ -119,6 +119,8 @@ export default function useMutatePayments() {
       if (res.ok) {
         fetchPayments();
         toast.success(data.message);
+      } else {
+        toast.error(data.message);
       }
     } catch (error: any) {
       toast.error(error.message);
