@@ -5,7 +5,7 @@
 ### Description
 
 EasyLedger cloud-based invoice and payment tracking solution called EasyLedger, designed for small businesses.
-Deployement Like :- https://klustherthon-64.vercel.app/
+Deployement Like :- https://easy-ledger.vercel.app/
 
 ### Product Description & Introduction
 
