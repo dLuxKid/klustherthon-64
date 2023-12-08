@@ -1,78 +1,42 @@
-import express from "express"
-//  import user model 
-import bcrypt from 'bcryptjs';
-import {
-    generateToken,
-    isAuth,
-    isBusiness
-} from "../utils.js";
+import express from "express";
+//  import user model
+import bcrypt from "bcryptjs";
+import { generateToken, isAuth, isBusiness } from "../utils.js";
 import expressAsyncHandler from "express-async-handler";
 import Business from "../Models/Business.js";
 import {
-    allStaff,
-    businessSignin,
-    businessSignup,
-    unVerifyStaff,
-    verifyStaff
+  allStaff,
+  businessSignin,
+  businessSignup,
+  unVerifyStaff,
+  verifyStaff,
 } from "../Controllers/businessController.js";
-import {
-    staffSignin,
-    staffSignup
-} from "../Controllers/staffController.js";
-
+import { staffSignin, staffSignup } from "../Controllers/staffController.js";
 
 const userRouter = express.Router();
 
-userRouter.post(
-    "/business/signup",
-    businessSignup
-)
+userRouter.post("/business/signup", businessSignup);
 
-userRouter.post(
-    "/business/signin",
-    businessSignin
+userRouter.post("/business/signin", businessSignin);
+userRouter.put(
+  "/business/profile",
+  // isAuth,
+  expressAsyncHandler(async (req, res) => {
+    // this will update business
+  })
 );
-userRouter.put(
-    "/business/profile",
-    // isAuth,
-    expressAsyncHandler(async (req, res) => {
-        // this will update business
+userRouter.put("/business/verify-staff", isAuth, isBusiness, verifyStaff);
+userRouter.put("/business/unverify-staff", isAuth, isBusiness, unVerifyStaff);
 
-    })
-)
+userRouter.post("/staff/signup", staffSignup);
+userRouter.post("/staff/signin", staffSignin);
 userRouter.put(
-    "/business/verify-staff",
-    isAuth,
-    isBusiness,
-    verifyStaff
-)
-userRouter.put(
-    "/business/unverify-staff",
-    isAuth,
-    isBusiness,
-    unVerifyStaff
-)
-
-userRouter.post(
-    "/staff/signup",
-    staffSignup
-)
-userRouter.post(
-    "/staff/signin",
-    staffSignin
+  "/staff/profile",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    // this will update Staff profile
+  })
 );
-userRouter.put(
-    "/staff/profile",
-    isAuth,
-    expressAsyncHandler(async (req, res) => {
-        // this will update Staff profile   
-    })
-)
-userRouter.get(
-    "/business/all-staff/:businessId",
-    isAuth,
-    isBusiness,
-    allStaff
-);
+userRouter.get("/business/all-staff/:businessId", isAuth, isBusiness, allStaff);
 
-export default userRouter
+export default userRouter;

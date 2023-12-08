@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { useAuthContext } from '../../context/useAuthContext';
 import { useDataContext } from '../../context/useFetchDataContext';
 
 import { formatCurrency, formatDateToLocal } from '../../utils/formatter';
 import { invoiceType } from '../../utils/types';
 
-import { DeleteBtn, UpdateBtn } from '../buttons';
+import { UpdateBtn } from '../buttons';
 import ErrorMessage from '../err-message';
 import Loader from '../loader';
 import EditInvoice from './edit-invoice';
@@ -21,8 +20,6 @@ export default function InvoicesTable() {
     const [selectedInvoice, setSelectedInvoice] = useState<invoiceType | null>(null)
     const [filteredInvoices, setFilteredInvoices] = useState<invoiceType[]>(invoices)
 
-    const { user } = useAuthContext()
-
     const [searchParams] = useSearchParams();
     const query = searchParams.get('query')
 
@@ -34,9 +31,6 @@ export default function InvoicesTable() {
         }
     }, [query])
 
-    // const handleDelete = (invoice: invoiceType) => {
-
-    // }
     return (
         <div className="mt-6 flow-root">
             <div className="inline-block min-w-full align-middle">
@@ -49,7 +43,7 @@ export default function InvoicesTable() {
 
                 {!isLoadingInvoices && invoicesErrMsg && <ErrorMessage>{invoicesErrMsg}</ErrorMessage>}
 
-                {!isLoadingInvoices && invoices.length === 0 && <p className="w-full text-center mt-8">No available invoices</p>}
+                {!isLoadingInvoices && invoices.length === 0 && !invoicesErrMsg && <p className="w-full text-center mt-8">No available invoices</p>}
 
                 {editModal &&
                     <EditInvoice
@@ -91,12 +85,6 @@ export default function InvoicesTable() {
                                             }}>
                                                 <UpdateBtn />
                                             </div>
-                                            {user.isBusiness &&
-                                                // <div onClick={() => handleDelete(invoice)}>
-                                                <div>
-                                                    <DeleteBtn />
-                                                </div>
-                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -159,12 +147,6 @@ export default function InvoicesTable() {
                                                 }}>
                                                     <UpdateBtn />
                                                 </div>
-                                                {user.isBusiness &&
-                                                    // <div onClick={() => handleDelete(invoice)}>
-                                                    <div>
-                                                        <DeleteBtn />
-                                                    </div>
-                                                }
                                             </div>
                                         </td>
                                     </tr>

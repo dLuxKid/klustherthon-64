@@ -11,6 +11,7 @@ import { DeleteBtn, UpdateBtn } from "../buttons";
 import ErrorMessage from "../err-message";
 import Loader from "../loader";
 import EditPayment from "./edit-payment";
+import useMutatePayments from "../../hooks/useMutatePayments";
 
 export default function PaymentTable() {
     const { payments, isLoadingPayments, paymentsErrMsg } = useDataContext()
@@ -18,6 +19,7 @@ export default function PaymentTable() {
     const [selectedPayment, setSelectedPayment] = useState<paymentType | null>(null)
 
     const { user } = useAuthContext()
+    const { deletePayment } = useMutatePayments()
 
     const [filteredPayments, setFilteredPayments] = useState<paymentType[]>(payments)
 
@@ -32,25 +34,6 @@ export default function PaymentTable() {
         }
     }, [query])
 
-    // const handleDelete = async (payment: paymentType) => {
-    //     try {
-    //         const res = await fetch('http://localhost:5000/api/payments/delete', {
-    //             method: 'DELETE',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${user.token}`
-    //             },
-    //             body: JSON.stringify({
-    //                 'businessId': user.id
-    //             }),
-    //         })
-
-    //         console.log(res)
-    //     } catch (error: any) {
-    //         toast.error(error.message)
-    //     }
-    // }
-
     return (
         <div className="mt-6 flow-root w-full">
             <div className="inline-block min-w-full align-middle">
@@ -63,7 +46,7 @@ export default function PaymentTable() {
 
                 {!isLoadingPayments && paymentsErrMsg && <ErrorMessage>{paymentsErrMsg}</ErrorMessage>}
 
-                {!isLoadingPayments && payments.length === 0 &&
+                {!isLoadingPayments && payments.length === 0 && !paymentsErrMsg &&
                     <p className="w-full text-center mt-8">You have no payments available, create one</p>
                 }
 
@@ -104,8 +87,7 @@ export default function PaymentTable() {
                                                 <UpdateBtn />
                                             </div>
                                             {user.isBusiness &&
-                                                // <div onClick={() => handleDelete(payment)}>
-                                                <div>
+                                                <div onClick={() => deletePayment(payment._id)}>
                                                     <DeleteBtn />
                                                 </div>
                                             }
@@ -157,8 +139,7 @@ export default function PaymentTable() {
                                                     <UpdateBtn />
                                                 </div>
                                                 {user.isBusiness &&
-                                                    // <div onClick={() => handleDelete(payment)}>
-                                                    <div>
+                                                    <div onClick={() => deletePayment(payment._id)}>
                                                         <DeleteBtn />
                                                     </div>
                                                 }

@@ -25,10 +25,11 @@ export default function useMutatePayments() {
     }
 
     try {
-      const response = await fetch(paymentsUrl + "/create", {
+      const response = await fetch(`${paymentsUrl}/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
           name: state.name,
@@ -102,5 +103,27 @@ export default function useMutatePayments() {
     setLoading(false);
   };
 
-  return { editPayments, createPayments, loading };
+  const deletePayment = async (id: string) => {
+    try {
+      const res = await fetch(`${paymentsUrl}/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          paymentId: id,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        fetchPayments();
+        toast.success(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  return { editPayments, createPayments, deletePayment, loading };
 }

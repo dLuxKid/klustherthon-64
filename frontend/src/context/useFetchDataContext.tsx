@@ -80,7 +80,8 @@ export const DataContextProvider = ({ children }: { children: React.ReactNode })
         setIsLoadingPayments(true)
         setPayments([])
         try {
-            const res = await fetch(`${paymentsUrl}/all-business/${user.id}`,
+            // const res = await fetch(`${paymentsUrl}/all-business/${user.id}`,
+            const res = await fetch(`http://localhost:5000/api/payments/all-business/${user.id}`,
                 {
                     method: 'GET',
                     headers: {
