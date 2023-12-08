@@ -1,4 +1,5 @@
 import expressAsyncHandler from "express-async-handler";
+import Payment from "../Models/Payment.js";
 
 export const getAllPayments = expressAsyncHandler(async (req, res) => {
   try {
