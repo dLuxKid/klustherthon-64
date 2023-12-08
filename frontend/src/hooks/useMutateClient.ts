@@ -40,18 +40,18 @@ export default function useMutateClient() {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        toast.success("Client successfully registered");
+        toast.success(data.message);
         setOpenModal(false);
         fetchClients();
         setLoading(false);
       } else {
-        console.error("Failed to send data to the server");
-        toast.error("Error registering client");
+        toast.error(data.message);
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Error registering client");
+    } catch (error: any) {
+      toast.error(error.message);
       setLoading(false);
     }
   };
@@ -84,18 +84,19 @@ export default function useMutateClient() {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        toast.success("Client successfully saved");
+        toast.success(data.message);
         fetchClients();
         setLoading(false);
         setOpenEditModal(false);
       } else {
-        toast.error("Error updating client");
+        toast.error(data.message);
         setLoading(false);
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Error updating client");
+    } catch (error: any) {
+      toast.error(error.message);
       setLoading(false);
     }
   };

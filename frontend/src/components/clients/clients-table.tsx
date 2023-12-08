@@ -38,7 +38,7 @@ export default function ClientsTable() {
                     </div>
                 }
 
-                {!isLoadingClients && clients.length === 0 &&
+                {!isLoadingClients && clients.length === 0 && !clientsErrMsg &&
                     <p className='text-black font-semibold text-base w-full text-center mt-8'>No Clients is associated with your business, Please create one.</p>
                 }
 
@@ -146,6 +146,6 @@ export default function ClientsTable() {
                     </div>
                 }
             </div>
-        </div>
+        </div >
     );
 }
