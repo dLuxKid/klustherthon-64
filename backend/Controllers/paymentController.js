@@ -1,5 +1,5 @@
 import expressAsyncHandler from "express-async-handler";
-
+import Payment from "../Models/Payment.js"
 export const getAllPayments = expressAsyncHandler(async (req, res) => {
     try {
         const payments = await Payment.find();
@@ -17,7 +17,7 @@ export const getBusinessPayments = expressAsyncHandler(async (req, res) => {
             business: req.params.businessId,
         });
         res.status(200).send(payments);
-    } catch (err) {
+    } catch (err) {console.log(err);
         res.status(400).send({
             err: err,
             message: "Error fetching payments",
