@@ -34,7 +34,7 @@ paymentRouter.put(
 );
 
 paymentRouter.delete(
-  "/delete",
+  "/delete/:id",
   isAuth,
   isBusiness,
   deletePayment

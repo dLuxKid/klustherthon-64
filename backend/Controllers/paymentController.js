@@ -17,7 +17,7 @@ export const getBusinessPayments = expressAsyncHandler(async (req, res) => {
             business: req.params.businessId,
         });
         res.status(200).send(payments);
-    } catch (err) {console.log(err);
+    } catch (err) {
         res.status(400).send({
             err: err,
             message: "Error fetching payments",
@@ -75,7 +75,7 @@ export const updatePayment = expressAsyncHandler(async (req, res) => {
       // if (staff && business.id.toString() !== req.body.businessId) {
       //   return res.status(403).send({ message: "Unauthorized" });
       // } else {
-      const payment = await Payment.deleteOne({_id:req.body.paymentId});
+      const payment = await Payment.deleteOne({_id:req.params.id});
       if(payment){
         return res.status(200).send({ message: `Payment Deleted` });
       }else{
