@@ -105,14 +105,14 @@ export default function useMutatePayments() {
 
   const deletePayment = async (id: string) => {
     try {
-      const res = await fetch(`${paymentsUrl}/delete`, {
+      const res = await fetch(`${paymentsUrl}/delete/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
-          paymentId: id,
+          businessId: user.id,
         }),
       });
       const data = await res.json();

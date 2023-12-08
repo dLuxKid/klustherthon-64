@@ -69,18 +69,12 @@ export const updatePayment = expressAsyncHandler(async (req, res) => {
 
 export const deletePayment = expressAsyncHandler(async (req, res) => {
   try {
-    // const business = await Business.findById(req.body.businessId);
-    // console.log(business);
-    // if (staff && business.id.toString() !== req.body.businessId) {
-    //   return res.status(403).send({ message: "Unauthorized" });
-    // } else {
-    const payment = await Payment.deleteOne({ _id: req.body.paymentId });
+    const payment = await Payment.deleteOne({ _id: req.params.id });
     if (payment) {
       return res.status(200).send({ message: `Payment Deleted` });
     } else {
       return res.status(400).send({ message: `Payment does not exist` });
     }
-    // }
   } catch (err) {
     res.status(400).send({ message: "something went wrong" });
   }

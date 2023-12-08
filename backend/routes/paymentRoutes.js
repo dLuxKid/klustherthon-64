@@ -18,6 +18,6 @@ paymentRouter.post("/create", isAuth, createPayment);
 
 paymentRouter.put("/:id/update", isAuth, updatePayment);
 
-paymentRouter.delete("/delete", isAuth, isBusiness, deletePayment);
+paymentRouter.delete("/delete/:id", isAuth, isBusiness, deletePayment);
 
 export default paymentRouter;
