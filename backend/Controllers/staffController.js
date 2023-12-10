@@ -75,3 +75,16 @@ export const staffSignin = expressAsyncHandler(async (req, res) => {
     });
   }
 });
+export const getBusinessStaff = expressAsyncHandler(async (req, res) => {
+  try {
+    const staffs = await Staff.find({
+      business: req.params.businessId,
+    });
+    res.status(200).send(staffs);
+  } catch (err) {
+    res.status(400).send({
+      err: err,
+      message: "Error fetching Staffs",
+    });
+  }
+});

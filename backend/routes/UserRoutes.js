@@ -37,6 +37,6 @@ userRouter.put(
     // this will update Staff profile
   })
 );
-userRouter.get("/business/all-staff/:businessId", isAuth, isBusiness, allStaff);
+
 
 export default userRouter;
