@@ -11,6 +11,7 @@ import ErrorMessage from '../err-message';
 import Loader from '../loader';
 import EditInvoice from './edit-invoice';
 import InvoiceStatus from './invoice-status';
+import { useDebouncedCallback } from 'use-debounce';
 
 
 export default function InvoicesTable() {
@@ -23,12 +24,16 @@ export default function InvoicesTable() {
     const [searchParams] = useSearchParams();
     const query = searchParams.get('query')
 
-    useEffect(() => {
+    const filterInvoices = useDebouncedCallback(() => {
         if (query) {
             setFilteredInvoices(invoices.filter(invoice => invoice.title.toLowerCase().includes(query.toLowerCase()) || invoice.clientEmail.toLowerCase().includes(query.toLowerCase())))
         } else {
             setFilteredInvoices(invoices)
         }
+    }, 500)
+
+    useEffect(() => {
+        filterInvoices()
     }, [query])
 
     return (

@@ -1,10 +1,9 @@
-import { useState } from "react"
+import { SetStateAction } from "react";
 
-import { TiCancelOutline } from "react-icons/ti";
 import { MdVerified } from "react-icons/md";
+import { TiCancelOutline } from "react-icons/ti";
+import { staffMemberType } from "../../pages/manage-staffs";
 
-
-type staffMemberType = 'all' | 'verified' | 'unverified'
 type staffMemberBtnType = { name: staffMemberType, icon?: React.ReactNode, iconColor?: string }[]
 
 const btn_items: staffMemberBtnType = [
@@ -13,8 +12,12 @@ const btn_items: staffMemberBtnType = [
     { name: 'unverified', icon: <TiCancelOutline />, iconColor: 'text-error' },
 ]
 
-export default function StaffBtns() {
-    const [staffType, setStaffType] = useState<staffMemberType>('all')
+type Props = {
+    staffType: staffMemberType,
+    setStaffType: React.Dispatch<SetStateAction<staffMemberType>>
+}
+
+export default function StaffBtns({ staffType, setStaffType }: Props) {
     return (
         <div className="flex items-center rounded-lg overflow-hidden">
             {btn_items.map((item, i) => (

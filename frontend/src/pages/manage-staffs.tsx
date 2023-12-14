@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import StaffBtns from "../components/manage-staffs/staff-buttons"
@@ -9,9 +9,13 @@ import { toast } from "sonner"
 
 import { useAuthContext } from "../context/useAuthContext"
 
+export type staffMemberType = 'all' | 'verified' | 'unverified'
+
 export default function ManageStaffs() {
     const navigate = useNavigate()
     const { user } = useAuthContext()
+
+    const [staffType, setStaffType] = useState<staffMemberType>('all')
 
     useEffect(() => {
         if (!user.isBusiness) {
@@ -26,9 +30,9 @@ export default function ManageStaffs() {
                 <h1 className={'text-black text-2xl font-semibold uppercase'}>Manage Staffs</h1>
                 <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
                     <Search placeholder="Search staffs..." />
-                    <StaffBtns />
+                    <StaffBtns staffType={staffType} setStaffType={setStaffType} />
                 </div>
-                <StaffTable />
+                <StaffTable staffType={staffType} />
             </div >
         )
 }

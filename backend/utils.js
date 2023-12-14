@@ -36,10 +36,11 @@ export const isAuth = (req, res, next) => {
     });
   }
 };
+
 export const isBusiness = async (req, res, next) => {
-  const business = await Business.findById(req.body.businessId);
+  let business = await Business.findById(req.body.businessId);
   if (!business) {
-    const business = await Business.findById(req.params.businessId);
+    business = await Business.findById(req.params.businessId);
   }
   if (business && business.isBusiness) {
     next();
@@ -49,6 +50,7 @@ export const isBusiness = async (req, res, next) => {
     });
   }
 };
+
 export const isStaff = async (id) => {
   const staff = await Staff.findById(req.body.id);
   if (staff) {

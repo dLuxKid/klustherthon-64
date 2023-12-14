@@ -9,6 +9,7 @@ import { clientsType } from '../../utils/types';
 
 import { useDataContext } from '../../context/useFetchDataContext';
 import { useSearchParams } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function ClientsTable() {
     const { clients, isLoadingClients, clientsErrMsg } = useDataContext()
@@ -20,12 +21,16 @@ export default function ClientsTable() {
     const [searchParams] = useSearchParams();
     const query = searchParams.get('query')
 
-    useEffect(() => {
+    const filterClients = useDebouncedCallback(() => {
         if (query) {
             setFilteredClients(clients.filter(clients => clients.name.toLowerCase().includes(query.toLowerCase()) || clients.email.toLowerCase().includes(query.toLowerCase())))
         } else {
             setFilteredClients(clients)
         }
+    }, 500)
+
+    useEffect(() => {
+        filterClients()
     }, [query])
 
     return (

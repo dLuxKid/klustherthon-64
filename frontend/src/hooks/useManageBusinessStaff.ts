@@ -2,59 +2,84 @@ import { useState } from "react";
 import { usersUrl } from "../utils/urls";
 import { useAuthContext } from "../context/useAuthContext";
 import { toast } from "sonner";
+import { businessStaffType } from "../utils/types";
+import { useDataContext } from "../context/useFetchDataContext";
 
 export default function useManageBusinessStaff() {
-  const [businessStaffs, setBusinessStaffs] = useState<any>();
-  const [isLoadingBusinessStaffs, setIsLoadingBusinessStaffs] =
-    useState<boolean>(false);
-  const [businessStaffsErrMsg, setBusinessStaffsErrMsg] = useState<string>("");
-
   const { user } = useAuthContext();
+  const { fetchStaffs } = useDataContext();
 
-  const fetchStaffs = async () => {
-    setIsLoadingBusinessStaffs(true);
-    setBusinessStaffs([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const verifyStaff = async (staffId: string, businessId: string) => {
+    setLoading(true);
     try {
-      //   const res = await fetch(
-      //     `${usersUrl}/business/all-staff/${user.id}`,
-      const res = await fetch(
-        `http://localhost:5000/api/users/business/all-staff/${user.id}`,
+      //   const response = await fetch(`${usersUrl}/business/verify-staff`, {
+      const response = await fetch(
+        `http://localhost:5000/api/users/business/verify-staff`,
         {
-          method: "GET",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user.token}`,
           },
+          body: JSON.stringify({
+            businessId,
+            staffId,
+          }),
         }
       );
-      const data = await res.json();
-      console.log(data);
-      if (res.ok) {
-        setBusinessStaffs(data);
-        setIsLoadingBusinessStaffs(false);
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message);
+        fetchStaffs();
+        setLoading(false);
       } else {
-        setBusinessStaffsErrMsg(data.message);
         toast.error(data.message);
-        setIsLoadingBusinessStaffs(false);
+        setLoading(false);
       }
     } catch (error: any) {
-      console.log(error);
       toast.error(error.message);
-      setBusinessStaffsErrMsg(error.message);
-      setIsLoadingBusinessStaffs(false);
+      setLoading(false);
     }
   };
 
-  const verifyStaff = () => {};
+  const unVerifyStaff = async (staffId: string, businessId: string) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${usersUrl}/business/verify-staff`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          businessId,
+          staffId,
+        }),
+      });
 
-  const unVerifyStaff = () => {};
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message);
+        fetchStaffs();
+        setLoading(false);
+      } else {
+        toast.error(data.message);
+        setLoading(false);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+      setLoading(false);
+    }
+  };
 
   return {
-    businessStaffs,
-    businessStaffsErrMsg,
-    isLoadingBusinessStaffs,
-    fetchStaffs,
     verifyStaff,
     unVerifyStaff,
+    loading,
   };
 }

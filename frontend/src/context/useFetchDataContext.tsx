@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useState } from "react"
 
 import { useAuthContext } from "./useAuthContext"
 
-import { clientUrl, invoiceUrl, paymentsUrl } from "../utils/urls"
-import { clientsType, invoiceType, dataContextType, paymentType } from "../utils/types"
+import { businessStaffType, clientsType, dataContextType, invoiceType, paymentType } from "../utils/types"
+import { clientUrl, invoiceUrl, paymentsUrl, usersUrl } from "../utils/urls"
 
 export const DataContext = createContext({} as dataContextType)
 
@@ -20,7 +20,40 @@ export const DataContextProvider = ({ children }: { children: React.ReactNode })
     const [isLoadingInvoices, setIsLoadingInvoices] = useState<boolean>(false)
     const [invoicesErrMsg, setInvoicesErrMsg] = useState<string>('')
 
+    const [businessStaffs, setBusinessStaffs] = useState<businessStaffType[]>([]);
+    const [isLoadingBusinessStaffs, setIsLoadingBusinessStaffs] =
+        useState<boolean>(false);
+    const [businessStaffsErrMsg, setBusinessStaffsErrMsg] = useState<string>("");
+
     const { user } = useAuthContext()
+
+    const fetchStaffs = async () => {
+        setIsLoadingBusinessStaffs(true);
+        setBusinessStaffs([]);
+        try {
+            const res = await fetch(
+                `${usersUrl}/business/all-staff/${user.id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                }
+            );
+            const data = await res.json();
+            if (res.ok) {
+                setBusinessStaffs(data);
+                setIsLoadingBusinessStaffs(false);
+            } else {
+                setBusinessStaffsErrMsg(data.message);
+                setIsLoadingBusinessStaffs(false);
+            }
+        } catch (error: any) {
+            setBusinessStaffsErrMsg(error.message);
+            setIsLoadingBusinessStaffs(false);
+        }
+    };
 
     const fetchInvoices = async () => {
         setIsLoadingInvoices(true)
@@ -104,6 +137,7 @@ export const DataContextProvider = ({ children }: { children: React.ReactNode })
             fetchClients()
             fetchInvoices()
             fetchPayments()
+            fetchStaffs()
         }
     }, [user])
 
@@ -112,15 +146,19 @@ export const DataContextProvider = ({ children }: { children: React.ReactNode })
             payments,
             invoices,
             clients,
+            businessStaffs,
             isLoadingPayments,
             isLoadingInvoices,
             isLoadingClients,
+            isLoadingBusinessStaffs,
             paymentsErrMsg,
             invoicesErrMsg,
             clientsErrMsg,
+            businessStaffsErrMsg,
             fetchPayments,
             fetchInvoices,
-            fetchClients
+            fetchClients,
+            fetchStaffs
         }}
     >
         {children}

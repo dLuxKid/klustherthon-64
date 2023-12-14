@@ -2,15 +2,19 @@ export type dataContextType = {
   payments: paymentType[];
   invoices: invoiceType[];
   clients: clientsType[];
+  businessStaffs: businessStaffType[];
   isLoadingPayments: boolean;
   isLoadingInvoices: boolean;
   isLoadingClients: boolean;
+  isLoadingBusinessStaffs: boolean;
   paymentsErrMsg: string;
   invoicesErrMsg: string;
   clientsErrMsg: string;
+  businessStaffsErrMsg: string;
   fetchPayments: () => void;
   fetchInvoices: () => void;
   fetchClients: () => void;
+  fetchStaffs: () => void;
 };
 
 export type clientsType = {
@@ -43,5 +47,18 @@ export type invoiceType = {
   title: string;
   updatedAt: string;
   __v: number;
+  _id: string;
+};
+
+export type businessStaffType = {
+  business: string;
+  department: string;
+  email: string;
+  isBusiness: boolean;
+  isVerified: boolean;
+  managerName: string;
+  name: string;
+  staffId: string;
+  userName: string;
   _id: string;
 };
