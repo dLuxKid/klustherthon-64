@@ -11,7 +11,11 @@ import {
   unVerifyStaff,
   verifyStaff,
 } from "../Controllers/businessController.js";
-import { staffSignin, staffSignup } from "../Controllers/staffController.js";
+import {
+  getBusinessStaff,
+  staffSignin,
+  staffSignup,
+} from "../Controllers/staffController.js";
 
 const userRouter = express.Router();
 
@@ -25,14 +29,14 @@ userRouter.put(
     // this will update business
   })
 );
-userRouter.put("/business/verify-staff", isAuth, isBusiness, verifyStaff);
-userRouter.put("/business/unverify-staff", isAuth, isBusiness, unVerifyStaff);
 userRouter.get(
-  "/business/all-staffs/:businessId",
+  "/business/all-staff/:businessId",
   isAuth,
   isBusiness,
-  allStaff
+  getBusinessStaff
 );
+userRouter.put("/business/verify-staff", isAuth, isBusiness, verifyStaff);
+userRouter.put("/business/unverify-staff", isAuth, isBusiness, unVerifyStaff);
 
 userRouter.post("/staff/signup", staffSignup);
 userRouter.post("/staff/signin", staffSignin);
