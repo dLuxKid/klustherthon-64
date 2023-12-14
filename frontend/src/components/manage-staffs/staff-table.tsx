@@ -65,7 +65,7 @@ export default function StaffTable({ staffType }: Props) {
 
                 {!isLoadingBusinessStaffs && businessStaffsErrMsg && <ErrorMessage>{businessStaffsErrMsg}</ErrorMessage>}
 
-                {businessStaffs.length > 0 &&
+                {businessStaffs.length !== 0 &&
                     <div className="rounded-lg bg-background w-full p-2 md:pt-0">
                         <div className="md:hidden">
                             {filteredStaff.map((staff) => (
