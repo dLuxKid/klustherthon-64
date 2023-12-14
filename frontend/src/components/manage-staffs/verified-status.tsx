@@ -12,7 +12,7 @@ export default function VerifiedStatus({ status }: { status: boolean }) {
             {status === false &&
                 <>
                     Unverified
-                    <div className="ml-1 w-4 text-gray-500" >
+                    <div className="ml-1 w-4 text-error" >
                         <TiCancelOutline />
                     </div>
                 </>
