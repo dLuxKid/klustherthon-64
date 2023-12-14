@@ -1,7 +1,11 @@
 import express from "express";
 //  import user model
 import bcrypt from "bcryptjs";
-import { generateToken, isAuth, isBusiness } from "../utils.js";
+import {
+  generateToken,
+  isAuth,
+  isBusiness
+} from "../utils.js";
 import expressAsyncHandler from "express-async-handler";
 import Business from "../Models/Business.js";
 import {
@@ -11,7 +15,11 @@ import {
   unVerifyStaff,
   verifyStaff,
 } from "../Controllers/businessController.js";
-import { staffSignin, staffSignup } from "../Controllers/staffController.js";
+import {
+  getBusinessStaff,
+  staffSignin,
+  staffSignup
+} from "../Controllers/staffController.js";
 
 const userRouter = express.Router();
 
@@ -25,6 +33,7 @@ userRouter.put(
     // this will update business
   })
 );
+userRouter.get("/business/all-staff/:businessId", isAuth, isBusiness, getBusinessStaff);
 userRouter.put("/business/verify-staff", isAuth, isBusiness, verifyStaff);
 userRouter.put("/business/unverify-staff", isAuth, isBusiness, unVerifyStaff);
 
@@ -37,6 +46,5 @@ userRouter.put(
     // this will update Staff profile
   })
 );
-
 
 export default userRouter;

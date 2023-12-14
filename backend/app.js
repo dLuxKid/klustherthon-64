@@ -23,17 +23,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.post("/api/posts", (req, res, next) => {
-  const post = req.body;
-  console.log(post);
-  res.status(201).json({
-    message: "Post added successfully",
-  });
-});
 app.use("/api/users", userRouter);
 app.use("/api/invoices", invoiceRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/clients",clientRouter);
-app.listen(5000, () => {
-  console.log("App listening on port 5000!");
+
+const port  = process.env.PORT;
+app.listen(port, () => {
+  console.log(`App listening on port`);
 });
