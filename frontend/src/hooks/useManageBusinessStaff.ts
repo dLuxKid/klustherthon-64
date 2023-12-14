@@ -15,9 +15,10 @@ export default function useManageBusinessStaff() {
     setIsLoadingBusinessStaffs(true);
     setBusinessStaffs([]);
     try {
-      //   const res = await fetch(`${usersUrl}/business/all-staffs/${user.id}`, {
+      //   const res = await fetch(
+      //     `${usersUrl}/business/all-staff/${user.id}`,
       const res = await fetch(
-        `http://localhost:5000/api/users/business/all-staffs/${user.id}`,
+        `http://localhost:5000/api/users/business/all-staff/${user.id}`,
         {
           method: "GET",
           headers: {
@@ -27,6 +28,7 @@ export default function useManageBusinessStaff() {
         }
       );
       const data = await res.json();
+      console.log(data);
       if (res.ok) {
         setBusinessStaffs(data);
         setIsLoadingBusinessStaffs(false);
@@ -36,8 +38,9 @@ export default function useManageBusinessStaff() {
         setIsLoadingBusinessStaffs(false);
       }
     } catch (error: any) {
+      console.log(error);
       toast.error(error.message);
-      setBusinessStaffsErrMsg("Error fetching all staffs");
+      setBusinessStaffsErrMsg(error.message);
       setIsLoadingBusinessStaffs(false);
     }
   };

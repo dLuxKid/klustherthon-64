@@ -21,13 +21,14 @@ mongoose
 
 const app = express();
 
-
-app.use(cors({
-  origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  optionsSuccessStatus: 204,
-}));
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    optionsSuccessStatus: 204,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -36,9 +37,9 @@ app.use("/api/invoices", invoiceRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/clients", clientRouter);
 
-const port = process.env.PORT  
-app.options('*', cors());
+const port = process.env.PORT;
+app.options("*", cors());
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+app.listen(5000, () => {
+  console.log(`App listening on port 5000`);
 });
