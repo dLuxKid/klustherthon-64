@@ -28,7 +28,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
                 Search
             </label>
             <input
-                className="peer block w-full rounded-md border border-background py-[9px] pl-10 text-text outline-2 placeholder:text-text"
+                className="peer block w-full rounded-md border border-background h-12 py-[9px] pl-10 text-text outline-2 placeholder:text-text"
                 placeholder={placeholder}
                 onChange={(e) => handleSearch(e.target.value)}
                 defaultValue={searchParams.get('query')?.toString()}

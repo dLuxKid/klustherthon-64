@@ -27,6 +27,12 @@ userRouter.put(
 );
 userRouter.put("/business/verify-staff", isAuth, isBusiness, verifyStaff);
 userRouter.put("/business/unverify-staff", isAuth, isBusiness, unVerifyStaff);
+userRouter.get(
+  "/business/all-staffs/:businessId",
+  isAuth,
+  isBusiness,
+  allStaff
+);
 
 userRouter.post("/staff/signup", staffSignup);
 userRouter.post("/staff/signin", staffSignin);
@@ -37,6 +43,5 @@ userRouter.put(
     // this will update Staff profile
   })
 );
-
 
 export default userRouter;

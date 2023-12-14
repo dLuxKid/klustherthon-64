@@ -1,9 +1,12 @@
-import { formatCurrency } from "../../utils/formatter";
 import { GrUpdate } from "react-icons/gr";
 import { useDataContext } from "../../context/useFetchDataContext";
+import { formatCurrency } from "../../utils/formatter";
+import { LatestInvoicesSkeleton } from "../skeletons";
 
 export default function LatestInvoices() {
-    const { invoices } = useDataContext()
+    const { invoices, isLoadingInvoices } = useDataContext()
+
+    if (isLoadingInvoices) return <LatestInvoicesSkeleton />
 
     return (
         <div className="flex w-full flex-col md:col-span-4 lg:col-span-4">

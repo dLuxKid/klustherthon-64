@@ -78,7 +78,7 @@ export default function useMutateInvoice() {
   };
 
   const editInvoice = async (
-    state: Pick<editInvoiceType, "amount" | "email" | "name" | "paymentStatus">,
+    state: Partial<editInvoiceType>,
     setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>,
     invoice: invoiceType
   ) => {

@@ -75,6 +75,7 @@ export const staffSignin = expressAsyncHandler(async (req, res) => {
     });
   }
 });
+
 export const getBusinessStaff = expressAsyncHandler(async (req, res) => {
   try {
     const staffs = await Staff.find({

@@ -5,16 +5,33 @@ import { AiFillCaretRight } from "react-icons/ai";
 import { BsCash, BsFillCaretDownFill, BsPeopleFill } from "react-icons/bs";
 import { FaBell, FaChartBar, FaFileInvoice } from "react-icons/fa";
 import { useAuthContext } from "../context/useAuthContext";
+import { IoIosPeople } from "react-icons/io";
 
 const links = [
-    { name: "clients", icon: <BsPeopleFill /> },
+    {
+        name: 'dashboard',
+        icon: <FaChartBar />,
+        href: '/dashboard'
+    },
+    {
+        name: "clients",
+        icon: <BsPeopleFill />,
+        href: '/dashboard/clients'
+    },
     {
         name: "invoices",
         icon: <FaFileInvoice />,
+        href: '/dashboard/invoices'
     },
     {
         name: "payments",
-        icon: <BsCash />
+        icon: <BsCash />,
+        href: '/dashboard/payments'
+    },
+    {
+        name: 'staffs',
+        icon: <IoIosPeople />,
+        href: '/dashboard/manage-staffs',
     }
 ];
 
@@ -82,31 +99,17 @@ export default function SideNavbar() {
                         <h1 className="text-2xl font-bold text-primary">EasyLedger</h1>
                     </div>
                     <div className="w-full flex flex-col gap-2">
-                        <NavLink
-                            onClick={() => setActiveMenu(!activeMenu)}
-                            to={`/dashboard`}
-                            className={({ isActive }: { isActive: boolean }) =>
-                                isActive
-                                    ? "bg-primary flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90 text-white"
-                                    : "flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90 hover:text-white text-text"
-                            }
-                            end
-                        >
-                            <FaChartBar />
-                            <p className="capitalize">
-                                Dashboard
-                            </p>
-                        </NavLink>
                         {links.map((item, index) => (
                             <NavLink
                                 onClick={() => setActiveMenu(!activeMenu)}
                                 key={index}
-                                to={`/dashboard/${item.name}`}
+                                to={item.href}
                                 className={({ isActive }: { isActive: boolean }) =>
                                     isActive
                                         ? "bg-primary flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90 text-white"
                                         : "flex gap-4 items-center rounded-md px-4 py-2 cursor-pointer hover:bg-primary/90 hover:text-white text-text"
                                 }
+                                end
                             >
                                 {item.icon}
                                 <p className="capitalize">

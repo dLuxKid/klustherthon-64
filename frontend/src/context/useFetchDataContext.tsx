@@ -16,7 +16,6 @@ export const DataContextProvider = ({ children }: { children: React.ReactNode })
     const [isLoadingClients, setIsLoadingClients] = useState<boolean>(false)
     const [clientsErrMsg, setClientsErrMsg] = useState<string>('')
 
-
     const [invoices, setInvoices] = useState<invoiceType[]>([])
     const [isLoadingInvoices, setIsLoadingInvoices] = useState<boolean>(false)
     const [invoicesErrMsg, setInvoicesErrMsg] = useState<string>('')
@@ -43,7 +42,6 @@ export const DataContextProvider = ({ children }: { children: React.ReactNode })
                 setIsLoadingInvoices(false)
             }
         } catch (error) {
-            console.log(error)
             setInvoicesErrMsg('Error fetching invoices')
             setIsLoadingInvoices(false)
         }
@@ -70,7 +68,6 @@ export const DataContextProvider = ({ children }: { children: React.ReactNode })
                 setIsLoadingClients(false)
             }
         } catch (error) {
-            console.log(error)
             setClientsErrMsg('Error fetching clients')
             setIsLoadingClients(false)
         }
