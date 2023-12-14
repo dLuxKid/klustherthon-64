@@ -29,8 +29,8 @@ export default function useManageBusinessStaff() {
 
       if (response.ok) {
         toast.success(data.message);
-        fetchStaffs();
         setLoading(false);
+        fetchStaffs();
       } else {
         toast.error(data.message);
         setLoading(false);
@@ -44,7 +44,7 @@ export default function useManageBusinessStaff() {
   const unVerifyStaff = async (staffId: string, businessId: string) => {
     setLoading(true);
     try {
-      const response = await fetch(`${usersUrl}/business/verify-staff`, {
+      const response = await fetch(`${usersUrl}/business/unverify-staff`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -60,8 +60,8 @@ export default function useManageBusinessStaff() {
 
       if (response.ok) {
         toast.success(data.message);
-        fetchStaffs();
         setLoading(false);
+        fetchStaffs();
       } else {
         toast.error(data.message);
         setLoading(false);
