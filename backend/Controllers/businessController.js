@@ -84,7 +84,8 @@ export const verifyStaff = expressAsyncHandler(async (req, res) => {
     await staff.save();
 
     res.status(200).send({ message: "Staff verified successfully" });
-  } catch (err) {console.log("error")
+  } catch (err) {
+    console.log("error");
     res.status(500).send({ message: "An error occurred" });
   }
 });
@@ -107,6 +108,7 @@ export const unVerifyStaff = expressAsyncHandler(async (req, res) => {
     res.status(500).send({ message: "An error occurred" });
   }
 });
+
 export const allStaff = expressAsyncHandler(async (req, res) => {
   try {
     const staffs = await Staff.find({

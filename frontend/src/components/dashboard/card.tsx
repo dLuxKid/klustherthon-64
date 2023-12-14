@@ -3,6 +3,7 @@ import { FaFileInvoice } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 
 import { useDataContext } from "../../context/useFetchDataContext";
+import { CardSkeleton } from "../skeletons";
 
 const iconMap = {
     staff: <FaPeopleGroup />,
@@ -13,13 +14,31 @@ const iconMap = {
 
 export default function CardWrapper() {
 
-    const { payments, clients, invoices } = useDataContext()
+    const { payments, isLoadingPayments, clients, isLoadingClients, invoices, isLoadingInvoices } = useDataContext()
 
     return (
         <>
-            <Card title="Total Payments" value={payments.length || '-'} type="payments" />
-            <Card title="Total Clients" value={clients.length || '-'} type="customers" />
-            <Card title="Total Invoices" value={invoices.length || '-'} type="invoices" />
+            {
+                isLoadingPayments
+                    ?
+                    <CardSkeleton />
+                    :
+                    <Card title="Total Payments" value={payments.length || '-'} type="payments" />
+            }
+            {
+                isLoadingClients
+                    ?
+                    <CardSkeleton />
+                    :
+                    <Card title="Total Clients" value={clients.length || '-'} type="customers" />
+            }
+            {
+                isLoadingInvoices
+                    ?
+                    <CardSkeleton />
+                    :
+                    <Card title="Total Invoices" value={invoices.length || '-'} type="invoices" />
+            }
         </>
     );
 }

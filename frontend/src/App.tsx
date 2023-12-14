@@ -1,8 +1,8 @@
 import { Navigate, Outlet, Route, Routes } from "react-router-dom"
 
-import SideNavbar from "./components/side-navbar"
-
 import { Toaster } from "sonner"
+
+import SideNavbar from "./components/side-navbar"
 
 import Customers from "./pages/clients"
 import Dashboard from "./pages/dashboard"
@@ -11,22 +11,12 @@ import LandingPage from "./pages/landing-page"
 import Login from "./pages/login"
 import Payments from "./pages/payments"
 import Signup from "./pages/signup"
+import ManageStaffs from "./pages/manage-staffs"
 
 import { useAuthContext } from "./context/useAuthContext"
-import Staffs from "./pages/manage-staffs"
-import { useEffect } from "react"
 
 function App() {
-  const { user, authIsReady, dispatch } = useAuthContext()
-
-  useEffect(() => {
-    const storedUser = sessionStorage.getItem('user');
-    if (storedUser) {
-      dispatch({ type: "login", payload: JSON.parse(storedUser) });
-    } else {
-      dispatch({ type: "auth-is-ready", payload: null });
-    }
-  }, []);
+  const { user, authIsReady } = useAuthContext()
 
   if (!authIsReady) return null
 
@@ -35,7 +25,7 @@ function App() {
       <Toaster richColors position="top-right" duration={5000} />
       <Routes>
         {/* unauthenticated routes */}
-        <Route element={user && user.id ? <Navigate to='/dashboard' /> : <Outlet />}>
+        <Route element={user?.id ? <Navigate to='/dashboard' /> : <Outlet />}>
           <Route index element={<LandingPage />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
@@ -45,7 +35,7 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            user && user.id ? (
+            user?.id ? (
               <div className="flex h-screen flex-col md:flex-row md:overflow-hidden w-full">
                 <div className="w-full flex-none md:w-64">
                   <SideNavbar />
@@ -62,9 +52,11 @@ function App() {
           <Route path="invoices" element={<Invoices />} />
           <Route path="clients" element={<Customers />} />
           <Route path="payments" element={<Payments />} />
-          <Route path="staffs" element={<Staffs />} />
+          <Route path="manage-staffs" element={<ManageStaffs />} />
         </Route>
-      </Routes >
+        <Route path="*" element={<Navigate to="/" />} />
+
+      </Routes>
     </>
   )
 }

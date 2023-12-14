@@ -12,6 +12,7 @@ import ErrorMessage from "../err-message";
 import Loader from "../loader";
 import EditPayment from "./edit-payment";
 import useMutatePayments from "../../hooks/useMutatePayments";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function PaymentTable() {
     const { payments, isLoadingPayments, paymentsErrMsg } = useDataContext()
@@ -26,12 +27,16 @@ export default function PaymentTable() {
     const [searchParams] = useSearchParams();
     const query = searchParams.get('query')
 
-    useEffect(() => {
+    const filterPayments = useDebouncedCallback(() => {
         if (query) {
             setFilteredPayments(payments.filter(payment => payment.name.toLowerCase().includes(query.toLowerCase())))
         } else {
             setFilteredPayments(payments)
         }
+    }, 500)
+
+    useEffect(() => {
+        filterPayments()
     }, [query])
 
     return (

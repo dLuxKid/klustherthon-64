@@ -20,20 +20,26 @@ mongoose
   });
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    optionsSuccessStatus: 204,
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.post("/api/posts", (req, res, next) => {
-  const post = req.body;
-  console.log(post);
-  res.status(201).json({
-    message: "Post added successfully",
-  });
-});
 app.use("/api/users", userRouter);
 app.use("/api/invoices", invoiceRouter);
 app.use("/api/payments", paymentRouter);
-app.use("/api/clients",clientRouter);
+app.use("/api/clients", clientRouter);
+
+const port = process.env.PORT;
+app.options("*", cors());
+
 app.listen(5000, () => {
-  console.log("App listening on port 5000!");
+  console.log(`App listening on port 5000`);
 });

@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
 
 export type authContextType = {
     user: any;
@@ -26,11 +26,11 @@ const initialState = {
 const authReducer = (state: authState, action: authActions) => {
     switch (action.type) {
         case 'login':
-            return { ...state, user: action.payload, authIsReady: true }
+            return { user: action.payload, authIsReady: true }
         case 'logout':
-            return { ...state, user: null, authIsReady: true }
+            return { user: null, authIsReady: true }
         case 'auth-is-ready':
-            return { ...state, user: action.payload, authIsReady: true }
+            return { user: action.payload, authIsReady: true }
         default:
             return state;
     }
@@ -42,6 +42,15 @@ type Props = {
 
 export const AuthContextProvider = ({ children }: Props) => {
     const [state, dispatch] = useReducer(authReducer, initialState)
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            dispatch({ type: "login", payload: JSON.parse(storedUser) });
+        } else {
+            dispatch({ type: "auth-is-ready", payload: null });
+        }
+    }, []);
 
     return (
         <AuthContext.Provider value={{ ...state, dispatch }}>
