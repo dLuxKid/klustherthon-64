@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { usersUrl } from "../utils/urls";
-import { useAuthContext } from "../context/useAuthContext";
 import { toast } from "sonner";
-import { businessStaffType } from "../utils/types";
+import { useAuthContext } from "../context/useAuthContext";
 import { useDataContext } from "../context/useFetchDataContext";
+import { usersUrl } from "../utils/urls";
 
 export default function useManageBusinessStaff() {
   const { user } = useAuthContext();
@@ -14,21 +13,17 @@ export default function useManageBusinessStaff() {
   const verifyStaff = async (staffId: string, businessId: string) => {
     setLoading(true);
     try {
-      //   const response = await fetch(`${usersUrl}/business/verify-staff`, {
-      const response = await fetch(
-        `http://localhost:5000/api/users/business/verify-staff`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-          body: JSON.stringify({
-            businessId,
-            staffId,
-          }),
-        }
-      );
+      const response = await fetch(`${usersUrl}/business/verify-staff`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          businessId,
+          staffId,
+        }),
+      });
 
       const data = await response.json();
 
