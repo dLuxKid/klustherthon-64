@@ -40,9 +40,10 @@ export default function StaffTable({ staffType }: Props) {
 
         if (staffType === 'all') {
             setFilteredStaff(businessStaffs)
+        } else {
+            const isVerified = staffType === 'unverified' ? false : true
+            setFilteredStaff(businessStaffs.filter(staff => staff.isVerified === isVerified))
         }
-        const isVerified = staffType === 'unverified' ? false : true
-        setFilteredStaff(businessStaffs.filter(staff => staff.isVerified === isVerified))
     }, [staffType])
 
     useEffect(() => {
