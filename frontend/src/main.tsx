@@ -1,18 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './global.css'
 import { BrowserRouter } from 'react-router-dom'
+import App from './App.tsx'
 import { AuthContextProvider } from './context/useAuthContext.tsx'
-import { DataContextProvider } from './context/useFetchDataContext.tsx'
+import './global.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
-        <DataContextProvider>
-          <App />
-        </DataContextProvider>
+        <App />
       </AuthContextProvider>
     </BrowserRouter>
   </React.StrictMode>,

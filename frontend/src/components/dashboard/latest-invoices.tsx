@@ -1,10 +1,11 @@
 import { GrUpdate } from "react-icons/gr";
-import { useDataContext } from "../../context/useFetchDataContext";
+import useFetchData from "../../hooks/useFetchData";
 import { formatCurrency } from "../../utils/formatter";
 import { LatestInvoicesSkeleton } from "../skeletons";
 
 export default function LatestInvoices() {
-    const { invoices, isLoadingInvoices } = useDataContext()
+    const { fetchInvoices } = useFetchData()
+    const { data: invoices, isLoading: isLoadingInvoices } = fetchInvoices()
 
     if (isLoadingInvoices) return <LatestInvoicesSkeleton />
 

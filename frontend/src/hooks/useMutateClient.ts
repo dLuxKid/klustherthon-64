@@ -3,15 +3,16 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { useAuthContext } from "../context/useAuthContext";
-import { useDataContext } from "../context/useFetchDataContext";
 
-import { clientUrl } from "../utils/urls";
 import { clientsType } from "../utils/types";
+import { clientUrl } from "../utils/urls";
+import useFetchData from "./useFetchData";
 
 export default function useMutateClient() {
   const { user } = useAuthContext();
   const [loading, setLoading] = useState<boolean>(false);
-  const { fetchClients } = useDataContext();
+  const { fetchClients } = useFetchData();
+  const { mutate } = fetchClients();
 
   const createClient = async (
     state: Omit<clientsType, "_id">,
@@ -45,7 +46,7 @@ export default function useMutateClient() {
       if (response.ok) {
         toast.success(data.message);
         setOpenModal(false);
-        fetchClients();
+        mutate();
         setLoading(false);
       } else {
         toast.error(data.message);
@@ -88,7 +89,7 @@ export default function useMutateClient() {
 
       if (response.ok) {
         toast.success(data.message);
-        fetchClients();
+        mutate();
         setLoading(false);
         setOpenEditModal(false);
       } else {

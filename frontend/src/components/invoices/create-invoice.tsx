@@ -1,8 +1,8 @@
 import React, { useEffect, useReducer } from "react";
 import { MdCancel } from "react-icons/md";
-import { useDataContext } from "../../context/useFetchDataContext";
 import useMutateInvoice from "../../hooks/useMutateInvoice";
 import Loader from "../loader";
+import useFetchData from "../../hooks/useFetchData";
 
 const initialState = {
     name: '',
@@ -40,7 +40,8 @@ export default function CreateNewInvoice(
         dispatch({ name: e.target.name, value: e.target.value })
     }
 
-    const { payments } = useDataContext()
+    const { fetchPayments } = useFetchData()
+    const { data: payments } = fetchPayments()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -48,7 +49,7 @@ export default function CreateNewInvoice(
     };
 
     useEffect(() => {
-        const amount = payments.find(i => i.name === state.name)?.amount.toString()
+        const amount = payments?.find(i => i.name === state.name)?.amount.toString()
         dispatch({ name: 'amount', value: amount as string })
     }, [state.name])
 
@@ -62,7 +63,7 @@ export default function CreateNewInvoice(
                     <p>Name</p>
                     <select name="name" className="w-full" onChange={handleChange}>
                         <option value="">Select product..</option>
-                        {payments.map((payment) => (
+                        {payments?.map((payment) => (
                             <option key={payment._id} value={payment.name} className="capitalize">
                                 {payment.name}
                             </option>

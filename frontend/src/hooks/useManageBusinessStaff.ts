@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAuthContext } from "../context/useAuthContext";
-import { useDataContext } from "../context/useFetchDataContext";
 import { usersUrl } from "../utils/urls";
+import useFetchData from "./useFetchData";
 
 export default function useManageBusinessStaff() {
   const { user } = useAuthContext();
-  const { fetchStaffs } = useDataContext();
+  const { fetchStaffs } = useFetchData();
+  const { mutate } = fetchStaffs();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -30,7 +31,7 @@ export default function useManageBusinessStaff() {
       if (response.ok) {
         toast.success(data.message);
         setLoading(false);
-        fetchStaffs();
+        mutate();
       } else {
         toast.error(data.message);
         setLoading(false);
@@ -61,7 +62,7 @@ export default function useManageBusinessStaff() {
       if (response.ok) {
         toast.success(data.message);
         setLoading(false);
-        fetchStaffs();
+        mutate();
       } else {
         toast.error(data.message);
         setLoading(false);

@@ -2,7 +2,7 @@ import { BsCash, BsPeopleFill } from "react-icons/bs";
 import { FaFileInvoice } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 
-import { useDataContext } from "../../context/useFetchDataContext";
+import useFetchData from "../../hooks/useFetchData";
 import { CardSkeleton } from "../skeletons";
 
 const iconMap = {
@@ -13,8 +13,11 @@ const iconMap = {
 };
 
 export default function CardWrapper() {
-
-    const { payments, isLoadingPayments, clients, isLoadingClients, invoices, isLoadingInvoices } = useDataContext()
+    const { fetchClients, fetchInvoices, fetchPayments, fetchStaffs } = useFetchData()
+    const { data: clients, isLoading: isLoadingClients } = fetchClients()
+    const { data: invoices, isLoading: isLoadingInvoices } = fetchInvoices()
+    const { data: payments, isLoading: isLoadingPayments } = fetchPayments()
+    const { data: businessStaffs, isLoading: isLoadingBusinessStaffs } = fetchStaffs()
 
     return (
         <>
@@ -23,21 +26,28 @@ export default function CardWrapper() {
                     ?
                     <CardSkeleton />
                     :
-                    <Card title="Total Payments" value={payments.length || '-'} type="payments" />
+                    <Card title="Total Payments" value={payments?.length || '-'} type="payments" />
             }
             {
                 isLoadingClients
                     ?
                     <CardSkeleton />
                     :
-                    <Card title="Total Clients" value={clients.length || '-'} type="customers" />
+                    <Card title="Total Clients" value={clients?.length || '-'} type="customers" />
             }
             {
                 isLoadingInvoices
                     ?
                     <CardSkeleton />
                     :
-                    <Card title="Total Invoices" value={invoices.length || '-'} type="invoices" />
+                    <Card title="Total Invoices" value={invoices?.length || '-'} type="invoices" />
+            }
+            {
+                isLoadingBusinessStaffs
+                    ?
+                    <CardSkeleton />
+                    :
+                    <Card title="Total Staffs" type="staff" value={businessStaffs?.length || '-'} />
             }
         </>
     );

@@ -61,7 +61,7 @@ export default function EditPayment({ setOpenEditModal, payment }: Props) {
                         required
                         onChange={handleChange}
                         value={state.notes}
-                        name="description"
+                        name="notes"
                         className="w-full h-40 rounded-lg text-text outline-none border-none p-4"
                         maxLength={250}
                         minLength={10}

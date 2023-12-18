@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { CreateBtn } from "../components/buttons"
-import CreateNewClient from "../components/clients/create-client"
 import CustomersTable from "../components/clients/clients-table"
+import CreateNewClient from "../components/clients/create-client"
 import Search from "../components/search"
 
 export default function Clients() {

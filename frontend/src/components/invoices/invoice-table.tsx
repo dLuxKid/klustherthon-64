@@ -1,34 +1,34 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { useDataContext } from '../../context/useFetchDataContext';
-
 import { formatCurrency, formatDateToLocal } from '../../utils/formatter';
 import { invoiceType } from '../../utils/types';
 
+import { useDebouncedCallback } from 'use-debounce';
+import useFetchData from '../../hooks/useFetchData';
 import { UpdateBtn } from '../buttons';
 import ErrorMessage from '../err-message';
 import Loader from '../loader';
 import EditInvoice from './edit-invoice';
 import InvoiceStatus from './invoice-status';
-import { useDebouncedCallback } from 'use-debounce';
 
 
 export default function InvoicesTable() {
-    const { invoices, isLoadingInvoices, invoicesErrMsg } = useDataContext()
+    const { fetchInvoices } = useFetchData()
+    const { data: invoices, isLoading: isLoadingInvoices, error: invoicesErrMsg } = fetchInvoices()
 
     const [editModal, setEditModal] = useState<boolean>(false)
     const [selectedInvoice, setSelectedInvoice] = useState<invoiceType | null>(null)
-    const [filteredInvoices, setFilteredInvoices] = useState<invoiceType[]>(invoices)
+    const [filteredInvoices, setFilteredInvoices] = useState<invoiceType[]>(invoices as invoiceType[])
 
     const [searchParams] = useSearchParams();
     const query = searchParams.get('query')
 
     const filterInvoices = useDebouncedCallback(() => {
-        if (query) {
+        if (query && invoices) {
             setFilteredInvoices(invoices.filter(invoice => invoice.title.toLowerCase().includes(query.toLowerCase()) || invoice.clientEmail.toLowerCase().includes(query.toLowerCase())))
         } else {
-            setFilteredInvoices(invoices)
+            setFilteredInvoices(invoices as invoiceType[])
         }
     }, 500)
 
@@ -48,7 +48,7 @@ export default function InvoicesTable() {
 
                 {!isLoadingInvoices && invoicesErrMsg && <ErrorMessage>{invoicesErrMsg}</ErrorMessage>}
 
-                {!isLoadingInvoices && invoices.length === 0 && !invoicesErrMsg && <p className="w-full text-center mt-8">No available invoices</p>}
+                {!isLoadingInvoices && invoices?.length === 0 && !invoicesErrMsg && <p className="w-full text-center mt-8">No available invoices</p>}
 
                 {editModal &&
                     <EditInvoice
@@ -56,10 +56,10 @@ export default function InvoicesTable() {
                         setOpenEditModal={setEditModal}
                     />}
 
-                {!!invoices.length &&
+                {!!invoices?.length && !isLoadingInvoices &&
                     <div className="rounded-lg bg-background p-2 md:pt-0">
                         <div className="md:hidden">
-                            {filteredInvoices?.map((invoice) => (
+                            {(query ? filteredInvoices : invoices).map((invoice) => (
                                 <div
                                     key={invoice._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -119,7 +119,7 @@ export default function InvoicesTable() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {filteredInvoices?.map((invoice) => (
+                                {(query ? filteredInvoices : invoices).map((invoice) => (
                                     <tr
                                         key={invoice._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
