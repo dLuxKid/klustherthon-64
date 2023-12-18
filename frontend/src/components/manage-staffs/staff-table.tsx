@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 
 import { useDebouncedCallback } from "use-debounce"
-import { useDataContext } from "../../context/useFetchDataContext"
+import useFetchData from "../../hooks/useFetchData"
 import useManageBusinessStaff from "../../hooks/useManageBusinessStaff"
 import { staffMemberType } from "../../pages/manage-staffs"
 import { businessStaffType } from "../../utils/types"
@@ -15,20 +15,21 @@ type Props = {
 }
 
 export default function StaffTable({ staffType }: Props) {
-    const { businessStaffs, businessStaffsErrMsg, isLoadingBusinessStaffs } = useDataContext()
+    const { fetchStaffs } = useFetchData()
+    const { data: businessStaffs, isLoading: isLoadingBusinessStaffs, error: businessStaffsErrMsg } = fetchStaffs()
 
     const { unVerifyStaff, verifyStaff, loading } = useManageBusinessStaff()
 
-    const [filteredStaff, setFilteredStaff] = useState<businessStaffType[]>(businessStaffs)
+    const [filteredStaff, setFilteredStaff] = useState<businessStaffType[]>(businessStaffs as businessStaffType[])
 
     const [searchParams, setSearchParams] = useSearchParams();
     const query = searchParams.get('query')
 
     const filterStaffsByQuery = useDebouncedCallback(() => {
-        if (query) {
+        if (query && businessStaffs) {
             setFilteredStaff(businessStaffs.filter(staff => staff.name.toLowerCase().includes(query.toLowerCase()) || staff.email.toLowerCase().includes(query.toLowerCase())))
         } else {
-            setFilteredStaff(businessStaffs)
+            setFilteredStaff(businessStaffs as businessStaffType[])
         }
     }, 500)
 
@@ -39,10 +40,10 @@ export default function StaffTable({ staffType }: Props) {
         })
 
         if (staffType === 'all') {
-            setFilteredStaff(businessStaffs)
+            setFilteredStaff(businessStaffs as businessStaffType[])
         } else {
             const isVerified = staffType === 'unverified' ? false : true
-            setFilteredStaff(businessStaffs.filter(staff => staff.isVerified === isVerified))
+            businessStaffs && setFilteredStaff(businessStaffs.filter(staff => staff.isVerified === isVerified))
         }
     }, [staffType])
 
@@ -60,16 +61,16 @@ export default function StaffTable({ staffType }: Props) {
                     </div>
                 }
 
-                {!isLoadingBusinessStaffs && businessStaffs.length === 0 && !businessStaffsErrMsg &&
+                {!isLoadingBusinessStaffs && businessStaffs?.length === 0 && !businessStaffsErrMsg &&
                     <p className='text-black font-semibold text-base w-full text-center mt-8'>No staff is associated with your business, Please create one.</p>
                 }
 
                 {!isLoadingBusinessStaffs && businessStaffsErrMsg && <ErrorMessage>{businessStaffsErrMsg}</ErrorMessage>}
 
-                {businessStaffs.length !== 0 &&
+                {!!businessStaffs?.length && !isLoadingBusinessStaffs &&
                     <div className="rounded-lg bg-background w-full p-2 md:pt-0">
                         <div className="md:hidden">
-                            {filteredStaff.map((staff) => (
+                            {(query || staffType !== 'all' ? filteredStaff : businessStaffs).map((staff) => (
                                 <div
                                     key={staff._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -128,7 +129,7 @@ export default function StaffTable({ staffType }: Props) {
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {filteredStaff?.map((staff) => (
+                                {(query || staffType !== 'all' ? filteredStaff : businessStaffs).map((staff) => (
                                     <tr
                                         key={staff._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

@@ -7,25 +7,26 @@ import EditClient from './edit-clients';
 
 import { clientsType } from '../../utils/types';
 
-import { useDataContext } from '../../context/useFetchDataContext';
 import { useSearchParams } from 'react-router-dom';
 import { useDebouncedCallback } from 'use-debounce';
+import useFetchData from '../../hooks/useFetchData';
 
 export default function ClientsTable() {
-    const { clients, isLoadingClients, clientsErrMsg } = useDataContext()
+    const { fetchClients } = useFetchData()
+    const { data: clients, isLoading: isLoadingClients, error: clientsErrMsg } = fetchClients()
 
     const [editModal, setEditModal] = useState<boolean>(false)
     const [selectedClient, setSelectedClient] = useState<clientsType | null>(null)
-    const [filteredClients, setFilteredClients] = useState<clientsType[]>(clients)
+    const [filteredClients, setFilteredClients] = useState<clientsType[]>(clients as clientsType[])
 
     const [searchParams] = useSearchParams();
     const query = searchParams.get('query')
 
     const filterClients = useDebouncedCallback(() => {
-        if (query) {
+        if (query && clients) {
             setFilteredClients(clients.filter(clients => clients.name.toLowerCase().includes(query.toLowerCase()) || clients.email.toLowerCase().includes(query.toLowerCase())))
         } else {
-            setFilteredClients(clients)
+            setFilteredClients(clients as clientsType[])
         }
     }, 500)
 
@@ -43,7 +44,7 @@ export default function ClientsTable() {
                     </div>
                 }
 
-                {!isLoadingClients && clients.length === 0 && !clientsErrMsg &&
+                {!isLoadingClients && clients?.length === 0 && !clientsErrMsg &&
                     <p className='text-black font-semibold text-base w-full text-center mt-8'>No Clients is associated with your business, Please create one.</p>
                 }
 
@@ -55,10 +56,10 @@ export default function ClientsTable() {
                         setOpenEditModal={setEditModal}
                     />}
 
-                {!!clients.length &&
+                {!!clients?.length && !isLoadingClients &&
                     <div className="rounded-lg bg-background w-full p-2 md:pt-0">
                         <div className="md:hidden">
-                            {filteredClients.map((client) => (
+                            {(query ? filteredClients : clients).map((client) => (
                                 <div
                                     key={client._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -112,7 +113,7 @@ export default function ClientsTable() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {filteredClients?.map((client) => (
+                                {(query ? filteredClients : clients).map((client) => (
                                     <tr
                                         key={client._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

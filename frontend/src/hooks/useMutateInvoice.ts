@@ -3,10 +3,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { useAuthContext } from "../context/useAuthContext";
-import { useDataContext } from "../context/useFetchDataContext";
 
 import { invoiceType } from "../utils/types";
 import { invoiceUrl } from "../utils/urls";
+import useFetchData from "./useFetchData";
 
 type editInvoiceType = {
   name: string;
@@ -21,7 +21,8 @@ type editInvoiceType = {
 export default function useMutateInvoice() {
   const { user } = useAuthContext();
   const [loading, setLoading] = useState<boolean>(false);
-  const { fetchInvoices } = useDataContext();
+  const { fetchInvoices } = useFetchData();
+  const { mutate } = fetchInvoices();
 
   const createInvoice = async (
     state: editInvoiceType,
@@ -65,7 +66,7 @@ export default function useMutateInvoice() {
       if (response.ok) {
         toast.success(data.message);
         setOpenModal(false);
-        fetchInvoices();
+        mutate();
         setLoading(false);
       } else {
         setLoading(false);
@@ -115,7 +116,7 @@ export default function useMutateInvoice() {
       if (response.ok) {
         toast.success(data.message);
         setOpenEditModal(false);
-        fetchInvoices();
+        mutate();
         setLoading(false);
       } else {
         setLoading(false);

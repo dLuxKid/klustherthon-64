@@ -1,17 +1,15 @@
 import { useState } from "react";
-
 import { toast } from "sonner";
-
 import { useAuthContext } from "../context/useAuthContext";
-import { useDataContext } from "../context/useFetchDataContext";
-
-import { paymentsUrl } from "../utils/urls";
 import { paymentType } from "../utils/types";
+import { paymentsUrl } from "../utils/urls";
+import useFetchData from "./useFetchData";
 
 export default function useMutatePayments() {
   const { user } = useAuthContext();
   const [loading, setLoading] = useState<boolean>(false);
-  const { fetchPayments } = useDataContext();
+  const { fetchPayments } = useFetchData();
+  const { mutate } = fetchPayments();
 
   const createPayments = async (
     state: Omit<paymentType, "_id" | "__v">,
@@ -43,7 +41,7 @@ export default function useMutatePayments() {
 
       if (response.ok) {
         toast.success(data.message);
-        fetchPayments();
+        mutate();
         setLoading(false);
         setOpenModal(false);
       } else {
@@ -88,7 +86,7 @@ export default function useMutatePayments() {
 
       if (response.ok) {
         toast.success(data.message);
-        fetchPayments();
+        mutate();
         setLoading(false);
         setOpenEditModal(false);
       } else {
@@ -117,7 +115,7 @@ export default function useMutatePayments() {
       });
       const data = await res.json();
       if (res.ok) {
-        fetchPayments();
+        mutate();
         toast.success(data.message);
       } else {
         toast.error(data.message);

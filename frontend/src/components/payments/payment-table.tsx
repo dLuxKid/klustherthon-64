@@ -1,37 +1,36 @@
 import { useEffect, useState } from "react";
-
-import { useAuthContext } from "../../context/useAuthContext";
-import { useDataContext } from "../../context/useFetchDataContext";
-
-import { formatCurrency } from "../../utils/formatter";
-
 import { useSearchParams } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
+import { useAuthContext } from "../../context/useAuthContext";
+import { formatCurrency } from "../../utils/formatter";
 import { paymentType } from "../../utils/types";
+import useFetchData from "../../hooks/useFetchData";
+import useMutatePayments from "../../hooks/useMutatePayments";
 import { DeleteBtn, UpdateBtn } from "../buttons";
 import ErrorMessage from "../err-message";
 import Loader from "../loader";
 import EditPayment from "./edit-payment";
-import useMutatePayments from "../../hooks/useMutatePayments";
-import { useDebouncedCallback } from "use-debounce";
 
 export default function PaymentTable() {
-    const { payments, isLoadingPayments, paymentsErrMsg } = useDataContext()
+    const { fetchPayments } = useFetchData()
+    const { data: payments, isLoading: isLoadingPayments, error: paymentsErrMsg } = fetchPayments()
+
     const [editModal, setEditModal] = useState<boolean>(false)
     const [selectedPayment, setSelectedPayment] = useState<paymentType | null>(null)
 
     const { user } = useAuthContext()
     const { deletePayment } = useMutatePayments()
 
-    const [filteredPayments, setFilteredPayments] = useState<paymentType[]>(payments)
+    const [filteredPayments, setFilteredPayments] = useState<paymentType[]>(payments as paymentType[])
 
     const [searchParams] = useSearchParams();
     const query = searchParams.get('query')
 
     const filterPayments = useDebouncedCallback(() => {
-        if (query) {
+        if (query && payments) {
             setFilteredPayments(payments.filter(payment => payment.name.toLowerCase().includes(query.toLowerCase())))
         } else {
-            setFilteredPayments(payments)
+            setFilteredPayments(payments as paymentType[])
         }
     }, 500)
 
@@ -51,7 +50,7 @@ export default function PaymentTable() {
 
                 {!isLoadingPayments && paymentsErrMsg && <ErrorMessage>{paymentsErrMsg}</ErrorMessage>}
 
-                {!isLoadingPayments && payments.length === 0 && !paymentsErrMsg &&
+                {!isLoadingPayments && payments?.length === 0 && !paymentsErrMsg &&
                     <p className="w-full text-center mt-8">You have no payments available, create one</p>
                 }
 
@@ -61,10 +60,10 @@ export default function PaymentTable() {
                         setOpenEditModal={setEditModal}
                     />}
 
-                {!!payments.length && !isLoadingPayments &&
+                {!!payments?.length && !isLoadingPayments &&
                     <div className="rounded-lg bg-background p-2 md:pt-0">
                         <div className="md:hidden">
-                            {filteredPayments?.map((payment) => (
+                            {(query ? filteredPayments : payments).map((payment) => (
                                 <div
                                     key={payment._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -116,7 +115,7 @@ export default function PaymentTable() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {filteredPayments?.map((payment) => (
+                                {(query ? filteredPayments : payments).map((payment) => (
                                     <tr
                                         key={payment._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
