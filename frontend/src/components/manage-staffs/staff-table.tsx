@@ -27,7 +27,7 @@ export default function StaffTable({ staffType }: Props) {
 
     const filterStaffsByQuery = useDebouncedCallback(() => {
         if (query && businessStaffs) {
-            setFilteredStaff(businessStaffs.filter(staff => staff.name.toLowerCase().includes(query.toLowerCase()) || staff.email.toLowerCase().includes(query.toLowerCase())))
+            setFilteredStaff(businessStaffs.filter((staff: businessStaffType) => staff.name.toLowerCase().includes(query.toLowerCase()) || staff.email.toLowerCase().includes(query.toLowerCase())))
         } else {
             setFilteredStaff(businessStaffs as businessStaffType[])
         }
@@ -43,7 +43,7 @@ export default function StaffTable({ staffType }: Props) {
             setFilteredStaff(businessStaffs as businessStaffType[])
         } else {
             const isVerified = staffType === 'unverified' ? false : true
-            businessStaffs && setFilteredStaff(businessStaffs.filter(staff => staff.isVerified === isVerified))
+            businessStaffs && setFilteredStaff(businessStaffs.filter((staff: businessStaffType) => staff.isVerified === isVerified))
         }
     }, [staffType])
 
@@ -70,7 +70,7 @@ export default function StaffTable({ staffType }: Props) {
                 {!!businessStaffs?.length && !isLoadingBusinessStaffs &&
                     <div className="rounded-lg bg-background w-full p-2 md:pt-0">
                         <div className="md:hidden">
-                            {(query || staffType !== 'all' ? filteredStaff : businessStaffs).map((staff) => (
+                            {(query || staffType !== 'all' ? filteredStaff : businessStaffs).map((staff: businessStaffType) => (
                                 <div
                                     key={staff._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -129,7 +129,7 @@ export default function StaffTable({ staffType }: Props) {
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {(query || staffType !== 'all' ? filteredStaff : businessStaffs).map((staff) => (
+                                {(query || staffType !== 'all' ? filteredStaff : businessStaffs).map((staff: businessStaffType) => (
                                     <tr
                                         key={staff._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

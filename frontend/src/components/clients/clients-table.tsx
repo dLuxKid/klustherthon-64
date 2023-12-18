@@ -24,7 +24,7 @@ export default function ClientsTable() {
 
     const filterClients = useDebouncedCallback(() => {
         if (query && clients) {
-            setFilteredClients(clients.filter(clients => clients.name.toLowerCase().includes(query.toLowerCase()) || clients.email.toLowerCase().includes(query.toLowerCase())))
+            setFilteredClients(clients.filter((clients: clientsType) => clients.name.toLowerCase().includes(query.toLowerCase()) || clients.email.toLowerCase().includes(query.toLowerCase())))
         } else {
             setFilteredClients(clients as clientsType[])
         }
@@ -59,7 +59,7 @@ export default function ClientsTable() {
                 {!!clients?.length && !isLoadingClients &&
                     <div className="rounded-lg bg-background w-full p-2 md:pt-0">
                         <div className="md:hidden">
-                            {(query ? filteredClients : clients).map((client) => (
+                            {(query ? filteredClients : clients).map((client: clientsType) => (
                                 <div
                                     key={client._id}
                                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -74,7 +74,6 @@ export default function ClientsTable() {
                                             </div>
                                             <p className="text-sm text-text">{client.email}</p>
                                         </div>
-
                                     </div>
                                     <div className="flex w-full items-center justify-between pt-4">
                                         <div className='text-text'>
@@ -113,7 +112,7 @@ export default function ClientsTable() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {(query ? filteredClients : clients).map((client) => (
+                                {(query ? filteredClients : clients).map((client: clientsType) => (
                                     <tr
                                         key={client._id}
                                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

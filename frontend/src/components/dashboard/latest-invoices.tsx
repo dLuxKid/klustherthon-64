@@ -2,6 +2,7 @@ import { GrUpdate } from "react-icons/gr";
 import useFetchData from "../../hooks/useFetchData";
 import { formatCurrency } from "../../utils/formatter";
 import { LatestInvoicesSkeleton } from "../skeletons";
+import { invoiceType } from "../../utils/types";
 
 export default function LatestInvoices() {
     const { fetchInvoices } = useFetchData()
@@ -16,7 +17,7 @@ export default function LatestInvoices() {
             </h2>
             <div className="flex grow flex-col justify-between rounded-xl bg-background p-2">
                 <div className="bg-white px-4">
-                    {invoices && invoices.filter((_, idx) => idx < 5).map((invoice, i) => {
+                    {invoices && invoices.filter((_: any, idx: number) => idx < 5).map((invoice: invoiceType, i: number) => {
                         return (
                             <div
                                 key={invoice._id}

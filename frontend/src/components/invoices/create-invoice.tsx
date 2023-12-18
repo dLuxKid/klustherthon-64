@@ -3,6 +3,7 @@ import { MdCancel } from "react-icons/md";
 import useMutateInvoice from "../../hooks/useMutateInvoice";
 import Loader from "../loader";
 import useFetchData from "../../hooks/useFetchData";
+import { paymentType } from "../../utils/types";
 
 const initialState = {
     name: '',
@@ -49,7 +50,7 @@ export default function CreateNewInvoice(
     };
 
     useEffect(() => {
-        const amount = payments?.find(i => i.name === state.name)?.amount.toString()
+        const amount = payments?.find((i: paymentType) => i.name === state.name)?.amount.toString()
         dispatch({ name: 'amount', value: amount as string })
     }, [state.name])
 
@@ -63,7 +64,7 @@ export default function CreateNewInvoice(
                     <p>Name</p>
                     <select name="name" className="w-full" onChange={handleChange}>
                         <option value="">Select product..</option>
-                        {payments?.map((payment) => (
+                        {payments?.map((payment: paymentType) => (
                             <option key={payment._id} value={payment.name} className="capitalize">
                                 {payment.name}
                             </option>
