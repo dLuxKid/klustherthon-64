@@ -32,6 +32,9 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.get('/', (req, res) => {
+  res.send('Welcome to the homepage!');
+});
 app.use("/api/users", userRouter);
 app.use("/api/invoices", invoiceRouter);
 app.use("/api/payments", paymentRouter);
